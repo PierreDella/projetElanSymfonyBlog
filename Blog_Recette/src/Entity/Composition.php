@@ -20,38 +20,74 @@ class Composition
     /**
      * @ORM\Column(type="integer")
      */
-    private $quantiteIngredient;
+    private $quantity;
 
     /**
-     * @ORM\Column(type="string", length=10)
+     * @ORM\Column(type="string", length=15, nullable=true)
      */
-    private $uniteMesure;
+    private $unit;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Recipe::class, inversedBy="compositions")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $recipe;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Ingredient::class, inversedBy="compositions")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $ingredient;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getQuantiteIngredient(): ?int
+    public function getQuantity(): ?int
     {
-        return $this->quantiteIngredient;
+        return $this->quantity;
     }
 
-    public function setQuantiteIngredient(int $quantiteIngredient): self
+    public function setQuantity(int $quantity): self
     {
-        $this->quantiteIngredient = $quantiteIngredient;
+        $this->quantity = $quantity;
 
         return $this;
     }
 
-    public function getUniteMesure(): ?string
+    public function getUnit(): ?string
     {
-        return $this->uniteMesure;
+        return $this->unit;
     }
 
-    public function setUniteMesure(string $uniteMesure): self
+    public function setUnit(?string $unit): self
     {
-        $this->uniteMesure = $uniteMesure;
+        $this->unit = $unit;
+
+        return $this;
+    }
+
+    public function getRecipe(): ?Recipe
+    {
+        return $this->recipe;
+    }
+
+    public function setRecipe(?Recipe $recipe): self
+    {
+        $this->recipe = $recipe;
+
+        return $this;
+    }
+
+    public function getIngredient(): ?Ingredient
+    {
+        return $this->ingredient;
+    }
+
+    public function setIngredient(?Ingredient $ingredient): self
+    {
+        $this->ingredient = $ingredient;
 
         return $this;
     }

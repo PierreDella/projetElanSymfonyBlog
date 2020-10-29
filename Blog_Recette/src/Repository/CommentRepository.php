@@ -2,25 +2,25 @@
 
 namespace App\Repository;
 
-use App\Entity\CategorieIngredient;
+use App\Entity\Comment;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method CategorieIngredient|null find($id, $lockMode = null, $lockVersion = null)
- * @method CategorieIngredient|null findOneBy(array $criteria, array $orderBy = null)
- * @method CategorieIngredient[]    findAll()
- * @method CategorieIngredient[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Comment|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Comment|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Comment[]    findAll()
+ * @method Comment[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CategorieIngredientRepository extends ServiceEntityRepository
+class CommentRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, CategorieIngredient::class);
+        parent::__construct($registry, Comment::class);
     }
 
     // /**
-    //  * @return CategorieIngredient[] Returns an array of CategorieIngredient objects
+    //  * @return Comment[] Returns an array of Comment objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class CategorieIngredientRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?CategorieIngredient
+    public function findOneBySomeField($value): ?Comment
     {
         return $this->createQueryBuilder('c')
             ->andWhere('c.exampleField = :val')

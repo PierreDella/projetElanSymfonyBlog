@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -45,9 +47,14 @@ class User implements UserInterface
     private $surname;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255)
      */
     private $picture;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $dateInscription;
 
     /**
      * @ORM\Column(type="date")
@@ -55,9 +62,41 @@ class User implements UserInterface
     private $dateNaissance;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\OneToMany(targetEntity=Bibliotheque::class, mappedBy="user")
      */
-    private $dateInscription;
+    private $bibliotheques;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Recipe::class, mappedBy="user")
+     */
+    private $recipes;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="user")
+     */
+    private $comments;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Subscription::class, mappedBy="subscriber")
+     */
+    private $listSubscriptions;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Subscription::class, mappedBy="targetUser")
+     */
+    private $subscribers;
+
+    
+
+    public function __construct()
+    {
+        $this->bibliotheques = new ArrayCollection();
+        $this->recipes = new ArrayCollection();
+        $this->comments = new ArrayCollection();
+        $this->listSubscriptions = new ArrayCollection();
+        $this->subscribers = new ArrayCollection();
+        
+    }
 
     public function getId(): ?int
     {
@@ -166,9 +205,21 @@ class User implements UserInterface
         return $this->picture;
     }
 
-    public function setPicture(?string $picture): self
+    public function setPicture(string $picture): self
     {
         $this->picture = $picture;
+
+        return $this;
+    }
+
+    public function getDateInscription(): ?\DateTimeInterface
+    {
+        return $this->dateInscription;
+    }
+
+    public function setDateInscription(\DateTimeInterface $dateInscription): self
+    {
+        $this->dateInscription = $dateInscription;
 
         return $this;
     }
@@ -185,15 +236,154 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getDateInscription(): ?\DateTimeInterface
+    /**
+     * @return Collection|Bibliotheque[]
+     */
+    public function getBibliotheques(): Collection
     {
-        return $this->dateInscription;
+        return $this->bibliotheques;
     }
 
-    public function setDateInscription(\DateTimeInterface $dateInscription): self
+    public function addBibliotheque(Bibliotheque $bibliotheque): self
     {
-        $this->dateInscription = $dateInscription;
+        if (!$this->bibliotheques->contains($bibliotheque)) {
+            $this->bibliotheques[] = $bibliotheque;
+            $bibliotheque->setUser($this);
+        }
 
         return $this;
     }
+
+    public function removeBibliotheque(Bibliotheque $bibliotheque): self
+    {
+        if ($this->bibliotheques->removeElement($bibliotheque)) {
+            // set the owning side to null (unless already changed)
+            if ($bibliotheque->getUser() === $this) {
+                $bibliotheque->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Recipe[]
+     */
+    public function getRecipes(): Collection
+    {
+        return $this->recipes;
+    }
+
+    public function addRecipe(Recipe $recipe): self
+    {
+        if (!$this->recipes->contains($recipe)) {
+            $this->recipes[] = $recipe;
+            $recipe->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecipe(Recipe $recipe): self
+    {
+        if ($this->recipes->removeElement($recipe)) {
+            // set the owning side to null (unless already changed)
+            if ($recipe->getUser() === $this) {
+                $recipe->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getUser() === $this) {
+                $comment->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Subscription[]
+     */
+    public function getListSubscriptions(): Collection
+    {
+        return $this->listSubscriptions;
+    }
+
+    public function addListSubscription(Subscription $listSubscription): self
+    {
+        if (!$this->listSubscriptions->contains($listSubscription)) {
+            $this->listSubscriptions[] = $listSubscription;
+            $listSubscription->setSubscriber($this);
+        }
+
+        return $this;
+    }
+
+    public function removeListSubscription(Subscription $listSubscription): self
+    {
+        if ($this->listSubscriptions->removeElement($listSubscription)) {
+            // set the owning side to null (unless already changed)
+            if ($listSubscription->getSubscriber() === $this) {
+                $listSubscription->setSubscriber(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Subscription[]
+     */
+    public function getSubscribers(): Collection
+    {
+        return $this->subscribers;
+    }
+
+    public function addSubscriber(Subscription $subscriber): self
+    {
+        if (!$this->subscribers->contains($subscriber)) {
+            $this->subscribers[] = $subscriber;
+            $subscriber->setTargetUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSubscriber(Subscription $subscriber): self
+    {
+        if ($this->subscribers->removeElement($subscriber)) {
+            // set the owning side to null (unless already changed)
+            if ($subscriber->getTargetUser() === $this) {
+                $subscriber->setTargetUser(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

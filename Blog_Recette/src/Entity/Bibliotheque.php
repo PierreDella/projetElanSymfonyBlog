@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\BibliothequeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -25,17 +27,33 @@ class Bibliotheque
     /**
      * @ORM\Column(type="datetime")
      */
-    private $dateCreation;
+    private $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $lastUpdate;
+    private $dateUpdate;
 
     /**
      * @ORM\Column(type="boolean")
      */
     private $publique;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="bibliotheques")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Recipe::class, mappedBy="bibliotheques")
+     */
+    private $recipes;
+
+    public function __construct()
+    {
+        $this->recipes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -54,26 +72,26 @@ class Bibliotheque
         return $this;
     }
 
-    public function getDateCreation(): ?\DateTimeInterface
+    public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->dateCreation;
+        return $this->createdAt;
     }
 
-    public function setDateCreation(\DateTimeInterface $dateCreation): self
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
-        $this->dateCreation = $dateCreation;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getLastUpdate(): ?\DateTimeInterface
+    public function getDateUpdate(): ?\DateTimeInterface
     {
-        return $this->lastUpdate;
+        return $this->dateUpdate;
     }
 
-    public function setLastUpdate(\DateTimeInterface $lastUpdate): self
+    public function setDateUpdate(\DateTimeInterface $dateUpdate): self
     {
-        $this->lastUpdate = $lastUpdate;
+        $this->dateUpdate = $dateUpdate;
 
         return $this;
     }
@@ -86,6 +104,45 @@ class Bibliotheque
     public function setPublique(bool $publique): self
     {
         $this->publique = $publique;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Recipe[]
+     */
+    public function getRecipes(): Collection
+    {
+        return $this->recipes;
+    }
+
+    public function addRecipe(Recipe $recipe): self
+    {
+        if (!$this->recipes->contains($recipe)) {
+            $this->recipes[] = $recipe;
+            $recipe->addBibliotheque($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecipe(Recipe $recipe): self
+    {
+        if ($this->recipes->removeElement($recipe)) {
+            $recipe->removeBibliotheque($this);
+        }
 
         return $this;
     }
