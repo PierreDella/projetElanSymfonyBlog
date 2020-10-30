@@ -70,10 +70,6 @@ class Recipe
      */
     private $comments;
 
-    /**
-     * @ORM\ManyToMany(targetEntity=CategoryRecipe::class, mappedBy="recipes")
-     */
-    private $categories;
 
     /**
      * @ORM\ManyToMany(targetEntity=Bibliotheque::class, inversedBy="recipes")
@@ -84,6 +80,11 @@ class Recipe
      * @ORM\OneToMany(targetEntity=Composition::class, mappedBy="recipe", orphanRemoval=true)
      */
     private $compositions;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=CategoryRecipe::class, inversedBy="recipes")
+     */
+    private $categories;
 
     public function __construct()
     {
@@ -236,32 +237,6 @@ class Recipe
         return $this;
     }
 
-    /**
-     * @return Collection|CategoryRecipe[]
-     */
-    public function getCategories(): Collection
-    {
-        return $this->categories;
-    }
-
-    public function addCategory(CategoryRecipe $category): self
-    {
-        if (!$this->categories->contains($category)) {
-            $this->categories[] = $category;
-            $category->addRecipe($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCategory(CategoryRecipe $category): self
-    {
-        if ($this->categories->removeElement($category)) {
-            $category->removeRecipe($this);
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection|Bibliotheque[]
@@ -313,6 +288,30 @@ class Recipe
                 $composition->setRecipe(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CategoryRecipe[]
+     */
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
+    public function addCategory(CategoryRecipe $category): self
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories[] = $category;
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(CategoryRecipe $category): self
+    {
+        $this->categories->removeElement($category);
 
         return $this;
     }

@@ -25,9 +25,11 @@ class CategoryRecipe
     private $name;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Recipe::class, inversedBy="categories")
+     * @ORM\ManyToMany(targetEntity=Recipe::class, mappedBy="categories")
      */
     private $recipes;
+
+   
 
     public function __construct()
     {
@@ -63,6 +65,7 @@ class CategoryRecipe
     {
         if (!$this->recipes->contains($recipe)) {
             $this->recipes[] = $recipe;
+            $recipe->addCategory($this);
         }
 
         return $this;
@@ -70,8 +73,12 @@ class CategoryRecipe
 
     public function removeRecipe(Recipe $recipe): self
     {
-        $this->recipes->removeElement($recipe);
+        if ($this->recipes->removeElement($recipe)) {
+            $recipe->removeCategory($this);
+        }
 
         return $this;
     }
+
+  
 }
