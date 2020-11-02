@@ -28,7 +28,7 @@ class User implements UserInterface
     private $email;
 
     /**
-     * @ORM\Column(type="json")
+     * @ORM\Column(type="json", nullable=true)
      */
     private $roles = [];
 
@@ -39,22 +39,13 @@ class User implements UserInterface
     private $password;
 
     /**
-     * @ORM\Column(type="string", length=50)
-     */
-    private $name;
-
-    /**
-     * @ORM\Column(type="string", length=50)
-     */
-    private $surname;
-
-    /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $picture;
 
     /**
      * @ORM\Column(type="datetime")
+     * 
      */
     private $dateInscription;
 
@@ -88,6 +79,11 @@ class User implements UserInterface
      */
     private $subscribers;
 
+    /**
+     * @ORM\Column(type="string", length=50)
+     */
+    private $pseudo;
+
     
 
     public function __construct()
@@ -97,6 +93,7 @@ class User implements UserInterface
         $this->comments = new ArrayCollection();
         $this->listSubscriptions = new ArrayCollection();
         $this->subscribers = new ArrayCollection();
+        $this->dateInscription = new \DateTime();
         
     }
 
@@ -178,36 +175,12 @@ class User implements UserInterface
         // $this->plainPassword = null;
     }
 
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    public function getSurname(): ?string
-    {
-        return $this->surname;
-    }
-
-    public function setSurname(string $surname): self
-    {
-        $this->surname = $surname;
-
-        return $this;
-    }
-
     public function getPicture(): ?string
     {
         return $this->picture;
     }
 
-    public function setPicture(string $picture): self
+    public function setPicture($picture): self
     {
         $this->picture = $picture;
 
@@ -384,6 +357,18 @@ class User implements UserInterface
                 $subscriber->setTargetUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPseudo(): ?string
+    {
+        return $this->pseudo;
+    }
+
+    public function setPseudo(string $pseudo): self
+    {
+        $this->pseudo = $pseudo;
 
         return $this;
     }

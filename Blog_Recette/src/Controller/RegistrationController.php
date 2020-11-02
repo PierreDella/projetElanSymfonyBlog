@@ -4,10 +4,11 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class RegistrationController extends AbstractController
@@ -29,6 +30,17 @@ class RegistrationController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
+
+            /** @var UploadedFile $picture */
+            $picture = $form->get('picture')->getData();
+            // $file = $form['picture']->getData();
+            // $file->move();
+            // if ($picture) {
+            //     $originalPicture = pathinfo($picture->getPseudo(), PATHINFO_FILENAME);
+
+                
+                // }
+            $user->setPicture($picture);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
