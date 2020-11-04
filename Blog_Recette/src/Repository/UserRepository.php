@@ -22,6 +22,15 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         parent::__construct($registry, User::class);
     }
 
+    public function getAll(){
+            $entityManager = $this->getEntityManager();
+            $query = $entityManager->createQuery(
+                'SELECT u
+                FROM App\Entity\User u 
+                ORDER BY u.pseudo'
+            );
+            return $query->execute();
+    }
     /**
      * Used to upgrade (rehash) the user's password automatically over time.
      */
@@ -34,6 +43,17 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $user->setPassword($newEncodedPassword);
         $this->_em->persist($user);
         $this->_em->flush();
+    }
+
+    public function getUserById($id){
+
+        $qb = $this->createQueryBuilder('u')
+            ->where('u.id = :id')
+            ->setParameter(':id', $id);
+
+            $query = $qb->getQuery();
+
+            return $query->execute();
     }
 
     // /**

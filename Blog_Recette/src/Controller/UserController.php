@@ -2,21 +2,50 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Entity\User;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Console\Output\NullOutput;
 
 class UserController extends AbstractController
 {
     /**
-     * @Route("/user", name="user")
+     * @Route("/user", name="user_index")
      */
     public function index(): Response
-    {
+    {   
+        $users = $this->getDoctrine()
+            ->getRepository(User::class)
+            ->getAll();
         return $this->render('user/index.html.twig', [
-            'controller_name' => 'UserController',
+            'users' => $users,
         ]);
     }
 
-    
+    /**
+     * @Route("/user/{id}", name="user_show", methods="GET" )
+     */
+     public function show(User $user = null){ //Ce fait grace au @ParamConverter
+        
+        // On veut recuperer la liste des user et la donner a twig
+        // On veut un repository dans lequel on interragi avec doctrine, où l'on veut un repository qui gere user
+        //On rajoute App/Entity/Repository
+        // $repository = $this->getDoctrine()->getRepository(User::class);
+        // Ensuite on lui dit sous quelle forme on veut les infos
+        // $user = $repository->find($id);
+
+        //Cpdt les dependances permettent de ce contenter de ca avec @ParamConverter
+        
+        if($user){
+            return $this->render('user/show.html.twig', [
+                'user' => $user
+            ]);
+        } else{
+            return $this->redirectToRoute('home');
+        }
+       
+        
+
+     }  
 }

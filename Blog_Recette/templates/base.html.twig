@@ -1,15 +1,46 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}
-        <link>
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
-    </body>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+		<title>
+			{% block title %}Welcome!
+			{% endblock %}
+		</title>
+		{% block stylesheets %}
+			<link>
+		{% endblock %}
+	</head>
+	<body>
+		<nav>
+			<div>
+
+				{% if app.user %}
+                    <ul>
+                        <li>
+                            <a href='{{ path('user_show', {'id':app.user.id}) }}'>Profil</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('user_index') }}">Utilisateurs</a>
+                        </li>
+                         {# <li>
+                        
+                        </li> #}
+                    </ul>
+				{% endif %}
+                <li>
+                    <a href="{{ path('home') }}">Home</a>
+                </li>
+                <li>
+                    <a href="{{ path('app_logout') }}">Deconnexion</a>
+                </li>
+                    <li>
+                    <a href="{{ path('app_login') }}">Connexion</a>
+                </li>
+			</div>
+		</nav>
+		{% block body %}{% endblock %}
+		{% block contenu %}{% endblock %}
+		{% block javascripts %}{% endblock %}
+	</body>
 </html>
