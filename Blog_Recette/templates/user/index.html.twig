@@ -17,6 +17,9 @@
         <td>
             {{ user.pseudo }}
         </td>
+        <td>
+            <a href="{{ path('user_delete', {'id':user.id}) }}">Supp</a>
+        </td>
     </tr>
 {% endfor %}
     </tbody>

@@ -18,7 +18,7 @@ class Composition
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string", length=50, nullable=true)
      */
     private $quantity;
 
@@ -44,12 +44,12 @@ class Composition
         return $this->id;
     }
 
-    public function getQuantity(): ?int
+    public function getQuantity(): ?string
     {
         return $this->quantity;
     }
 
-    public function setQuantity(int $quantity): self
+    public function setQuantity(string $quantity): self
     {
         $this->quantity = $quantity;
 

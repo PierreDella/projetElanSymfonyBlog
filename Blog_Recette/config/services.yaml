@@ -5,7 +5,7 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     #creation du parametre qui va nous permettre de ranger nos img dans dossier imguploads
-    pictures_directory: '%kernel.project_dir%/public/imguploads' #dossier dans lequel ce trouve symfony
+    pictures_directory: '%kernel.project_dir%/public/uploads/profilpicture' #dossier dans lequel ce trouve symfony
     
 services:
     # default configuration for services in *this* file

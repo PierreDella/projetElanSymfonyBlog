@@ -9,12 +9,9 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/laragon/www/DL8_Pierre/projetElanSymfonyBlog/Blog_Recette/src/Controller/RecipeController.php'|file_link(0) }}">src/Controller/RecipeController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/laragon/www/DL8_Pierre/projetElanSymfonyBlog/Blog_Recette/templates/recipe/index.html.twig'|file_link(0) }}">templates/recipe/index.html.twig</a></code></li>
-    </ul>
+    {% for recipe in recipes %}
+        <a href="{{ path('detailRecipe', {'id':recipe.id}) }}">{{ recipe.name }}</a><br>
+        {# {{ recipe.categoryRecipe.name }} #}
+    {% endfor %}
 </div>
 {% endblock %}

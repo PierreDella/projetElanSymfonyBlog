@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello RecipeController!{% endblock %}
+
+{% block body %}
+    <p>{{ recipe.name }}</p> 
+    <p>{{ recipe.createdAt | date('d/m/Y') }} 
+    - par {{ recipe.user.pseudo }}
+    </p>
+    <p>{{ recipe.preparationTime | date('H:i') }}</p>
+    <p>{{ recipe.cookingTime |date('H:i') }}</p>
+
+    {% for recipeCategory in recipeCategories %}
+        <p>{{ recipeCategory.name }}</p>
+    {% endfor %}
+
+    <p>{{ recipe.description }}</p>
+    
+    <h2>Les ingrédients de la recette : </h2>
+
+    {% for ingredient in ingredients %}
+        <p> - {{ ingredient['quantity'] }} {{ ingredient['unit'] }} de {{ ingredient['name'] }} categorie :   {{ ingredient['category'] }}</p>
+    {% endfor %}
+
+
+     <h2>Commentaires : </h2>
+     {% for recipeComment in recipeComments %}
+        <p>{{ recipeComment['post'] }}</p>
+        <p>{{recipeComment['pseudo']}}</p>
+        {# <p>{{ recipeComment[createdAt | date('d/m/Y')'] }}</p> #}
+     {% endfor %} 
+     {# {% for comment in recipe.comments %}
+         {{ recipe.comments }}
+     {% endfor %} #}
+
+{% endblock %}

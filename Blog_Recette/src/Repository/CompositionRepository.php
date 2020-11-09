@@ -19,6 +19,7 @@ class CompositionRepository extends ServiceEntityRepository
         parent::__construct($registry, Composition::class);
     }
 
+    
     // /**
     //  * @return Composition[] Returns an array of Composition objects
     //  */

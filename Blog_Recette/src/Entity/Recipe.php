@@ -45,7 +45,7 @@ class Recipe
     private $preparationTime;
 
     /**
-     * @ORM\Column(type="blob")
+     * @ORM\Column(type="blob", nullable=true)
      */
     private $steps;
 
@@ -85,6 +85,11 @@ class Recipe
      * @ORM\ManyToMany(targetEntity=CategoryRecipe::class, inversedBy="recipes")
      */
     private $categories;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $createdAt;
 
     public function __construct()
     {
@@ -312,6 +317,18 @@ class Recipe
     public function removeCategory(CategoryRecipe $category): self
     {
         $this->categories->removeElement($category);
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }

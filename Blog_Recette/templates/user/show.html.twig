@@ -8,8 +8,9 @@
     
 
     <p>Pseudo : {{ user.pseudo }}</p>
-     <img src= "{{ asset('public/imguploads/') }}" width="150">
-
+    <img src= "{{ asset('uploads/profilpicture/' ~ user.picture) }}" width="150" alt="ProfiPicture">
+    <p>{{ user.picture }} </p>
+    <a href="{{ path('user_edit', {'id':user.id}) }}">Edit</a>
 
  
 </div>
