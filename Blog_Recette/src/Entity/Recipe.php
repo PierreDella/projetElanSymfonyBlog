@@ -30,7 +30,7 @@ class Recipe
     private $picture;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     private $description;
 
@@ -50,12 +50,12 @@ class Recipe
     private $steps;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     private $instructions;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $nbPerson;
 
@@ -97,6 +97,7 @@ class Recipe
         $this->categories = new ArrayCollection();
         $this->bibliotheques = new ArrayCollection();
         $this->compositions = new ArrayCollection();
+        $this->createdAt = new \DateTime();
     }
 
     public function getId(): ?int
@@ -309,6 +310,7 @@ class Recipe
     {
         if (!$this->categories->contains($category)) {
             $this->categories[] = $category;
+            // $category->addRecipe($this);
         }
 
         return $this;

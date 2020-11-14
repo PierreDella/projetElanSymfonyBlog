@@ -9,12 +9,19 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class RecipeType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+        ->add('valider', SubmitType::class)
             ->add('name', TextType::class, [
                 'constraints' => [
                     new NotBlank([
@@ -22,26 +29,51 @@ class RecipeType extends AbstractType
                     ]),
                     ],
             ])
-            ->add('picture', FileType::class, [
-                'label' => 'photoProfil ',
-                'mapped' => false
-            ])
+            // ->add('picture', FileType::class, [
+            //     'label' => 'photo ',
+            //     'mapped' => false
+            // ])
             ->add('description', TextType::class, [
-            ])
-            ->add('cookingTime')
-            ->add('preparationTime')
-            ->add('steps')
-            ->add('instructions')
-            ->add('nbPerson')
-            ->add('categories', EntityType::class, [
-                'class' => CategoryRecipe::class,
-                'choice_label' => 'name',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Veuillez choisir une catégorie',
+                        'message' => 'Entrez une description de votre recette',
                     ]),
-                    ],
+                ],
             ])
+            // ->add('cookingTime')
+            // ->add('preparationTime')
+            // ->add('steps')
+            ->add('instructions', TextType::class, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez entrer des instructions',
+                    ]),
+                ],
+            ])
+            ->add('nbPerson', IntegerType::class, [
+                'attr' => array('min' => 1), 
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez mettre pour combien de personne est cette recette',
+                    ]),
+                ],
+            ])
+            ->add('categories', CollectionType::class, [
+                'entry_type' => EntityType::class,
+                'entry_options' => [
+                    'class' => CategoryRecipe::class,
+                    'choice_label' => 'name',
+                    'label' => false
+                ],
+                'allow_add' => true,
+                'by_reference' => false
+                // 'constraints' => [
+                //     new NotBlank([
+                //         'message' => 'Veuillez choisir au moins une catégorie',
+                //     ]),
+                //     ],
+            ])
+            
         ;
     }
 
