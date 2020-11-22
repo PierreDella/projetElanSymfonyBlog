@@ -9,6 +9,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -21,7 +22,7 @@ class RecipeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-        ->add('valider', SubmitType::class)
+        // ->add('valider', SubmitType::class)
             ->add('name', TextType::class, [
                 'constraints' => [
                     new NotBlank([
@@ -29,10 +30,10 @@ class RecipeType extends AbstractType
                     ]),
                     ],
             ])
-            // ->add('picture', FileType::class, [
-            //     'label' => 'photo ',
-            //     'mapped' => false
-            // ])
+            ->add('picture', FileType::class, [
+                'label' => 'photo ',
+                'mapped' => false
+            ])
             ->add('description', TextType::class, [
                 'constraints' => [
                     new NotBlank([
@@ -40,8 +41,14 @@ class RecipeType extends AbstractType
                     ]),
                 ],
             ])
-            // ->add('cookingTime')
-            // ->add('preparationTime')
+            ->add('cookingTime', DateType::class, [
+                'placeholder' => [
+                    'hour' => 'Hour', 'minute' => 'Minute', 'second' => 'Second',
+                ]
+            ])
+            // ->add('preparationTime', DateType::class, [
+            //     'format' => 'HH:mm'
+            // ])
             // ->add('steps')
             ->add('instructions', TextType::class, [
                 'constraints' => [
@@ -67,11 +74,6 @@ class RecipeType extends AbstractType
                 ],
                 'allow_add' => true,
                 'by_reference' => false
-                // 'constraints' => [
-                //     new NotBlank([
-                //         'message' => 'Veuillez choisir au moins une catégorie',
-                //     ]),
-                //     ],
             ])
             
         ;

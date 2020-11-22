@@ -82,46 +82,77 @@ class RecipeController extends AbstractController
     }
 
     /**
-     *@Route("/recipe/add", name="begin_recipe")
-     * @Route("/recipe/edit/{id}", name="finish_recipe") 
+     *@Route("/recipe/step1", name="add_recipe_step_1")
+     * 
      */
-    public function newRecipe(Recipe $recipe = null, Request $request, ManagerRegistry $manager): Response {
+    public function addRecipeStep1(Request $request){
         
+        //On recupere la session
+        $session = $request->getSession();
+        //On crée une nouvelle recette
         $recipe = new Recipe();
-        $recipe->setUser($this->getUser());
-        $formFirst = $this->createForm(RecipeType::class, $recipe);
-        
-        $formFirst->handleRequest($request);
-
-        if($formFirst->isSubmitted() && $formFirst->isValid()){
-           
-            $em = $manager->getManager();
-            $em->persist($recipe);
-            $em->flush();
-
-            return $this->redirectToRoute('add_composition');
+        //Si la recette a deja un nom, on pourra le modifier
+        if($session->has("recipe_name")){
+            $recipe->setName($session->get("recipe_name", null));
         }
-       return $this->render('recipe/new.html.twig', [
-           'formFirst' => $formFirst->createView(),
-           'formSecond' => $recipe->getId() !== null,
-           'recipe' => $recipe
+        //On crée un formulaire, où on remove un certain nombre de fields
+        $form = $this->createForm(RecipeType::class, $recipe);
+        $form->remove('picture');
+        $form->remove('cookingTime');
+        $form->remove('preparationTime');
+        $form->remove('steps');
+        $form->remove('instructions');
+        
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            
+            //La recette aura comme user la personne connecté
+            $recipe->setUser($this->getUser());
+
+            //En cas de retour en arrriere on permet la modification des fields voulu
+            $session->set('recipe_name', $recipe->getName());
+            $session->set('recipe_description', $recipe->getName());
+            $session->set('recipe_nbPerson', $recipe->getName());
+            $session->set('recipe_categories', $recipe->getName());
+
+            return $this->redirectToRoute('add_recipe_step_2');
+
+        }
+
+       return $this->render('recipe/step1.html.twig', [
+           'form' => $form->createView()
        ]);
     }
 
     /**
-     * @Route("/composition/add", name="add_composition")
+     * @Route("/composition/step2", name="add_recipe_step_2")
      */
-    public function newComposition(Recipe $recipe, Composition $composition, Request $request, EntityManagerInterface $manager): Response {
+    public function addRecipeStep2(Request $request, Recipe $recipe) {
+        
+        //On recupere la session
+        $session = $request->getSession();
+        //Si la recette n'a pas de nom on nous renvoie à la premiere etape
+        if(!$session->has('recipe_name')){
+            return $this->redirectToRoute('add_recipe_step_1');
 
-        $composition = new Composition();
-        $composition->setRecipe($recipe);
+        } else {
+
+            //On crée un nouvelle composition
+            $composition = new Composition();
+
+            $composition->getRecipe($recipe);
+            
+
+        }
+        
+       
         $formComposition = $this->createForm(CompositionType::class, $composition);
 
         $formComposition->handleRequest($request);  
 
         if($formComposition->isSubmitted() && $formComposition->isValid()){
-            $manager->persist($composition);
-            $manager->flush();
+           
         
             return $this->redirectToRoute('finish_recipe');
         }
@@ -131,6 +162,12 @@ class RecipeController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/recipe/step3", name="add_recipe_step_3")
+     */
+    public function addRecipeStep3() {
+       
+    }
 
     /**
      * @Route("/ingredient/new", name="new_ingredient")
