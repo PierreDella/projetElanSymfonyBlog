@@ -74,12 +74,12 @@ class User implements UserInterface
     /**
      * @ORM\OneToMany(targetEntity=Subscription::class, mappedBy="subscriber")
      */
-    private $listSubscriptions;
+    private $listSubscriptions; //Liste des gens que je suis
 
     /**
      * @ORM\OneToMany(targetEntity=Subscription::class, mappedBy="targetUser")
      */
-    private $subscribers;
+    private $subscribers; // Les gens qui me suivent
 
     /**
      * @ORM\Column(type="string", length=50)

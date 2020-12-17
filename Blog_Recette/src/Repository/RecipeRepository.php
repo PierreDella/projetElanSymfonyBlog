@@ -19,7 +19,14 @@ class RecipeRepository extends ServiceEntityRepository
         parent::__construct($registry, Recipe::class);
     }
 
-
+    public function search($name) {
+        return $this->createQueryBuilder('Recipe')
+            ->andWhere('Recipe.name LIKE :name')
+            ->setParameter('name', $name)
+            ->getQuery()
+            ->execute();
+    }
+    
     
 
     // /**

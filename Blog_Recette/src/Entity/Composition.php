@@ -23,7 +23,7 @@ class Composition
     private $quantity;
 
     /**
-     * @ORM\Column(type="string", length=15, nullable=true)
+     * @ORM\Column(type="string", length=20, nullable=true)
      */
     private $unit;
 
@@ -91,4 +91,9 @@ class Composition
 
         return $this;
     }
+
+    // public function removeIngredient(Ingredient $ingredient): void 
+    // {
+    //     $this->removeElement($ingredient);
+    // }
 }

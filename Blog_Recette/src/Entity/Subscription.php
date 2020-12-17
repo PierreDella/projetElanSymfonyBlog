@@ -22,23 +22,23 @@ class Subscription
      */
     private $createdAt;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="subscribers")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $user;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="listSubscriptions")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $subscriber;
+    private $subscriber; //celui qui suit un autre user
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="subscribers")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $targetUser;
+    private $targetUser; //Ce lui qui se fait suivre par un user
+    
+    public function __construct(){
+        
+        $this->createdAt = new \DateTime();
+    }
 
     public function getId(): ?int
     {

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\Recipe;
 use App\Form\UserType;
+use App\Entity\Subscription;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,11 +29,44 @@ class UserController extends AbstractController
         ]);
     }
 
+
+    /** 
+     * @Route("/subscribe/{id}", name="add_following")
+     */
+    public function makeSubscription(User $target, EntityManagerInterface $em){
+        
+        $subscription = new Subscription();
+
+        $subscription->setSubscriber($this->getUser());
+        $subscription->setTargetUser($target);
+
+        $em->persist($subscription);
+        $em->flush();
+
+        return $this->redirectToRoute("user_show", ["id"=>$this->getUser()->getId()]);
+    }   
+
     /**
      * @Route("/user/{id}", name="user_show", methods="GET")
      */
-    public function show(User $user = null)
-    { //Ce fait grace au @ParamConverter
+    public function show(User $user = null, EntityManagerInterface $manager)
+    {   
+        $subscribers = $this->getUser()->getSubscribers();
+
+        $subscribers = $user->getSubscribers();
+        $userSubscribers = [];
+        foreach($subscribers as $subscriber) {
+            $userSubscribers[] = [
+                "pseudo" => $user->getPseudo()
+            ];
+        }
+
+        $subscriptions = $this->getUser()->getListsubscriptions();
+
+        $others = $manager->getRepository(User::class)->findAll();
+
+        
+        //Ce fait grace au @ParamConverter
 
         // On veut recuperer la liste des user et la donner a twig
         // On veut un repository dans lequel on interragi avec doctrine, où l'on veut un repository qui gere user
@@ -45,7 +79,11 @@ class UserController extends AbstractController
 
         if ($user) {
             return $this->render('user/show.html.twig', [
-                'user' => $user
+                "userSubscribers" => $userSubscribers,
+                'user' => $user,
+                "subscriptions" => $subscriptions,
+                "subscribers" => $subscribers,
+                "others" => $others
             ]);
         } else {
             return $this->redirectToRoute('home');
@@ -97,4 +135,6 @@ class UserController extends AbstractController
             return $this->redirectToRoute('home');
         }
     }
+
+    
 }

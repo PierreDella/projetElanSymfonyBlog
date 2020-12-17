@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class RecipeType extends AbstractType
@@ -41,15 +42,20 @@ class RecipeType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('cookingTime', DateType::class, [
+            ->add('cookingTime', DateTimeType::class, [
                 'placeholder' => [
-                    'hour' => 'Hour', 'minute' => 'Minute', 'second' => 'Second',
-                ]
+                    'hour' => 'Hour', 
+                    'minute' => 'Minute', 
+                    'second' => 'Second',
+                ],
             ])
-            // ->add('preparationTime', DateType::class, [
-            //     'format' => 'HH:mm'
-            // ])
-            // ->add('steps')
+            ->add('preparationTime', DateTimeType::class, [
+                'placeholder' => [
+                    'hour' => 'Hour', 
+                    'minute' => 'Minute', 
+                    'second' => 'Second',
+                ],
+            ])
             ->add('instructions', TextType::class, [
                 'constraints' => [
                     new NotBlank([
@@ -64,6 +70,15 @@ class RecipeType extends AbstractType
                         'message' => 'Veuillez mettre pour combien de personne est cette recette',
                     ]),
                 ],
+            ])
+            ->add('compositions', CollectionType::class, [
+                'entry_type' => CompositionType::class,
+                'entry_options' => [
+                   
+                    'label' => 'ajouter des ingredients',
+                ],
+                'allow_add' => true,
+                'by_reference' => false
             ])
             ->add('categories', CollectionType::class, [
                 'entry_type' => EntityType::class,
