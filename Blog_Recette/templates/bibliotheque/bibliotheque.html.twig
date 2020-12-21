@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello UserController!{% endblock %}
+
+{% block body %}
+
+
+<h1>Mes bibliotheques</h1>
+    <ul>
+    {% for bibliotheque in bibliotheques %}
+        <ul>
+            <li>
+                <a href="{{ path('show_bibliotheque', {'id':bibliotheque.id}) }}">{{ bibliotheque.titre }}</a>
+
+            </li>
+        </ul>
+    
+    {% endfor %}
+    </ul>
+<br>
+    <a href="{{ path('add_bibliotheque', { 'id':user.id }) }}">Créer une bibliotheque</a>
+<br><br>
+
+{% endblock %}

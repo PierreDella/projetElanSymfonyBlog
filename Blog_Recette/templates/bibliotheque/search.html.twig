@@ -3,41 +3,6 @@
 {% block title %}Rechercher une recette{% endblock %}
 
 {% block body %}
-   
-<h1>Votre recherche</h1>
-
-    <div>
-    {% form_theme searchForm %}
-    {{ form_start(searchForm) }}
-    {{ form_row(searchForm.name, {'label': " ", 'attr': {'placeholder': 'mot clé...'}}) }}
-    <button >rechercher</button>
-    {{ form_end(searchForm) }}
-    
-
-    <section id="content">
-{# 
-            {% for recipe in recipes %}
-            <article>
-            <div class="card border-light mb-3" id="articlesRecents" style="max-width: 25rem;margin:1.5em;">
-                <div class="card-header">
-
-                   <h3>{{ recipe.name }}</h3>
-
-                </div> #}
-                {# <div class="card-body">
-                  <h4 class="card-title">Ecrit le {{ recipe.createdAt | date('d/m/Y') }} à {{ article.createdAt | date('H:i') }} dans la catégorie {{ article.category.title }}</h4>
-                  <p class="card-text">
-
-                      {{ article.content | slice(0, 170) | raw }} ...
-                    
-                    </p>
-                    <a href="{{ path('blog_show', {'id': article.id}) }}" class="btn btn-primary">Lire la suite</a>
-                </div> #}
-              {# </div> #}
-            {# </article> #}
-        {# {% endfor %} #}
-
-        </section>
 
         
            

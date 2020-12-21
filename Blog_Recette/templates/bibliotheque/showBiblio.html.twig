@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello UserController!{% endblock %}
+
+{% block body %}
+
+{# <h2>{{ bibliotheque.titre }}</h2> #}
+
+     {% for userBibliotheque in userBibliotheques %}
+     <a href="{{ path('detailRecipe', { id: bibliotheque.id }) }}">{{ userBibliotheque['name'] }}</a><br>
+     {% endfor %} 
+
+{% endblock %}

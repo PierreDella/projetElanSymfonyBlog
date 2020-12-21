@@ -21,36 +21,5 @@ class HomeController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/followings", name="my_followings")
-     */
-    public function SubIndex(EntityManagerInterface $manager) {
-       
-        $usersIFollow = $this->getUser()->getListSubscriptions();
-        $usersWhoFollowMe = $this->getUser()->getSubscribers();
-
-        $others = $manager->getRepository(User::class)->findAll();
-
-        return $this->render('user/show.html.twig', [
-            "listSubscriptions" => $usersIFollow,
-            "subscribers" => $usersWhoFollowMe,
-            "others" => $others
-        ]);
-    }
-
-    /** 
-     * @Route("/follow/{id}", name="add_following")
-     */
-    public function followSomeone(User $user, EntityManagerInterface $manager){
-       
-        $subscription = new Subscription();
-
-        $subscription->setSubscriber($this->getUser());
-        $subscription->setTargetUser($user);
-
-        $manager->persist($subscription);
-        $manager->flush();
-
-        return $this->redirectToRoute("my_followings");
-    }
+   
 }

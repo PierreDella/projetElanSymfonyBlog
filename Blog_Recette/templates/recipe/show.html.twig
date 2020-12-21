@@ -5,7 +5,7 @@
 {% block body %}
     <p>{{ recipe.name }}</p> 
     <p>{{ recipe.createdAt | date('d/m/Y') }} 
-    - par {{ recipe.user.pseudo }}
+    - par {{ recipe.user.pseudo }} <a href="{{ path('add_following', { id : recipe.user.id }) }}">suivre</a>
     </p>
     <p>{{ recipe.preparationTime | date('H:i') }}</p>
     <p>{{ recipe.cookingTime |date('H:i') }}</p>
@@ -30,7 +30,7 @@
         <p>{{ recipeComment['createdAt'] | date('d/m/Y') }}</p>
      {% endfor %} 
 <br>
-        <a href="{{ path('comment_add', { 'id':recipe.id }) }}">Ajouter un commentaire</a>
+        <a href="{{ path('comment_add', { 'id': recipe.id }) }}">Ajouter un commentaire</a>
     <br><br>
 </a>
 

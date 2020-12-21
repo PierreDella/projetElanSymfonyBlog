@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello UserController!{% endblock %}
+
+{% block body %}
+<h1>Mes abonnements (les users que je suis)</h1>
+    <ul>
+    {% for subscription in subscriptions %}
+        <li>{{ subscription.targetUser.pseudo }}</li>
+    {% endfor %}
+    </ul>
+
+    <h1>Les personnes abonnés à moi !</h1>
+    
+    <ul>
+    {% for subscriber in subscribers %}
+        <li>{{ subscriber.subscriber.pseudo }}</li>
+    {% endfor %}
+    </ul>
+ <h2>Les utilisateurs que je ne suis pas encore...</h2>
+    <ul>
+     
+    {% for other in others %}
+        <li>
+            {{ other.pseudo }}
+            <a href="{{ path('add_following', { id : other.id }) }}">suivre</a>
+        </li>
+    {% endfor %}
+    </ul>
+{% endblock %}

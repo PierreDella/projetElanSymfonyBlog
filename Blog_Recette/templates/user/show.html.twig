@@ -4,43 +4,37 @@
 
 {% block body %}
 
-<div>
+<div class="container ">
+    <div class="profile-nav">
+            <div class="user-heading">
+                <a href="#">
+                    <img src= "{{ asset('uploads/profilpicture/' ~ user.picture) }}" alt="ProfiPicture">
+                </a>
+                <h1>{{ user.pseudo }}</h1>
+                <p>{{ user.email }}</p>
+                <button href="{{ path('user_edit', {'id':user.id}) }}">Edit</button>
+                {# {% if $this %} #}
+                    <button href="{{ path('add_following', { id : user.id }) }}">suivre</button>
+                {# {% endif %} #}
+                
+            </div>
+            <ul>
+                <li><a href="{{ path('abonnements_index', {'id':app.user.id}) }}">Abonnements</a></li>
+                <li><a href="{{ path('bibliotheque_index', {'id':app.user.id}) }}">Bibliotheques</a></li>
+            </ul>
+    </div>
+</div>
 
-    <p>Pseudo : {{ user.pseudo }}</p>
-    <p>Mail : {{ user.email }}</p>
+
+<div>
     <p>Date d'inscription : {{ user.dateInscription | date('d/m/Y') }}</p>
     <p>Date de Naissance : {{ user.dateNaissance | date('d/m/Y') }}</p>
-
-    <img src= "{{ asset('uploads/profilpicture/' ~ user.picture) }}" width="150" alt="ProfiPicture">
-    <p>{{ user.picture }} </p>
-    <a href="{{ path('user_edit', {'id':user.id}) }}">Edit</a>
  
 </div>
 
-<h1>Mes abonnements (les users que je suis)</h1>
-    <ul>
-    {% for subscription in subscriptions %}
-        <li>{{ subscription.targetUser.pseudo }}</li>
-    {% endfor %}
-    </ul>
 
-    <h1>Les personnes abonnés à moi !</h1>
-    
-    <ul>
-    {% for userSubscriber in userSubscribers %}
-        <li>{{ userSubscriber.pseudo }}</li>
-    {% endfor %}
-    </ul>
 
-    <h2>Les utilisateurs que je ne suis pas encore...</h2>
-    <ul>
-     
-    {% for other in others %}
-        <li>
-            {{ other.pseudo }}
-            <a href="{{ path('add_following', { id : other.id }) }}">suivre</a>
-        </li>
-    {% endfor %}
-    </ul>
+
+   
 
 {% endblock %}

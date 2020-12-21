@@ -19,11 +19,9 @@
                     {{ form_row(form.categories) }}
                     <a id="add_category">Ajouter une catégorie</a>  
                 </div>
+
                 <div id="recipe_compositions_container">
                    <ul data-prototype="{{ form_widget(form.compositions.vars.prototype)|e('html_attr') }}">
-                        
-                        {# <li>{{ form_row(formComposition.quantity) }}</li>
-                        <li>{{ form_row(formComposition.unit) }}</li> #}
                     </ul>
                     
                     <button type="button" class="add_ingredient_link" data-collection-holder-class="ingredient">Ajout d'ingredient</button>

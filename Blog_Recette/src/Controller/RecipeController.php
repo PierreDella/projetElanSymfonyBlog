@@ -37,31 +37,6 @@ class RecipeController extends AbstractController
     }
     
     /**
-     * @Route("/search", name="search")
-     */
-    public function search(Request $request, RecipeRepository $repo) {
-
-        $searchForm = $this->createForm(RecipeSearchType::class);
-        $searchForm->handleRequest($request);
-
-        $results = $repo->findAll();
-
-        if ($searchForm->isSubmitted() && $searchForm->isValid()){
-            $name = $searchForm->getData()->getName();
-            $results = $repo->search($name);
-
-            if($results == null) {
-                $this->addFlash('erreur', 'Aucune recette ne contient ce mot clé');
-            }
-
-        }
-
-        return $this->render('bibliotheque/search.html.twig', [
-            // 'recipesResults' => $recipesResults,
-            'searchForm' => $searchForm->createView()
-        ]);
-    }
-    /**
      * @Route("/recipe/composition/{id}", name="detailRecipe")
      */
     public function indexComposition(Recipe $recipe, Comment $comment) {
@@ -193,14 +168,4 @@ class RecipeController extends AbstractController
         ]);
     }
 
-
-
-
-    // public function search(IngredientRepository $ingredient){
-        
-    //     $ingredient = $repository->findSearch();
-    //     return $this->render('ingredient/add.html.twig', [
-    //         'ingredient' => $ingredient,
-    //     ]);
-    // }
 }

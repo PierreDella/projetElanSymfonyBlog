@@ -53,6 +53,8 @@ class Bibliotheque
     public function __construct()
     {
         $this->recipes = new ArrayCollection();
+        $this->createdAt = new \DateTime();
+        $this->dateUpdate = new \DateTime();
     }
 
     public function getId(): ?int
