@@ -35,12 +35,12 @@ class Recipe
     private $description;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $cookingTime;
 
     /**
-     * @ORM\Column(type="date", nullable=true)
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $preparationTime;
 
@@ -77,7 +77,7 @@ class Recipe
     private $bibliotheques;
 
     /**
-     * @ORM\OneToMany(targetEntity=Composition::class, mappedBy="recipe", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Composition::class, mappedBy="recipe", orphanRemoval=true, cascade={"persist"})
      */
     private $compositions;
 
@@ -90,6 +90,11 @@ class Recipe
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $published;
 
     public function __construct()
     {
@@ -141,24 +146,24 @@ class Recipe
         return $this;
     }
 
-    public function getCookingTime(): ?\DateTimeInterface
+    public function getCookingTime(): ?int
     {
         return $this->cookingTime;
     }
 
-    public function setCookingTime(?\DateTimeInterface $cookingTime): self
+    public function setCookingTime(int $cookingTime): self
     {
         $this->cookingTime = $cookingTime;
 
         return $this;
     }
 
-    public function getPreparationTime(): ?\DateTimeInterface
+    public function getPreparationTime(): ?int
     {
         return $this->preparationTime;
     }
 
-    public function setPreparationTime(?\DateTimeInterface $preparationTime): self
+    public function setPreparationTime(int $preparationTime): self
     {
         $this->preparationTime = $preparationTime;
 
@@ -331,6 +336,18 @@ class Recipe
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getPublished(): ?bool
+    {
+        return $this->published;
+    }
+
+    public function setPublished(bool $published): self
+    {
+        $this->published = $published;
 
         return $this;
     }

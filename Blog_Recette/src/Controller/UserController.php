@@ -32,20 +32,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/user/{id}/bibliotheque", name="bibliotheque_index")
-     */
-    public function indexBilio(User $user = null){
-        
-        $bibliotheques = $this->getUser()->getBibliotheques();
-
-        if($user) {
-            return $this->render('bibliotheque/bibliotheque.html.twig',[
-                'bibliotheques' => $bibliotheques,
-                'user' => $user
-            ]);
-        }
-    }
+   
     /**
      * @Route("/show/bibliotheque/{id}", name="show_bibliotheque")
      */
@@ -56,7 +43,8 @@ class UserController extends AbstractController
         foreach ($bibliotheques as $bibliotheque) {
             $userBibliotheques[] = [
                 "name" => $bibliotheque->getName(),
-                "id" => $bibliotheque->getId()
+                "id" => $bibliotheque->getId(),
+               
             ];
         }
         return $this->render('bibliotheque/showBiblio.html.twig', [
@@ -65,9 +53,76 @@ class UserController extends AbstractController
         ]);
     }
 
+     /**
+     * @Route("/user/{id}/bibliotheque", name="bibliotheque_index")
+     */
+    public function indexBiblio(User $user = null){
+        
+        $bibliotheques = $this->getUser()->getBibliotheques();
+
+        if($user) {
+            return $this->render('bibliotheque/bibliotheque.html.twig',[
+                'bibliotheques' => $bibliotheques,
+                'user' => $user
+            ]);
+        }
+    }
 
     /**
-     * @Route("/add/biliotheque/{id}", name="add_bibliotheque")
+     * @Route("/{id}/public", name="biblio_lock")
+     * 
+     */
+    public function closed(Bibliotheque $bibliotheque, EntityManagerInterface $manager){
+
+        if($this->getUser()){
+            if($this->getUser()->isAdmin()){
+                $closeState = $bibliotheque->getPublique() ? false : true;
+                $bibliotheque->setPublique($closeState);
+                $manager->persist($bibliotheque);
+                $manager->flush($bibliotheque);
+
+                return $this->redirectToRoute('bibliotheque_index', ["id"=>$this->getUser()->getId()]);
+            }
+        }
+        return $this->redirectToRoute('bibliotheque_index');
+    }
+
+    /**
+     * @Route("/user/{id}/recipes", name="recipesUser_index")
+     */
+    public function indexRecipes(User $user = null){
+        
+        $recipes = $this->getUser()->getRecipes();
+
+        if($user) {
+            return $this->render('user/showRecipesUser.html.twig',[
+                'recipes' => $recipes,
+                'user' => $user
+            ]);
+        }
+    }
+
+    /**
+     * @Route("/{id}/public", name="recipe_lock")
+     * 
+     */
+    public function closedRecipe(Recipe $recipe, EntityManagerInterface $manager){
+
+        if($this->getUser()){
+            if($this->getUser()->isAdmin()){
+                $closeState = $recipe->getPublished() ? false : true;
+                $recipe->setPublished($closeState);
+                $manager->persist($recipe);
+                $manager->flush($recipe);
+
+                return $this->redirectToRoute('recipesUser_index', ["id"=>$this->getUser()->getId()]);
+            }
+        }
+        return $this->redirectToRoute('recipesUser_index');
+    }
+
+    /**
+     * @Route("/add/bibliotheque/{id}", name="add_bibliotheque")
      */
     public function createBiliotheque( User $user, Request $request, ManagerRegistry $manager): Response {
         

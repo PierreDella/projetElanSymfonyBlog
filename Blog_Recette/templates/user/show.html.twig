@@ -19,8 +19,9 @@
                 
             </div>
             <ul>
-                <li><a href="{{ path('abonnements_index', {'id':app.user.id}) }}">Abonnements</a></li>
-                <li><a href="{{ path('bibliotheque_index', {'id':app.user.id}) }}">Bibliotheques</a></li>
+                <li><a href="{{ path('abonnements_index', {'id':app.user.id}) }}">Mes Abonnements</a></li>
+                <li><a href="{{ path('bibliotheque_index', {'id':app.user.id}) }}">Mes Bibliotheques</a></li>
+                <li><a href="{{ path('recipesUser_index', {'id':app.user.id}) }}">Mes Recettes</a></li>
             </ul>
     </div>
 </div>

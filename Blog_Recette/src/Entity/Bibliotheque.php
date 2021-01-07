@@ -51,7 +51,8 @@ class Bibliotheque
     private $recipes;
 
     public function __construct()
-    {
+    {   
+        $this->publique = false;
         $this->recipes = new ArrayCollection();
         $this->createdAt = new \DateTime();
         $this->dateUpdate = new \DateTime();

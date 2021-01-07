@@ -15,7 +15,17 @@
                 {{ form_row(form.description) }}
                 {# {{ form_row(form.instructions) }} #}
                 {{ form_row(form.nbPerson) }}
+                
+
+                {# <div id="recipe_categories_container">
+                   <ul data-prototype="{{ form_widget(form.recipe.vars.prototype)|e('html_attr') }}">
+                    </ul>
+                    
+                    <button type="button" class="add_category_link" data-collection-holder-class="categorie">Ajout d'ingredient</button>
+                </div> #}
+                
                 <div id="recipe_categories_container">
+                 
                     {{ form_row(form.categories) }}
                     <a id="add_category">Ajouter une catégorie</a>  
                 </div>
@@ -30,7 +40,7 @@
         </div>
        
 <pre>
-    {{ dump(form) }}
+    {# {{ dump(form) }} #}
 </pre>
 {{ form_end(form) }}
     
@@ -40,12 +50,64 @@
 {# On récupère jquery de base.html.twig #}
     {{ parent() }}
     <script>
+    // $(document).ready(function() {
+    //         //On définit le contenant 
+    //         var $collectionHolder = $('#recipe_compositions_container ul');
+    //         var proto = $collectionHolder.data("prototype");
+                       
+    //         //ajoute un attribut data-index qui compte le nbre d'inputs dans la collection
+    //         $collectionHolder.data('index', $collectionHolder.find(':input').length);
+            
+    //         $('.add_ingredient_link').on('click', function(e){
+    //             e.preventDefault();
+    //             //ajoute un nouvel ingredient formulaire
+    //             addFormToCollection($collectionHolder, proto);
+    //         })
+    //     });
+
+    //     function addFormToCollection($holder, newForm){
+    //         console.log(newForm)
+    //         var index = $holder.data('index');
+            
+    //         newForm = newForm.replace(/__name__/g, index);
+            
+    //         //définit le nombred 'index qu'on veut ajouter qu'en on appuie sur le bouton
+    //         $holder.data('index', index + 1);
+    //         //Ajoute un form avec <li> avant le bouton ajouter ingredient
+    //         var $newFormLi = $('<li></li>').append(newForm);
+
+    //         $newFormLi.append('<a href="#" class="remove">x</a>');
+    
+    //         $holder.append($newFormLi)
+
+    //         $('.remove').click(function(e) {
+    //             e.preventDefault();
+                
+    //             $(this).parent().remove();
+                
+    //             return false;
+    //         });
+
+    //     }
+
         $("#add_category").click(function(){
             let proto = $("#recipe_categories").data("prototype")
             //Permet d'ajouter a la suite
             $("#recipe_categories").append(proto)
 
         }) 
+
+
+
+
+
+
+
+
+
+
+
+
         $(document).ready(function() {
             //On définit le contenant 
             var $collectionHolder = $('#recipe_compositions_container ul');

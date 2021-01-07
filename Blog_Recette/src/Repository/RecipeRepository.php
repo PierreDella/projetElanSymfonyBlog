@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Data\SearchData;
 use App\Entity\Recipe;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -19,14 +20,35 @@ class RecipeRepository extends ServiceEntityRepository
         parent::__construct($registry, Recipe::class);
     }
 
-    public function search($name) {
-        return $this->createQueryBuilder('Recipe')
-            ->andWhere('Recipe.name LIKE :name')
-            ->setParameter('name', $name)
-            ->getQuery()
-            ->execute();
+    /**
+     * @return Recipe[]
+     */
+    public function findSearch(SearchData $search): array
+    {   
+        $query = $this
+        
+            ->createQueryBuilder('r')
+            //permettra avec join de recupérer les infos en une seule requete
+            ->select('c', 'r')
+            ->join('r.categories', 'c')
+            ->andWhere('r.published=1');
+
+        if( ! empty($search->q)) {
+            $query = $query 
+                ->andWhere('r.name LIKE :q')
+                ->setParameter('q', "%{$search->q}%");
+        }
+
+        if( ! empty($search->categoriesRecipe)){
+            $query = $query 
+                ->andWhere('c.id IN (:categoriesRecipe)')
+                // 
+                ->setParameter('categoriesRecipe', $search->categoriesRecipe);
+        }
+
+        return $query->getQuery()->getResult();
+        // return $this->findBy(["published" => 1]);
     }
-    
     
 
     // /**

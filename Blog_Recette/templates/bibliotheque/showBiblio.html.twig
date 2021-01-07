@@ -8,6 +8,7 @@
 
      {% for userBibliotheque in userBibliotheques %}
      <a href="{{ path('detailRecipe', { id: bibliotheque.id }) }}">{{ userBibliotheque['name'] }}</a><br>
+     
      {% endfor %} 
 
 {% endblock %}

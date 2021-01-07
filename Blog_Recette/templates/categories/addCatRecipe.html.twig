@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+
+{% if editMode %}
+<h3 class="textCentre">Edition de la catégorie {{ categoryRecipe.name }}</h3>
+
+{% else %}
+<h3 class="textCentre">Ajouter une catégorie</h3>    
+
+{% endif %}
+
+    {{ form(formCatRecipe) }}
+
+     
+{% endblock %}

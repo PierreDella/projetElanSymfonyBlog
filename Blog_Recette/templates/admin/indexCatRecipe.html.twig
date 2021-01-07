@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello UserController!{% endblock %}
+
+{% block body %}
+<table>
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th></th>            
+        </tr>
+    </thead>
+
+    <tbody>
+{% for categorie in categories %}
+    <tr>
+        <td>
+            {{ categorie.name }}
+        </td>
+        <td>
+            <a href="{{ path('edit_catRecipe', {'id':categorie.id}) }}">Edit</a>
+        </td>
+    </tr>
+{% endfor %}
+    </tbody>
+</table>   
+{% endblock %}

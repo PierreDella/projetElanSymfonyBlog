@@ -3,10 +3,13 @@
 namespace App\Form;
 
 use App\Entity\Recipe;
+use App\Form\CompositionType;
 use App\Entity\CategoryRecipe;
 use Symfony\Component\Form\AbstractType;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -17,6 +20,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class RecipeType extends AbstractType
 {
@@ -35,28 +39,24 @@ class RecipeType extends AbstractType
                 'label' => 'photo ',
                 'mapped' => false
             ])
-            ->add('description', TextType::class, [
+            ->add('published', CheckboxType::class)
+            ->add('description', TextareaType::class, [
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Entrez une description de votre recette',
                     ]),
                 ],
             ])
-            ->add('cookingTime', DateTimeType::class, [
-                'placeholder' => [
-                    'hour' => 'Hour', 
-                    'minute' => 'Minute', 
-                    'second' => 'Second',
-                ],
+            ->add('cookingTime', IntegerType::class, [
+               
             ])
-            ->add('preparationTime', DateTimeType::class, [
-                'placeholder' => [
-                    'hour' => 'Hour', 
-                    'minute' => 'Minute', 
-                    'second' => 'Second',
-                ],
+            ->add('preparationTime', IntegerType::class, [
+                // 'placeholder' => [
+                //     'hour' => 'Hour', 
+                //     'minute' => 'Minute', 
+                // ],
             ])
-            ->add('instructions', TextType::class, [
+            ->add('instructions', CKEditorType::class, [
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Veuillez entrer des instructions',
@@ -90,6 +90,7 @@ class RecipeType extends AbstractType
                 'allow_add' => true,
                 'by_reference' => false
             ])
+            ->add('Valider', SubmitType::class)
             
         ;
     }

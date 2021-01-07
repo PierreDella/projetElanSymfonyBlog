@@ -8,9 +8,8 @@
 
         {{ form_start(formBiblio) }}
             {{ form_row(formBiblio.titre) }} 
-
                 <div id="recipe_bibliotheques_container">
-                    <ul data-prototype="{{ form_row(formBiblio.recipes)|e('html_attr') }}">
+                    <ul id="recipes" data-prototype="{{ form_widget(formBiblio.recipes.vars.prototype)|e('html_attr') }}">
                     </ul>
                     <button type="button" class="add_recipe_link" data-collection-holder-class="recipe">Ajout de recette</button>
                 </div>
@@ -23,13 +22,17 @@
 {# On récupère jquery de base.html.twig #}
     {{ parent() }}
     <script>
+   
+
         $(document).ready(function() {
             //On définit le contenant 
-            var $collectionHolder = $('#recipe_bibliotheques_container ul');
+            var $collectionHolder = $('#recipes');
             var proto = $collectionHolder.data("prototype");
                        
             //ajoute un attribut data-index qui compte le nbre d'inputs dans la collection
             $collectionHolder.data('index', $collectionHolder.find(':input').length);
+
+            addFormToCollection($collectionHolder, proto);
             
             $('.add_recipe_link').on('click', function(e){
                 e.preventDefault();

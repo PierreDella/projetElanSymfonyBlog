@@ -31,7 +31,8 @@ class Ingredient
     private $category;
 
     /**
-     * @ORM\OneToMany(targetEntity=Composition::class, mappedBy="ingredient", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Composition::class, mappedBy="ingredient", orphanRemoval=true, cascade={"persist"})
+     * 
      */
     private $compositions;
 

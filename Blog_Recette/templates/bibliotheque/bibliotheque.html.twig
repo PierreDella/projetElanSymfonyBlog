@@ -5,13 +5,21 @@
 {% block body %}
 
 
-<h1>Mes bibliotheques</h1>
+<h1>Bibliotheque de {{ user.pseudo }}</h1>
     <ul>
     {% for bibliotheque in bibliotheques %}
         <ul>
             <li>
                 <a href="{{ path('show_bibliotheque', {'id':bibliotheque.id}) }}">{{ bibliotheque.titre }}</a>
-
+                {{ bibliotheque.publique == '1' ? '<span uk-icon="icon: lock"></span>' : '<span uk-icon="icon: unlock"></span>' }}
+           
+                {% if bibliotheque.publique == 1 %}
+                    <a class="uk-button uk-button-default" href="{{ path('biblio_lock', {'id':bibliotheque.id} ) }}">Déverrouiller</a>
+                {% else %}
+                    <a class="uk-button uk-button-default" href="{{ path('biblio_lock', {'id':bibliotheque.id} ) }}">Vérrouiller</a>
+                {% endif %}
+                <br>
+        
             </li>
         </ul>
     

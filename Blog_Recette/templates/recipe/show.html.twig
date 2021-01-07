@@ -3,7 +3,7 @@
 {% block title %}Hello RecipeController!{% endblock %}
 
 {% block body %}
-    <p>{{ recipe.name }}</p> 
+    <h3>{{ recipe.name }}</h3> 
     <p>{{ recipe.createdAt | date('d/m/Y') }} 
     - par {{ recipe.user.pseudo }} <a href="{{ path('add_following', { id : recipe.user.id }) }}">suivre</a>
     </p>
@@ -14,25 +14,43 @@
         <p>{{ recipeCategory.name }}</p>
     {% endfor %}
 
-    <p>{{ recipe.description }}</p>
-    
+    <h4>{{ recipe.description }}</h4>
+        {{ recipe.instructions }}
     <h2>Les ingrédients de la recette : </h2>
 
     {% for ingredient in ingredients %}
         <p> - {{ ingredient['quantity'] }} {{ ingredient['unit'] }} de {{ ingredient['name'] }} categorie :   {{ ingredient['category'] }}</p>
     {% endfor %}
+    
+{% for comment in recipe.comments %}
+    <article class="uk-comment uk-comment-primary"> 
+        <header class="uk-comment-header">
+                <div class="uk-grid-medium uk-flex-middle" uk-grid>
+                    <div class="uk-width-auto">
+                        <img class="uk-comment-avatar" src="" width="80" height="80" alt="">
+                    </div>
+                    <div class="uk-width-expand">
+                        <h4 class="uk-comment-title uk-margin-remove"><a class="uk-link-reset" href="#">{{ comment.user.pseudo }}</a></h4>
+                        <ul class="uk-comment-meta uk-subnav uk-subnav-divider uk-margin-remove-top">
+                            <li>{{ comment.createdAt | date('d/m/Y') }}</li>
+                        </ul>
+                    </div>
+                </div>
+        </header>
+
+        <div class="uk-comment-body">
+            <p>{{ comment.post }}</p>
+            {% if app.user == comment.user %}
+                <a class="uk-button uk-button-default" href="{{ path('coment_delete', {'id':comment.id})}}">DELETE</a>
+                <a class="uk-button uk-button-default" href="{{ path('comment_edit', {'id':comment.id})}}">EDIT</a>
+            {% endif %}
+        </div>
+    </article>
+{% endfor %}  
 
 
-     <h2>Commentaires : </h2>
-     {% for recipeComment in recipeComments %}
-        <p>{{ recipeComment['post'] }}</p>
-        <p>{{recipeComment['pseudo']}}</p>
-        <p>{{ recipeComment['createdAt'] | date('d/m/Y') }}</p>
-     {% endfor %} 
-<br>
-        <a href="{{ path('comment_add', { 'id': recipe.id }) }}">Ajouter un commentaire</a>
-    <br><br>
-</a>
+        {{ form(formComment) }}
+
 
 
 {% endblock %}
