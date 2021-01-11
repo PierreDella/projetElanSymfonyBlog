@@ -28,14 +28,13 @@
             
             {{ form_row(form.categories) }}
 
-                <div id="recipe_categories_container">
+                {# <div id="recipe_categories_container">
                     <ul id="categories" data-prototype="{{ form_widget(form.recipe.vars.prototype)|e('html_attr') }}">
                     </ul>
                     <button type="button" class="add_categorie_link" data-collection-holder-class="categorie">Ajout d'une categorie</button>
-                </div>
+                </div> #}
         
-                    
-                {# <div id="recipe_compositions_container">
+                <div id="recipe_compositions_container">
                    <ul data-prototype="{{ form_widget(form.compositions.vars.prototype)|e('html_attr') }}">
                     </ul>
                     
@@ -43,7 +42,7 @@
                 </div>
                 <br>
                     <a class= "icon_add" href="{{ path('new_ingredient') }}"><button type="button" class="btn btn-dark">Ajout d'ingredient</button></a>
-                <br><br> #}
+                <br><br>
             {{ form_end(form) }}
         </div>
        
@@ -62,47 +61,47 @@
 
 
 
-$(document).ready(function() {
-            //On définit le contenant 
-            var $collectionHolderCategories = $('#categories');
-            var proto = $collectionHolderCategories.data("prototype");
+// $(document).ready(function() {
+//             //On définit le contenant 
+//             var $collectionHolderCategories = $('#categories');
+//             var proto = $collectionHolderCategories.data("prototype");
                        
-            //ajoute un attribut data-index qui compte le nbre d'inputs dans la collection
-            $collectionHolderCategories.data('index', $collectionHolderCategories.find(':input').length);
+//             //ajoute un attribut data-index qui compte le nbre d'inputs dans la collection
+//             $collectionHolderCategories.data('index', $collectionHolderCategories.find(':input').length);
 
-            addFormToCollection($collectionHolderCategories, proto);
+//             addFormToCollection($collectionHolderCategories, proto);
             
-            $('.add_categorie_link').on('click', function(e){
-                e.preventDefault();
-                //ajoute un nouvel recipe  formulaire
-                addFormToCollection($collectionHolderCategories, proto);
-            })
-        });
+//             $('.add_categorie_link').on('click', function(e){
+//                 e.preventDefault();
+//                 //ajoute un nouvel recipe  formulaire
+//                 addFormToCollection($collectionHolderCategories, proto);
+//             })
+//         });
 
-        function addFormToCollectionC($holderR, newForm){
-            console.log(newForm)
-            var index = $holder.data('index');
+//         function addFormToCollectionC($holderR, newForm){
+//             console.log(newForm)
+//             var index = $holder.data('index');
             
-            newForm = newForm.replace(/__name__/g, index);
+//             newForm = newForm.replace(/__name__/g, index);
             
-            //définit le nombred 'index qu'on veut ajouter qu'en on appuie sur le bouton
-            $holderR.data('index', index + 1);
-            //Ajoute un form avec <li> avant le bouton ajouter recipe
-            var $newFormLi = $('<li></li>').append(newForm);
+//             //définit le nombred 'index qu'on veut ajouter qu'en on appuie sur le bouton
+//             $holderR.data('index', index + 1);
+//             //Ajoute un form avec <li> avant le bouton ajouter recipe
+//             var $newFormLi = $('<li></li>').append(newForm);
 
-            $newFormLi.append('<a href="#" class="remove">x</a>');
+//             $newFormLi.append('<a href="#" class="remove">x</a>');
     
-            $holderR.append($newFormLi)
+//             $holderR.append($newFormLi)
 
-            $('.remove').click(function(e) {
-                e.preventDefault();
+//             $('.remove').click(function(e) {
+//                 e.preventDefault();
                 
-                $(this).parent().remove();
+//                 $(this).parent().remove();
                 
-                return false;
-            });
+//                 return false;
+//             });
 
-        }
+//         }
 
 
 
@@ -143,45 +142,45 @@ $(document).ready(function() {
 
 
 
-        // $(document).ready(function() {
-        //     //On définit le contenant 
-        //     var $collectionHolder = $('#recipe_compositions_container ul');
-        //     var proto = $collectionHolder.data("prototype");
+        $(document).ready(function() {
+            //On définit le contenant 
+            var $collectionHolder = $('#recipe_compositions_container ul');
+            var proto = $collectionHolder.data("prototype");
                        
-        //     //ajoute un attribut data-index qui compte le nbre d'inputs dans la collection
-        //     $collectionHolder.data('index', $collectionHolder.find(':input').length);
+            //ajoute un attribut data-index qui compte le nbre d'inputs dans la collection
+            $collectionHolder.data('index', $collectionHolder.find(':input').length);
             
-        //     $('.add_ingredient_link').on('click', function(e){
-        //         e.preventDefault();
-        //         //ajoute un nouvel ingredient formulaire
-        //         addFormToCollection($collectionHolder, proto);
-        //     })
-        // });
+            $('.add_ingredient_link').on('click', function(e){
+                e.preventDefault();
+                //ajoute un nouvel ingredient formulaire
+                addFormToCollection($collectionHolder, proto);
+            })
+        });
 
-        // function addFormToCollection($holder, newForm){
-        //     console.log(newForm)
-        //     var index = $holder.data('index');
+        function addFormToCollection($holder, newForm){
+            console.log(newForm)
+            var index = $holder.data('index');
             
-        //     newForm = newForm.replace(/__name__/g, index);
+            newForm = newForm.replace(/__name__/g, index);
             
-        //     //définit le nombre 'index qu'on veut ajouter qu'en on appuie sur le bouton
-        //     $holder.data('index', index + 1);
-        //     //Ajoute un form avec <li> avant le bouton ajouter ingredient
-        //     var $newFormLi = $('<li></li>').append(newForm);
+            //définit le nombre 'index qu'on veut ajouter qu'en on appuie sur le bouton
+            $holder.data('index', index + 1);
+            //Ajoute un form avec <li> avant le bouton ajouter ingredient
+            var $newFormLi = $('<li></li>').append(newForm);
 
-        //     $newFormLi.append('<a href="#" class="remove">x</a>');
+            $newFormLi.append('<a href="#" class="remove">x</a>');
     
-        //     $holder.append($newFormLi)
+            $holder.append($newFormLi)
 
-        //     $('.remove').click(function(e) {
-        //         e.preventDefault();
+            $('.remove').click(function(e) {
+                e.preventDefault();
                 
-        //         $(this).parent().remove();
+                $(this).parent().remove();
                 
-        //         return false;
-        //     });
+                return false;
+            });
 
-        // }
+        }
     </script>
 {% endblock %}
 
