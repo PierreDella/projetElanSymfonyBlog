@@ -86,6 +86,11 @@ class User implements UserInterface
      */
     private $pseudo;
 
+    /**
+     * @ORM\OneToMany(targetEntity=RecipeLike::class, mappedBy="user")
+     */
+    private $likes;
+
     
 
     public function __construct()
@@ -96,6 +101,7 @@ class User implements UserInterface
         $this->listSubscriptions = new ArrayCollection();
         $this->subscribers = new ArrayCollection();
         $this->dateInscription = new \DateTime();
+        $this->likes = new ArrayCollection();
         
     }
 
@@ -377,6 +383,36 @@ class User implements UserInterface
 
     public function isAdmin(){
         return in_array('ROLE_ADMIN', $this->getRoles());
+    }
+
+    /**
+     * @return Collection|RecipeLike[]
+     */
+    public function getLikes(): Collection
+    {
+        return $this->likes;
+    }
+
+    public function addLike(RecipeLike $like): self
+    {
+        if (!$this->likes->contains($like)) {
+            $this->likes[] = $like;
+            $like->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLike(RecipeLike $like): self
+    {
+        if ($this->likes->removeElement($like)) {
+            // set the owning side to null (unless already changed)
+            if ($like->getUser() === $this) {
+                $like->setUser(null);
+            }
+        }
+
+        return $this;
     }
 
 }

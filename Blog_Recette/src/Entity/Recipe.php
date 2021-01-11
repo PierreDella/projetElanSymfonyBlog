@@ -2,10 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\RecipeRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\RecipeRepository;
+use Doctrine\Common\Collections\Collection;
+use phpDocumentor\Reflection\Types\Boolean;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass=RecipeRepository::class)
@@ -96,6 +98,11 @@ class Recipe
      */
     private $published;
 
+    /**
+     * @ORM\OneToMany(targetEntity=RecipeLike::class, mappedBy="recipe")
+     */
+    private $likes;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -103,6 +110,7 @@ class Recipe
         $this->bibliotheques = new ArrayCollection();
         $this->compositions = new ArrayCollection();
         $this->createdAt = new \DateTime();
+        $this->likes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -350,5 +358,48 @@ class Recipe
         $this->published = $published;
 
         return $this;
+    }
+
+    /**
+     * @return Collection|RecipeLike[]
+     */
+    public function getLikes(): Collection
+    {
+        return $this->likes;
+    }
+
+    public function addLike(RecipeLike $like): self
+    {
+        if (!$this->likes->contains($like)) {
+            $this->likes[] = $like;
+            $like->setRecipe($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLike(RecipeLike $like): self
+    {
+        if ($this->likes->removeElement($like)) {
+            // set the owning side to null (unless already changed)
+            if ($like->getRecipe() === $this) {
+                $like->setRecipe(null);
+            }
+        }
+
+        return $this;
+    }
+    /**
+     * @return boolean
+     */
+    public function isLikedByUser(User $user) : bool {
+
+        foreach($this->likes as $like){
+                // si dans les likes se trouve l'utilisateur ca veut dire qu'il aura liké
+            if($like->getUser() === $user) return true;
+        
+        }
+
+        return false;
     }
 }

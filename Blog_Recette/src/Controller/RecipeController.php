@@ -10,15 +10,18 @@ use App\Entity\Ingredient;
 use App\Entity\Composition;
 use App\Form\IngredientType;
 use App\Form\CompositionType;
-use App\Entity\CategoryIngredient;
 use App\Entity\CategoryRecipe;
-use App\Form\CategoryIngredientType;
 use App\Form\CategoryRecipeType;
-use App\Repository\CategoryRecipeRepository;
+use App\Entity\CategoryIngredient;
+use App\Entity\RecipeLike;
+use App\Form\CategoryIngredientType;
 use App\Repository\RecipeRepository;
+use Doctrine\Persistence\ObjectManager;
 use App\Repository\IngredientRepository;
+use App\Repository\RecipeLikeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Repository\CategoryRecipeRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\User\User;
@@ -198,9 +201,53 @@ class RecipeController extends AbstractController
        ]);
     }
 
-   
+    
+    /** Permet de liker ou non une recette
+     * @Route("/recipe/{id}/like", name="recipe_like")
+     */
+    public function like(Recipe $recipe, EntityManagerInterface $manager, RecipeLikeRepository $likeRepo) : Response{
+        
+        
+        $user = $this->getUser();
+        //Si l'utilisateur est anonyme et qu'il essaye de like une recette 
+        if(!$user) return $this->json([
+            'code' => 403,
+            'message' => "Unauthorized"
+        ], 403);
+        //Si j'ai deja aimé supp le j'aime
+        if($recipe->isLikedByUser($user)){
+            //On lui demande de retrouver le like du user et de la recette
+            $like = $likeRepo->findOneBy([
+                'recipe' => $recipe,
+                'user' => $user
+            ]);
 
-    /**
+            $manager->remove($like);
+            $manager->flush();
+            //On retourne l'info au js
+            return $this->json([
+                'code' => 200,
+                'message' => 'Like supprimé',
+                'likes' => $likeRepo->count(['recipe' => $recipe])
+            ], 200); //donne le statu http
+        }
+        $like = new RecipeLike();
+        $like->setRecipe($recipe)
+             ->setUser($user);
+
+             $manager->persist($like);
+             $manager->flush();
+
+             return $this->json([
+                'code' => 200,
+                'message' => 'Like ajouté',
+                'likes' => $likeRepo->count(['recipe' => $recipe])
+            ], 200); //donne le statu http
+
+        return $this->json(['code' => 200, ''], 200);
+    }
+
+    /** Permet d'ajouter un ingredient dans la liste des ingrédients
      * @Route("/ingredient/new", name="new_ingredient")
      * 
      */
