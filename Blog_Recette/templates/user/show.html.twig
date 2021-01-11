@@ -11,8 +11,9 @@
                     <img src= "{{ asset('uploads/profilpicture/' ~ user.picture) }}" alt="ProfiPicture">
                 </a>
                 <h1>{{ user.pseudo }}</h1>
+                
                 <p>{{ user.email }}</p>
-                <button href="{{ path('user_edit', {'id':user.id}) }}">Edit</button>
+                {# <button href="{{ path('user_edit', {'id':user.id}) }}">Edit</button> #}
                 {# {% if $this %} #}
                     <button href="{{ path('add_following', { id : user.id }) }}">suivre</button>
                 {# {% endif %} #}
@@ -22,6 +23,7 @@
                 <li><a href="{{ path('abonnements_index', {'id':app.user.id}) }}">Mes Abonnements</a></li>
                 <li><a href="{{ path('bibliotheque_index', {'id':app.user.id}) }}">Mes Bibliotheques</a></li>
                 <li><a href="{{ path('recipesUser_index', {'id':app.user.id}) }}">Mes Recettes</a></li>
+                <a class= "icon_add" href="{{ path('user_edit_password', {'id':app.user.id}) }}"><button type="button">Changer mon mot de passe</button></a>
             </ul>
     </div>
 </div>

@@ -4,39 +4,48 @@
 
 {% block body %}
     <div class="container">
-        <div class="row">
-            <div class="">
-                 {% include 'home/_filter.html.twig' with {form: form} only %}
-            </div>
-            {# <div class="">
-                <div class="grid">
-                    {% for recipe in recipes %}
-                    {{ recipe.name }} <br>
-                    {% endfor %}
-                </div>
-            </div> #}
-        </div>
+        
         
     </div>
-    {% for recipe in recipes %}
+
+
+<div class="container">
     <div class="row">
-        <div class="col-md-4" >
-            <div class="card mb-4 box-shadow">
-                <img class="card-img-top" src= "{{ asset('uploads/profilpicture/' ~ recipe.picture) }}" alt="ProfiPicture"  alt="Thumbnail [100%x225]" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22379%22%20height%3D%22226%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20379%20226%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_176d7af20d0%20text%20%7B%20fill%3A%23eceeef%3Bfont-weight%3Abold%3Bfont-family%3AArial%2C%20Helvetica%2C%20Open%20Sans%2C%20sans-serif%2C%20monospace%3Bfont-size%3A19pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_176d7af20d0%22%3E%3Crect%20width%3D%22379%22%20height%3D%22226%22%20fill%3D%22%2355595c%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22125.46875%22%20y%3D%22121.4890625%22%3EThumbnail%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" data-holder-rendered="true" style="height: 225px; width: 100%; display: block;">
-                <div class="card-body">
-                <h4 class="card-text">{{ recipe.name }}</h4>
-                    <p class="card-text">{{ recipe.description }}</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-                                <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                            </div>
-                        </div>
-                </div>
-            </div>
-        </div> 
+        <div class="filter">
+                {% include 'home/_filter.html.twig' %}
+        </div>
+            
     </div>
+
+    <div class="grid">
+        {% for recipe in recipes %}
+            <div class="card">
+                <img class="card-img-top" src= "{{ asset('uploads/profilpicture/' ~ recipe.picture) }}" alt="picture">
+            </div>
+            <div class="card-body">
+                <a href="{{ path('detailRecipe', {'id':recipe.id}) }}" class="card-title">{{ recipe.name }}</a>
+                <p class="card-text">{{ recipe.preparationTime }} minutes</p>
+                <p class="card-text">{{ recipe.comments | length }} commentaire(s)</p>
+                <p class="card-text">{{ recipe.description }}</p>
+            </div>
+            <div></div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    .grid{
+        display : grid;
+        grid-template-columns : repeat(3,1fr);
+        grid-gap: 20px
+    }
+    .card-title{
+        font-weight : bold;
+        font-size : 1.5em;
+
+    }
+</style> 
         
-    {% endfor %}
+    
     
 {% endblock %}

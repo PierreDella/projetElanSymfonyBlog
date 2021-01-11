@@ -1,3 +1,4 @@
+{# {% if is_granted('ROLE_ADMIN') %} #}
 <!DOCTYPE html>
 <html>
     <head>
@@ -28,19 +29,18 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ path('home')}}">Accueil</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('new_ingredient') }}">AI</a>
-                        </li>
-                        <li>
-                            <a class="nav-link" href="{{ path('add_recipe') }}">Ajout Recette</a>
-                        </li>
-                        
-                        
-                        {% if is_granted('ROLE_ADMIN') %}
                         <li>
                             <a class="nav-link" href="{{ path('adminHome') }}">Desk</a>
                         </li>
-                        {% endif %}
+                        <li>
+                            <a class="nav-link" href="{{ path('catRecipe_index') }}">Catégories Recettes</a>                      
+                        </li>
+                        <li>
+                            <a class="nav-link" href="{{ path('catIngredient_index') }}">Catégories Ingrédients</a>                       
+                        </li>
+                        <li>
+                            <a class="nav-link" href="{{ path('recipe_index') }}">Recettes</a>
+                        </li>
                     </ul>
                     <ul class="nav justify-content-end navbar-nav">
                         <li class="nav-item">
@@ -56,16 +56,12 @@
                     </ul>
                     {% else %}
                         <ul class="nav justify-content-end navbar-nav">
-                            
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
                             </li>  
                             <li class="nav-item">   
                                 <a class="nav-link" href="{{ path('app_register') }}">Inscription</a>
-                            </li>
-                            {# <li class="nav-item">
-                                <a class="nav-link" href="{{ path('recipesUser_index', {'id':app.user.id}) }}">Mes Recettes</a>
-                            </li>                     #}
+                            </li>                    
                         </ul>
                         
                     {% endif %}
@@ -92,7 +88,7 @@
                 <br>
         {% endfor %}
 
-                
+               
         </div>
         
 		<div id="main">
@@ -122,3 +118,4 @@
        {% endblock %}
 	</body>
 </html>
+{# {% endif %} #}

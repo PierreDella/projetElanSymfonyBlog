@@ -9,7 +9,7 @@ use Symfony\Component\Form\AbstractType;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -18,9 +18,10 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class RecipeType extends AbstractType
 {
@@ -35,9 +36,16 @@ class RecipeType extends AbstractType
                     ]),
                     ],
             ])
+        
             ->add('picture', FileType::class, [
                 'label' => 'photo ',
-                'mapped' => false
+                'mapped' => false, 
+                'multiple' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '1024k'
+                    ])
+                ],
             ])
             ->add('published', CheckboxType::class)
             ->add('description', TextareaType::class, [
@@ -48,13 +56,10 @@ class RecipeType extends AbstractType
                 ],
             ])
             ->add('cookingTime', IntegerType::class, [
-               
+                'label' => 'temps de cuisson (en minutes) ',
             ])
             ->add('preparationTime', IntegerType::class, [
-                // 'placeholder' => [
-                //     'hour' => 'Hour', 
-                //     'minute' => 'Minute', 
-                // ],
+                'label' => 'temps de préparation (en minutes) :  ',
             ])
             ->add('instructions', CKEditorType::class, [
                 'constraints' => [
@@ -64,7 +69,7 @@ class RecipeType extends AbstractType
                 ],
             ])
             ->add('nbPerson', IntegerType::class, [
-                'attr' => array('min' => 1), 
+                'attr' => array('min' => 1, 'max' => 20), 
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Veuillez mettre pour combien de personne est cette recette',

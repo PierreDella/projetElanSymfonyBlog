@@ -3,20 +3,32 @@
 {% block title %}Hello RecipeController!{% endblock %}
 
 {% block body %}
-    <h3>{{ recipe.name }}</h3> 
+    <div class="textCentre">
+        <h2>{{ recipe.name }}</h2>
+        <a href="{{ path('edit_recipe', { id: recipe.id }) }}">EDIT</a>
+        <a href="#">SUPP</a>
+        
+    </div>
+    
     <p>{{ recipe.createdAt | date('d/m/Y') }} 
     - par {{ recipe.user.pseudo }} <a href="{{ path('add_following', { id : recipe.user.id }) }}">suivre</a>
     </p>
     <p>{{ recipe.preparationTime | date('H:i') }}</p>
     <p>{{ recipe.cookingTime |date('H:i') }}</p>
+    
 
     {% for recipeCategory in recipeCategories %}
         <p>{{ recipeCategory.name }}</p>
     {% endfor %}
+    
+    
 
     <h4>{{ recipe.description }}</h4>
         {{ recipe.instructions }}
-    <h2>Les ingrédients de la recette : </h2>
+    <div class="textCentre">
+        <h2>Les ingrédients de la recette : </h2>
+    </div>
+    
 
     {% for ingredient in ingredients %}
         <p> - {{ ingredient['quantity'] }} {{ ingredient['unit'] }} de {{ ingredient['name'] }} categorie :   {{ ingredient['category'] }}</p>

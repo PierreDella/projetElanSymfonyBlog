@@ -2,6 +2,12 @@
     box-sizing: border-box;
 }
 
+.textCentre{
+  margin: 0 auto;
+  text-align: center;
+}
+
+
 /* The side navigation menu */
 .sidenav {
     height: 100%; /* 100% Full-height */

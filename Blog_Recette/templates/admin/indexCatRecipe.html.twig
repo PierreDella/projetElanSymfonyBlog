@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin.html.twig' %}
 
 {% block title %}Hello UserController!{% endblock %}
 
@@ -21,7 +21,11 @@
             <a href="{{ path('edit_catRecipe', {'id':categorie.id}) }}">Edit</a>
         </td>
     </tr>
+
 {% endfor %}
     </tbody>
 </table>   
+<br>
+    <a class= "icon_add" href="{{ path('new_catRecipe') }}"><button type="button" class="btn btn-dark">Ajouter</button></a>
+<br><br>
 {% endblock %}

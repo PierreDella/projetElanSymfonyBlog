@@ -1,5 +1,5 @@
 
-{% extends 'base.html.twig' %}
+{% extends 'admin.html.twig' %}
 
 {% block title %}Hello UserController!{% endblock %}
 
@@ -13,16 +13,19 @@
     </thead>
 
     <tbody>
-{% for categorie in categories %}
-    <tr>
-        <td>
-            {{ categorie.name }}
-        </td>
-        <td>
-            <a href="{{ path('edit_catIngredient', {'id':categorie.id}) }}">Edit</a>
-        </td>
-    </tr>
-{% endfor %}
+        {% for categorie in categories %}
+            <tr>
+                <td>
+                    {{ categorie.name }}
+                </td>
+                <td>
+                    <a href="{{ path('edit_catIngredient', {'id':categorie.id}) }}">Edit</a>
+                </td>
+            </tr>
+        {% endfor %}    
     </tbody>
-</table>   
+</table> 
+<br>
+                <a class= "icon_add" href="{{ path('new_catIngredient') }}"><button type="button" class="btn btn-dark">Ajouter</button></a>
+            <br><br>  
 {% endblock %}

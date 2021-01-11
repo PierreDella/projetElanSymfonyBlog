@@ -31,6 +31,19 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             );
             return $query->execute();
     }
+
+    public function getAllOrder() {
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager->createQuery(
+            'SELECT u
+                FROM App\Entity\User u
+                ORDER BY u.id DESC'
+        )
+        ->setMaxResults(15);
+
+        return $query->execute();
+    }
+
     /**
      * Used to upgrade (rehash) the user's password automatically over time.
      */

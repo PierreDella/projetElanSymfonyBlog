@@ -11,6 +11,8 @@
         <ul>
             <li>
                 <a href="{{ path('detailRecipe', {'id':recipe.id}) }}">{{ recipe.name }}</a>
+                <a href="{{ path('recipe_delete', {'id':recipe.id}) }}">SUPP</a>
+                
                 {{ recipe.published == '0' ? '<span uk-icon="icon: lock"></span>' : '<span uk-icon="icon: unlock"></span>' }}
            
                 {% if recipe.published == 0 %}

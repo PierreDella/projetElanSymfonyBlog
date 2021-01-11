@@ -128,142 +128,8 @@ class RecipeController extends AbstractController
         ]);
         
     }
-//                                                 ******************AJOUTS*****************
+//                                                 ******************EDITIONS/AJOUTS*****************
 
-
-/**
-     *@Route("/recipe/add", name="add_recipe")
-     * 
-     */
-    public function addRecipeStep1(EntityManagerInterface $manager, Request $request, Composition $composition = null, Recipe $recipe = null): Response{
-        
-        //On crée une nouvelle recette
-        $recipe = new Recipe();
-
-        // $composition = new Composition();
-        //La recette aura comme user la personne connecté
-        $recipe->setUser($this->getUser());
-
-
-        //On crée un formulaire, où on remove un certain nombre de fields
-        $form = $this->createForm(RecipeType::class, $recipe);
-        
-        
-        $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){   
-            
-            // $recipe->setComposition();
-
-            $manager->persist($recipe);
-            $manager->flush();
-            
-            return $this->redirectToRoute('recipe_index');
-
-        }
-
-       return $this->render('recipe/addRecipe.html.twig', [
-           'form' => $form->createView(),
-           'recipe' => $recipe
-       ]);
-    }
-   
-
-    /**
-     * @Route("/ingredient/new", name="new_ingredient")
-     * @Route("/ingredient/edit/{id}", name="edit_ingredient")
-     */
-    public function addIngredient(Ingredient $ingredient = null, Request $request, EntityManagerInterface $manager): Response {
-        
-        $ingredient = new Ingredient();
-        $form = $this->createForm(IngredientType::class, $ingredient);
-
-        $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()) {   
-           
-            $manager->persist($ingredient);
-            $manager->flush();
-
-            return $this->redirectToRoute('recipe_index');
-        }
-        return $this->render('ingredient/add.html.twig', [
-            'formIngredient' => $form->createView(),
-            'ingredient' => $ingredient
-        ]);
-    }
-
-    /**
-     * @Route("/catRecipe/new", name="new_catRecipe")
-     * @Route("/catRecipe/edit/{id}", name="edit_catRecipe")
-     */
-    public function newCatRecipe(CategoryRecipe $categoryRecipe = null, Request $request, ManagerRegistry $manager): Response {
-        
-        $categoryRecipe = new CategoryRecipe();
-        $form = $this->createForm(CategoryRecipeType::class, $categoryRecipe);
-        $form->handleRequest($request);
-
-
-        if($form->isSubmitted() && $form->isValid()) 
-        {   
-            $em = $manager->getManager();
-            $em->persist($categoryRecipe);
-            $em->flush();
-
-            return $this->redirectToRoute('catRecipe_index');
-        }
-        return $this->render('categories/addCatRecipe.html.twig', [
-            'formCatRecipe' => $form->createView(),
-            'categoryRecipe' => $categoryRecipe,
-            'editMode' => $categoryRecipe->getId() !== null,
-            
-        ]);
-    }
-
-    /**
-     * @Route("/catIngredient/new", name="new_catIngredient")
-     * @Route("/catIngredient/edit/{id}", name="edit_catIngredient")
-     */
-    public function newCatIngredient(CategoryIngredient $categoryIngredient = null, Request $request, ManagerRegistry $manager): Response {
-        
-        $categoryIngredient = new CategoryIngredient();
-        $form = $this->createForm(CategoryIngredientType::class, $categoryIngredient);
-
-        $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()) 
-        {   
-            $em = $manager->getManager();
-            $em->persist($categoryIngredient);
-            $em->flush();
-
-            return $this->redirectToRoute('catIngredient_index');
-        }
-        return $this->render('categories/addCatIngredient.html.twig', 
-        [
-            'formCatIngredient' => $form->createView(),
-            'categoryIngredient' => $categoryIngredient,
-            'editMode' => $categoryIngredient->getId() !== null,
-        ]);
-    }
-
-
-//                                              ******************EDITIONS/SUPPRESSIONS*****************
-    
-    
-    /**
-     * @Route("{id}/deleteComment", name="coment_delete")
-     */
-    public function deleteComment(Comment $comment, EntityManagerInterface $manager){
-        
-        if($this->getUser()){
-            if($this->getUser()->isAdmin() || $this->getUser() == $comment->getUser()){
-                $recipeId = $comment->getRecipe()->getId();
-                $manager->remove($comment);
-                $manager->flush();
-
-                return $this->redirectToRoute('detailRecipe', ['id' => $recipeId]);
-            }
-        }
-        return $this->redirectToRoute('recipe_index');
-    }
 
     /**
      * @Route("{id}/editComment", name="comment_edit")
@@ -292,30 +158,181 @@ class RecipeController extends AbstractController
 
     }
 
+
     /**
-     * @Route("{id}/deleteRecipe", name="recipe_delete")
+     *@Route("/recipe/add", name="add_recipe")
+     *@Route("/recipe/edit/{id}", name="edit_recipe")
+     */
+    public function addRecipe(ManagerRegistry $manager, Request $request, Recipe $recipe = null): Response{
+        
+        if ( ! $recipe){
+            //On crée une nouvelle recette
+            $recipe = new Recipe();
+        }        
+        //La recette aura comme user la personne connecté
+        $recipe->setUser($this->getUser());
+        //On crée un formulaire, où on remove un certain nombre de fields
+        $form = $this->createForm(RecipeType::class, $recipe);
+        $form->handleRequest($request);
+        
+        if($form->isSubmitted() && $form->isValid()){   
+            $time = ($request->request->get('recipe'));
+            if (($time['preparationTime']) > $time['cookingTime']){ //securité
+                
+                $em = $manager->getManager();
+                $em->persist($recipe);
+                $em->flush();
+
+                return $this->redirectToRoute('recipe_index');
+
+            }else{
+                $this->addFlash("error", "Merci de mettre un temps de préparation inférieur au temps de cuisson");
+            }
+            
+        }
+       return $this->render('recipe/addRecipe.html.twig', 
+       [
+           'form' => $form->createView(),
+           'recipe' => $recipe,
+           'editMode' => $recipe->getId() !== null,
+       ]);
+    }
+
+   
+
+    /**
+     * @Route("/ingredient/new", name="new_ingredient")
      * 
      */
-    public function deleteRecipe(Recipe $recipe, EntityManagerInterface $manager){
+    public function addIngredient(Ingredient $ingredient = null, Request $request, EntityManagerInterface $manager): Response {
+        
+        $ingredient = new Ingredient();
+        
+        $form = $this->createForm(IngredientType::class, $ingredient);
 
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()) {   
+           
+            $manager->persist($ingredient);
+            $manager->flush();
+
+            return $this->redirectToRoute('recipe_index');
+        }
+        return $this->render('ingredient/add.html.twig', [
+            'formIngredient' => $form->createView(),
+            'ingredient' => $ingredient,
+            
+        ]);
+    }
+
+    /**
+     * @Route("/catRecipe/new", name="new_catRecipe")
+     * @Route("/catRecipe/edit/{id}", name="edit_catRecipe")
+     */
+    public function newCatRecipe(CategoryRecipe $categoryRecipe = null, Request $request, ManagerRegistry $manager): Response {
+        
+        if ( ! $categoryRecipe){
+
+            $categoryRecipe = new CategoryRecipe();
+        }
+
+        $form = $this->createForm(CategoryRecipeType::class, $categoryRecipe);
+        $form->handleRequest($request);
+
+
+        if($form->isSubmitted() && $form->isValid()) 
+        {   
+            $em = $manager->getManager();
+            $em->persist($categoryRecipe);
+            $em->flush();
+
+            return $this->redirectToRoute('catRecipe_index');
+        }
+        return $this->render('categories/addCatRecipe.html.twig', [
+            'formCatRecipe' => $form->createView(),
+            'categoryRecipe' => $categoryRecipe,
+            'editMode' => $categoryRecipe->getId() !== null,
+            
+        ]);
+    }
+
+    /**
+     * @Route("/catIngredient/new", name="new_catIngredient")
+     * @Route("/catIngredient/edit/{id}", name="edit_catIngredient")
+     */
+    public function newCatIngredient(CategoryIngredient $categoryIngredient = null, Request $request, ManagerRegistry $manager): Response {
+        
+        if ( ! $categoryIngredient){
+
+            $categoryIngredient = new CategoryIngredient();
+        }
+
+        $form = $this->createForm(CategoryIngredientType::class, $categoryIngredient);
+
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()) 
+        {   
+            $em = $manager->getManager();
+            $em->persist($categoryIngredient);
+            $em->flush();
+
+            return $this->redirectToRoute('catIngredient_index');
+        }
+        return $this->render('categories/addCatIngredient.html.twig', 
+        [
+            'formCatIngredient' => $form->createView(),
+            'categoryIngredient' => $categoryIngredient,
+            'editMode' => $categoryIngredient->getId() !== null,
+        ]);
+    }
+
+
+//                                              ******************SUPPRESSIONS*****************
+    
+    
+    /**
+     * @Route("{id}/deleteComment", name="coment_delete")
+     */
+    public function deleteComment(Comment $comment, EntityManagerInterface $manager){
         
         if($this->getUser()){
-            if($this->getUser()->isAdmin()){
-                $comments = $recipe->getComments();
-                foreach($comments as $comment){
-                    $manager->remove($comment);
-                }
-                $bibliotheques = $recipe->getBibliotheques();
-                foreach($bibliotheques as $bibliotheque){
-                    $manager->remove($bibliotheque);
-                }
-                $manager->remove($recipe);
+            if($this->getUser()->isAdmin() || $this->getUser() == $comment->getUser()){
+                $recipeId = $comment->getRecipe()->getId();
+                $manager->remove($comment);
                 $manager->flush();
 
-                return $this->redirectToRoute('topics'); 
+                return $this->redirectToRoute('detailRecipe', ['id' => $recipeId]);
             }
         }
-        return $this->redirectToRoute('topics');
-        
+        return $this->redirectToRoute('recipe_index');
     }
+
+
+    /**
+     * @Route("/recipe/{id}/delete", name="recipe_delete")
+     */
+    public function deleteRecipe(Recipe $recipe = null, EntityManagerInterface $manager){
+      
+        if($this->getUser()){
+            $comments = $recipe->getComments();
+            foreach($comments as $comment){
+                $manager->remove($comment);
+            }
+            $bibliotheques = $recipe->getBibliotheques();
+            foreach ($bibliotheques as $bibliotheque) {
+                $manager->remove($bibliotheque);
+            }
+        
+            $manager->remove($recipe);
+            $manager->flush();
+        
+            return $this->redirectToRoute('recipesUser_index', ['id' => $this->getUser()->getId()]);
+        }else{
+            $this->addFlash("error", "Cette recette n'existe pas.");
+            return $this->redirectToRoute("recipesUser_index");
+        }
+    }
+
+    
+    
 }
