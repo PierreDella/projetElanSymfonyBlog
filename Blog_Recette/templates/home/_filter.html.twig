@@ -1,21 +1,16 @@
 {{ form_start(form) }}
     <div class="filter">
-        {{ form_row(form.q) }}
+        
         <div>
-            <h4>Categories Recette</h4>
-            <div class="filter-categorie">
+        {{ form_row(form.q) }}
+            <h4>Categories Recette:</h4>
+            <div class="filter-categorie" style="flex">
                 <p class="balises">{{ form_row(form.categoriesRecipe) }}</p>
             </div>
         </div>
-    <button type="submit" class="">Rechercher</button>
+        <button type="submit" class="">Rechercher</button>
     </div>
     <style>
-        label {
-            padding : 2.5px;
-            /* display : flex; */
-            
-            /* grid-template-columns : repeat(2, 1fr); */
-        }
         .filter{
             padding-bottom: 1em;
         }

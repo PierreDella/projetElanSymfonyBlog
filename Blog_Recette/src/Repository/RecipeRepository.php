@@ -2,10 +2,11 @@
 
 namespace App\Repository;
 
-use App\Data\SearchData;
+use App\Entity\User;
 use App\Entity\Recipe;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Data\SearchData;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Recipe|null find($id, $lockMode = null, $lockVersion = null)
@@ -32,6 +33,9 @@ class RecipeRepository extends ServiceEntityRepository
             ->select('c', 'r')
             ->join('r.categories', 'c')
             ->andWhere('r.published=1');
+            // ->orderBy('r.nblikes', 'DESC')
+            // ->orderBy('')
+            
 
         if( ! empty($search->q)) {
             $query = $query 
@@ -50,6 +54,19 @@ class RecipeRepository extends ServiceEntityRepository
         // return $this->findBy(["published" => 1]);
     }
     
+    /**
+     * @return boolean
+     */
+    public function isLikedByUser(User $user) : bool {
+
+        foreach($this->likes as $like){
+                // si dans les likes se trouve l'utilisateur ca veut dire qu'il aura liké
+            if($like->getUser() === $user) return true;
+        
+        }
+
+        return false;
+    }
 
     // /**
     //  * @return Recipe[] Returns an array of Recipe objects

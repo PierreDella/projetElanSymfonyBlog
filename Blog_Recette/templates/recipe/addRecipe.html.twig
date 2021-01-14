@@ -2,8 +2,6 @@
 
 {% block title %}Ma recette{% endblock %}
 
-
-
 {% block body %}
 {% if editMode %}
 <h1>Edition recette</h1>
@@ -11,134 +9,105 @@
 <h1>Creation recette</h1>
 {% endif %}
 
-
 {{ form_start(form) }}
 
-    {{ form_row(form.name) }}
-
-
-        <div>
-            {{ form_start(form) }}
-                {{ form_row(form.description) }}
-                {{ form_row(form.nbPerson) }}
-                {{ form_row(form.preparationTime) }}
-                {{ form_row(form.cookingTime) }}
-                
-
-            
-            {{ form_row(form.categories) }}
-
-                {# <div id="recipe_categories_container">
-                    <ul id="categories" data-prototype="{{ form_widget(form.recipe.vars.prototype)|e('html_attr') }}">
-                    </ul>
-                    <button type="button" class="add_categorie_link" data-collection-holder-class="categorie">Ajout d'une categorie</button>
-                </div> #}
-        
-                <div id="recipe_compositions_container">
-                   <ul data-prototype="{{ form_widget(form.compositions.vars.prototype)|e('html_attr') }}">
-                    </ul>
-                    
-                    <button type="button" class="add_ingredient_link" data-collection-holder-class="ingredient">Ma liste d'ingredients</button>
-                </div>
-                <br>
-                    <a class= "icon_add" href="{{ path('new_ingredient') }}"><button type="button" class="btn btn-dark">Ajout d'ingredient</button></a>
-                <br><br>
-            {{ form_end(form) }}
-        </div>
-       
-<pre>
-    {{ dump(form) }}
-</pre>
-{{ form_end(form) }}
     
+
+    {{ form_start(form) }}
+
+        {{ form_row(form.name) }}
+        {{ form_row(form.published) }} 
+        {{ form_row(form.description) }}
+        {{ form_row(form.nbPerson) }}
+        {{ form_row(form.preparationTime) }}
+        {{ form_row(form.cookingTime) }}
+        {{ form_row(form.picture) }}
+        {{ form_row(form.instructions) }}
+
+        <div id="recipe_categories_container" style="width:25%;">
+            <ul id="categories" data-prototype="{{ form_widget(form.categories.vars.prototype)|e('html_attr') }}">
+                {% for categorie in form.categories %}
+                    <div class="categories-form"style="display:flex;">
+                        {{ form_row(categorie) }} 
+                        <a class="remove">X</a>
+                    </div>  
+                {% endfor %}
+            </ul>
+            <button type="button" class="btn btn-dark add_categorie_link" data-collection-holder-class="categorie">Ajouter une categorie</button>
+        </div>
+
+        <div id="recipe_compositions_container">
+            <ul data-prototype="{{ form_widget(form.compositions.vars.prototype)|e('html_attr') }}">
+                {% for composition in form.compositions %}
+                    <div class="composition-form"style="display:flex;">
+                            {{ form_row(composition) }}
+                            <div class="remove-ingredient"style="padding-top: 3em;">
+                                <a class="remove">X</a>    
+                            </div> 
+                            
+                    </div>  
+                {% endfor %}
+            </ul>
+            <p class="d-flex">
+                <button type="button" class="add_ingredient_link btn btn-dark" data-collection-holder-class="ingredient">Ma liste d'ingredients</button>
+                {{ form_widget(form.catIngredient) }}
+            </p>
+            
+        </div>
+
+        <br>
+            <a class= "icon_add" href="{{ path('new_ingredient') }}"><button type="button" class="btn btn-dark">Manque d'un ingrédient ajouter le ici</button></a>
+        <br><br>
+         
+    {{ form_end(form) }}
+
 {% endblock %}
 
 {% block javascripts %}
 {# On récupère jquery de base.html.twig #}
     {{ parent() }}
     <script>
-
-
-
-
-// $(document).ready(function() {
-//             //On définit le contenant 
-//             var $collectionHolderCategories = $('#categories');
-//             var proto = $collectionHolderCategories.data("prototype");
+        $(document).ready(function() {
+            //On définit le contenant 
+            var $collectionHolderCategories = $('#categories');
+            var proto = $collectionHolderCategories.data("prototype");
                        
-//             //ajoute un attribut data-index qui compte le nbre d'inputs dans la collection
-//             $collectionHolderCategories.data('index', $collectionHolderCategories.find(':input').length);
+            //ajoute un attribut data-index qui compte le nbre d'inputs dans la collection
+            $collectionHolderCategories.data('index', $collectionHolderCategories.find(':input').length);
 
-//             addFormToCollection($collectionHolderCategories, proto);
+            addFormToCollection($collectionHolderCategories, proto);
             
-//             $('.add_categorie_link').on('click', function(e){
-//                 e.preventDefault();
-//                 //ajoute un nouvel recipe  formulaire
-//                 addFormToCollection($collectionHolderCategories, proto);
-//             })
-//         });
+            $('.add_categorie_link').on('click', function(e){
+                e.preventDefault();
+                //ajoute un nouvel recipe  formulaire
+                addFormToCollection($collectionHolderCategories, proto);
+            })
+        });
 
-//         function addFormToCollectionC($holderR, newForm){
-//             console.log(newForm)
-//             var index = $holder.data('index');
+        function addFormToCollectionC($holderR, newFormSec){
+            console.log(newFormSec)
+            var index = $holderR.data('index');
             
-//             newForm = newForm.replace(/__name__/g, index);
+            newFormSec = newFormSec.replace(/__nameSec__/g, index);
             
-//             //définit le nombred 'index qu'on veut ajouter qu'en on appuie sur le bouton
-//             $holderR.data('index', index + 1);
-//             //Ajoute un form avec <li> avant le bouton ajouter recipe
-//             var $newFormLi = $('<li></li>').append(newForm);
+            //définit le nombred 'index qu'on veut ajouter qu'en on appuie sur le bouton
+            $holderR.data('index', index + 1);
+            //Ajoute un form avec <li> avant le bouton ajouter recipe
+            var $newFormCatLi = $('<li></li>').append(newFormSec);
 
-//             $newFormLi.append('<a href="#" class="remove">x</a>');
+            $newFormCatLi.append('<a href="#" class="remove">x</a>');
     
-//             $holderR.append($newFormLi)
+            $holderR.append($newFormCatLi)
 
-//             $('.remove').click(function(e) {
-//                 e.preventDefault();
+            $('.remove').click(function(e) {
+                e.preventDefault();
                 
-//                 $(this).parent().remove();
+                $(this).parent().remove();
                 
-//                 return false;
-//             });
+                return false;
+            });
 
-//         }
-
-
-
-
-
-
-
-        // $("#add_category").click(function(){
-        //     let proto = $("#recipe_categories").data("prototype")
-        //     //Permet d'ajouter a la suite
-        //     $("#recipe_categories").append(proto)
-
-        // }) 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        }
 
 
 
@@ -181,6 +150,15 @@
             });
 
         }
+
+
+// $("#add_category").click(function(){
+//             let proto = $("#recipe_categories").data("prototype")
+//             //Permet d'ajouter a la suite
+//             $("#recipe_categories").append(proto)
+
+//         }) 
+
     </script>
 {% endblock %}
 

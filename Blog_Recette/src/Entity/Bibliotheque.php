@@ -47,6 +47,7 @@ class Bibliotheque
 
     /**
      * @ORM\ManyToMany(targetEntity=Recipe::class, mappedBy="bibliotheques")
+     * @ORM\JoinColumn(nullable=true)
      */
     private $recipes;
 

@@ -10,6 +10,12 @@
             {{ form_row(formBiblio.titre) }} 
                 <div id="recipe_bibliotheques_container">
                     <ul id="recipes" data-prototype="{{ form_widget(formBiblio.recipes.vars.prototype)|e('html_attr') }}">
+                        {% for recipe in formBiblio.recipes %}
+                            <div class="categories-form"style="display:flex;">
+                                {{ form_row(recipe) }} 
+                                <a class="remove">X</a>
+                            </div>  
+                        {% endfor %}
                     </ul>
                     <button type="button" class="add_recipe_link" data-collection-holder-class="recipe">Ajout de recette</button>
                 </div>

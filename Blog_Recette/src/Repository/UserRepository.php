@@ -22,15 +22,17 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         parent::__construct($registry, User::class);
     }
 
-    public function getAll(){
-            $entityManager = $this->getEntityManager();
-            $query = $entityManager->createQuery(
-                'SELECT u
-                FROM App\Entity\User u 
-                ORDER BY u.pseudo'
-            );
-            return $query->execute();
-    }
+    // public function getRecipeByLikes(){
+    //         $entityManager = $this->getEntityManager();
+    //         $query = $entityManager->createQuery(
+    //             'SELECT COUNT(user_id) AS nblikes, recipe_id
+    //             FROM App\Entity\RecipeLike
+    //             GROUP BY recipe_id
+    //             ORDER BY nblikes DESC'
+    //         );
+    //             return $query->execute();
+    // }
+
 
     public function getAllOrder() {
         $entityManager = $this->getEntityManager();
@@ -43,6 +45,17 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
         return $query->execute();
     }
+
+    // public function getByMostliked() {
+    //     $entityManager = $this->getEntityManager();
+    //     $query = $entityManager->createQuery(
+    //         'SELECT u
+    //             FROM App\Entity\User u
+    //             ORDER BY u.id DESC'
+    //     )
+    //     ->set
+    //     return $query->execute();
+    // }
 
     /**
      * Used to upgrade (rehash) the user's password automatically over time.
@@ -58,16 +71,10 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
-    public function getUserById($id){
+    
 
-        $qb = $this->createQueryBuilder('u')
-            ->where('u.id = :id')
-            ->setParameter(':id', $id);
 
-            $query = $qb->getQuery();
 
-            return $query->execute();
-    }
 
     // /**
     //  * @return User[] Returns an array of User objects

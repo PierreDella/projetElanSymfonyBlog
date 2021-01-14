@@ -5,13 +5,14 @@
 {% block body %}
 
 
-<h1>Bibliotheque de {{ user.pseudo }}</h1>
+<h1>Recettes de {{ user.pseudo }}</h1>
     <ul>
     {% for recipe in recipes %}
         <ul>
             <li>
                 <a href="{{ path('detailRecipe', {'id':recipe.id}) }}">{{ recipe.name }}</a>
-                <a href="{{ path('recipe_delete', {'id':recipe.id}) }}">SUPP</a>
+                <a href="{{ path('edit_recipe', { id: recipe.id }) }}"> <i class="fas fa-edit"></i></a>
+                <a href="{{ path('recipe_delete', { id: recipe.id }) }}"><i class="fas fa-trash-alt"></i></a>
                 
                 {{ recipe.published == '0' ? '<span uk-icon="icon: lock"></span>' : '<span uk-icon="icon: unlock"></span>' }}
            

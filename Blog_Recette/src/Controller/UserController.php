@@ -5,11 +5,15 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\Recipe;
 use App\Form\UserType;
+use App\Entity\RecipeLike;
 use App\Entity\Bibliotheque;
 use App\Entity\Subscription;
 use App\Form\BibliothequeType;
+use App\Form\ChangePasswordType;
+use App\Repository\RecipeLikeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Repository\SubscriptionRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\File;
@@ -18,27 +22,13 @@ use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use App\Form\ChangePasswordType;
-
 
 class UserController extends AbstractController
 {
 
 
 //                                                    ******************AFFICHAGES*****************
-    /**
-     * @Route("/users", name="user_index")
-     */
-    public function index()
-    {
-        $repo = $this->getDoctrine()->getRepository(User::class);
-        $users = $repo->findAll();
-        return $this->render('user/index.html.twig', [
-            'users' => $users,
-        ]);
-    }
 
-   
     /**
      * @Route("/show/bibliotheque/{id}", name="show_bibliotheque")
      */
@@ -111,21 +101,25 @@ class UserController extends AbstractController
     {   
         $subscribers = $this->getUser()->getSubscribers();
 
-        $subscriptions = $this->getUser()->getListsubscriptions();
+        $subscriptions = $this->getUser()->getListSubscriptions();
         
         $others = $manager->getRepository(User::class)->findAll();
         
+        $subscriptionsRecipes = $this->getUser()->getListSubscriptions();
+    
         if ($user) {
             return $this->render('bibliotheque/abo.html.twig', [
                 'user' => $user,
                 "subscriptions" => $subscriptions,
                 "subscribers" => $subscribers,
+                'subscriptionsRecipes' => $subscriptionsRecipes,
                 "others" => $others
             ]);
         } else {
             return $this->redirectToRoute('home');
         }
     }
+
 
 
 //                                                    ******************EDITIONS/AJOUTS*****************
@@ -152,7 +146,7 @@ class UserController extends AbstractController
     
 
     /**
-     * @Route("/{id}/public", name="recipe_lock")
+     * @Route("/{id}/publicRecipe", name="recipe_lock")
      * 
      */
     public function lockRecipe(Recipe $recipe, EntityManagerInterface $manager){
@@ -180,8 +174,7 @@ class UserController extends AbstractController
 
                 $bibliotheque = new Bibliotheque();
             }
-        
-
+            
         $form = $this->createForm(BibliothequeType::class, $bibliotheque);
         $form->handleRequest($request);
 
@@ -209,23 +202,107 @@ class UserController extends AbstractController
     /** 
      * @Route("/subscribe/{id}", name="add_following")
      */
-    public function makeSubscription(User $target, EntityManagerInterface $em){
+    public function makeSubscription(User $target, EntityManagerInterface $manager, SubscriptionRepository $SubscibRepo) : Response{
         
+        // $user = $this->getUser();
+
+        // if(!$user) return $this->json([
+        //     'code' => 403,
+        //     'message' => "Unauthorized"
+        // ], 403);
+        // //Si j'ai deja aimé supp le j'aime
+        // if($recipe->isSubscribedByUser($user)){
+        //     //On lui demande de retrouver le like du user et de la recette
+        //     $like = $SubscibRepo->findOneBy([
+        //         'recipe' => $recipe,
+        //         'user' => $user
+        //     ]);
+
+        //     $manager->remove($like);
+        //     $manager->flush();
+        //     //On retourne l'info au js
+        //     return $this->json([
+        //         'code' => 200,
+        //         'message' => 'Like supprimé',
+        //         'likes' => $SubscibRepo->count(['recipe' => $recipe])
+        //     ], 200); //donne le statu http
+        // }
+        // $like = new RecipeLike();
+        // $like->setRecipe($recipe)
+        //      ->setUser($user);
+
+        //      $manager->persist($like);
+        //      $manager->flush();
+
+        //      return $this->json([
+        //         'code' => 200,
+        //         'message' => 'Like ajouté',
+        //         'likes' => $SubscibRepo->count(['recipe' => $recipe])
+        //     ], 200); //donne le statu http
+
+        // return $this->json(['code' => 200, ''], 200);
+
         $subscription = new Subscription();
 
         $subscription->setSubscriber($this->getUser());
         $subscription->setTargetUser($target);
 
-        $em->persist($subscription);
-        $em->flush();
+        $manager->persist($subscription);
+        $manager->flush();
 
         return $this->redirectToRoute("abonnements_index", ["id"=>$this->getUser()->getId()]);
+    }
+
+
+    /** Permet de liker ou non une recette
+     * @Route("/recipe/{id}/like", name="recipe_like")
+     */
+    public function like(Recipe $recipe, EntityManagerInterface $manager, RecipeLikeRepository $likeRepo) : Response{
+        
+        
+        $user = $this->getUser();
+        //Si l'utilisateur est anonyme et qu'il essaye de like une recette 
+        if(!$user) return $this->json([
+            'code' => 403,
+            'message' => "Unauthorized"
+        ], 403);
+        //Si j'ai deja aimé supp le j'aime
+        if($recipe->isLikedByUser($user)){
+            //On lui demande de retrouver le like du user et de la recette
+            $like = $likeRepo->findOneBy([
+                'recipe' => $recipe,
+                'user' => $user
+            ]);
+
+            $manager->remove($like);
+            $manager->flush();
+            //On retourne l'info au js
+            return $this->json([
+                'code' => 200,
+                'message' => 'Like supprimé',
+                'likes' => $likeRepo->count(['recipe' => $recipe])
+            ], 200); //donne le statu http
+        }
+        $like = new RecipeLike();
+        $like->setRecipe($recipe)
+             ->setUser($user);
+
+             $manager->persist($like);
+             $manager->flush();
+
+             return $this->json([
+                'code' => 200,
+                'message' => 'Like ajouté',
+                'likes' => $likeRepo->count(['recipe' => $recipe])
+            ], 200); //donne le statu http
+
+        return $this->json(['code' => 200, ''], 200);
     }
 
     /**
      * @Route("/user/{id}/changePassword", name="user_edit_password")
      */
-    public function editUserPassword(User $user = null, Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $passwordEncoder): Response {
+    public function editUserPassword(User $user = null, Request $request, UserPasswordEncoderInterface $passwordEncoder): Response {
 
         if ($user){
             if($user->getId() == $this->getUser()->getId()){
@@ -267,8 +344,8 @@ class UserController extends AbstractController
      * @Route("/user/{id}/delete", name="user_delete")
      */
     public function deleteUser(User $user = null, EntityManagerInterface $manager){
-      
-        if($this->getUser()){
+       
+        if($this->getUser()->isAdmin()){
             $comments = $user->getComments();
             foreach($comments as $comment){
                 $manager->remove($comment);
@@ -285,12 +362,16 @@ class UserController extends AbstractController
             foreach ($subscriptions as $subscription){
                 $manager->remove($subscription);
             }
-            
+            $likes = $user->getLikes();
+            foreach ($likes as $like) {
+                $manager->remove($like);
+            }
             $manager->remove($user);
             $manager->flush();
         
             return $this->redirectToRoute('user_index');
         }else{
+            $this->addFlash("error", "Suppression non autorisé.");
             return $this->redirectToRoute("home");
         }
     }

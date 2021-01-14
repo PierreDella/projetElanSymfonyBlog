@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Entity\CategoryIngredient;
 use App\Entity\Recipe;
 use App\Form\CompositionType;
 use App\Entity\CategoryRecipe;
@@ -76,6 +77,11 @@ class RecipeType extends AbstractType
                     ]),
                 ],
             ])
+            ->add('catIngredient', EntityType::class,[
+                'class' => CategoryIngredient::class,
+                'mapped' => false,
+                'choice_label' => 'name'
+            ])
             ->add('compositions', CollectionType::class, [
                 'entry_type' => CompositionType::class,
                 'entry_options' => [
@@ -83,9 +89,12 @@ class RecipeType extends AbstractType
                     'label' => 'ajouter des ingredients',
                 ],
                 'allow_add' => true,
+                'label' => false,
+                'allow_delete' => true,
                 'by_reference' => false
             ])
             ->add('categories', CollectionType::class, [
+                'label' => false,
                 'entry_type' => EntityType::class,
                 'entry_options' => [
                     'class' => CategoryRecipe::class,
@@ -93,6 +102,7 @@ class RecipeType extends AbstractType
                     'label' => false
                 ],
                 'allow_add' => true,
+                'allow_delete' => true,
                 'by_reference' => false
             ])
             ->add('Valider', SubmitType::class)

@@ -6,6 +6,7 @@
 parameters:
     #creation du parametre qui va nous permettre de ranger nos img dans dossier imguploads
     pictures_directory: '%kernel.project_dir%/public/uploads/profilpicture' #dossier dans lequel ce trouve symfony
+    picturesRecipe_directory: '%kernel.project_dir%/public/uploads/images'
     
 services:
     # default configuration for services in *this* file

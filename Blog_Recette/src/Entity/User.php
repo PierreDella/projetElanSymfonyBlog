@@ -414,5 +414,17 @@ class User implements UserInterface
 
         return $this;
     }
+    /**
+     * @return boolean
+     */
+    public function isSubscribedByUser(User $user) : bool {
 
+        foreach($this->listSubscriptions as $listSubscription){
+                // si dans les likes se trouve l'utilisateur ca veut dire qu'il aura liké
+            if($listSubscription->getTargetUser() === $user) return true;
+        
+        }
+
+        return false;
+    }
 }

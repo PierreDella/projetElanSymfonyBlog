@@ -38,8 +38,9 @@ class RegistrationFormType extends AbstractType
                     ],
             ])
             ->add('picture', FileType::class, [
-                'label' => 'photoProfil ',
-                'mapped' => false
+                'label' => 'image de profil ',
+                'mapped' => false,
+                'required' => false
             ])
             ->add('dateNaissance', DateType::class,[
                 "widget" => 'single_text',

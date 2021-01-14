@@ -7,7 +7,8 @@
     <thead>
         <tr>
             <th>Nom</th>
-            <th></th>            
+            <th></th>
+            <th></th>              
         </tr>
     </thead>
 
@@ -20,6 +21,10 @@
         <td>
             <a href="{{ path('edit_catRecipe', {'id':categorie.id}) }}">Edit</a>
         </td>
+        <td>
+            <a href="{{ path('categoryRecipe_delete', {'id':categorie.id}) }}">Supp</a>
+        </td>
+        
     </tr>
 
 {% endfor %}

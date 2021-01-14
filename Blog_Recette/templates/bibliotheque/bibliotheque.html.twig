@@ -11,6 +11,8 @@
         <ul>
             <li>
                 <a href="{{ path('show_bibliotheque', {'id':bibliotheque.id}) }}">{{ bibliotheque.titre }}</a>
+                <a href="{{ path('edit_bibliotheque', { id: bibliotheque.id }) }}"> <i class="fas fa-edit"></i></a>
+                
                 {{ bibliotheque.publique == '1' ? '<span uk-icon="icon: lock"></span>' : '<span uk-icon="icon: unlock"></span>' }}
                 
                 {% if bibliotheque.publique == 1 %}
@@ -30,3 +32,5 @@
 <br><br>
 
 {% endblock %}
+
+

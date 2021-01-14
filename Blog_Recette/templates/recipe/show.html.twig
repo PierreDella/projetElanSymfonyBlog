@@ -3,66 +3,125 @@
 {% block title %}Hello RecipeController!{% endblock %}
 
 {% block body %}
-    <div class="textCentre">
-        <h2>{{ recipe.name }}</h2>
-        <a href="{{ path('edit_recipe', { id: recipe.id }) }}">EDIT</a>
-        <a href="#">SUPP</a>
+
+    <div class="card mb-3">
+        <div class="card-body">
         
-    </div>
-    
-    <p>{{ recipe.createdAt | date('d/m/Y') }} 
-    - par {{ recipe.user.pseudo }} <a href="{{ path('add_following', { id : recipe.user.id }) }}">suivre</a>
-    </p>
-    <p>{{ recipe.preparationTime | date('H:i') }}</p>
-    <p>{{ recipe.cookingTime |date('H:i') }}</p>
-    
-
-    {% for recipeCategory in recipeCategories %}
-        <p>{{ recipeCategory.name }}</p>
-    {% endfor %}
-    
-    
-
-    <h4>{{ recipe.description }}</h4>
-        {{ recipe.instructions }}
-    <div class="textCentre">
-        <h2>Les ingrédients de la recette : </h2>
-    </div>
-    
-
-    {% for ingredient in ingredients %}
-        <p> - {{ ingredient['quantity'] }} {{ ingredient['unit'] }} de {{ ingredient['name'] }} categorie :   {{ ingredient['category'] }}</p>
-    {% endfor %}
-    
-{% for comment in recipe.comments %}
-    <article class="uk-comment uk-comment-primary"> 
-        <header class="uk-comment-header">
-                <div class="uk-grid-medium uk-flex-middle" uk-grid>
-                    <div class="uk-width-auto">
-                        <img class="uk-comment-avatar" src="" width="80" height="80" alt="">
-                    </div>
-                    <div class="uk-width-expand">
-                        <h4 class="uk-comment-title uk-margin-remove"><a class="uk-link-reset" href="#">{{ comment.user.pseudo }}</a></h4>
-                        <ul class="uk-comment-meta uk-subnav uk-subnav-divider uk-margin-remove-top">
-                            <li>{{ comment.createdAt | date('d/m/Y') }}</li>
-                        </ul>
-                    </div>
-                </div>
-        </header>
-
-        <div class="uk-comment-body">
-            <p>{{ comment.post }}</p>
-            {% if app.user == comment.user %}
-                <a class="uk-button uk-button-default" href="{{ path('coment_delete', {'id':comment.id})}}">DELETE</a>
-                <a class="uk-button uk-button-default" href="{{ path('comment_edit', {'id':comment.id})}}">EDIT</a>
-            {% endif %}
+            <h4 class="text-center card-title">{{ recipe.name }}</h4>
+            <div class="text-center card-tools">
+                <a href="{{ path('edit_recipe', { id: recipe.id }) }}"> <i class="fas fa-edit"></i></a>
+                <a href="{{ path('recipe_delete', { id: recipe.id }) }}"><i class="fas fa-trash-alt"></i></a>
+            </div>
+            
+            <p class="text-left">
+                {% for recipeCategory in recipeCategories %}
+                    <span class="badge badge-secondary">
+                        {{ recipeCategory.name }}  
+                    </span>
+                {% endfor %}
+            </p> 
+            <div class="img-recipe" style="display:inline-flex;" >
+                <img src="{{ asset('uploads/images/' ~ recipe.picture) }}" class="img-fluid" style="margin:1em; min-width: 25%%;" alt="Responsive image">
+                <div class="img card-text" style="margin:1em; max-width: 75%;">
+                    <p>{{ recipe.description }}</p> 
+                    <p>Temps de préparation : {{ recipe.preparationTime }} minutes</p>
+                    <p>Temps de cuisson : {{ recipe.cookingTime }} minutes</p>
+                    <a href="{{ path('recipe_like', {'id': recipe.id}) }}" class="btn btn-link js-like">
+                        {% if app.user and recipe.isLikedByUser(app.user) %}
+                            <i class="fas fa-thumbs-up"></i>
+                        {% else %}
+                            <i class="far fa-thumbs-up"></i>
+                        {% endif %}
+                            <span class="js-likes">{{ recipe.likes | length }}</span>
+                            <span class="js-label">like<span>
+                    </a>
+                </div>  
+            </div>
+            <p class="card-text">
+                <small class="text-muted">{{ recipe.createdAt | date('d/m/Y') }}</small>
+                <div class="recipe-detail-pseudo">
+                    par <a href='{{ path('user_show', {'id': recipe.user.id}) }}'>{{ recipe.user.pseudo }}</a> 
+                </div> 
+                <a href="{{ path('add_following', { id : recipe.user.id }) }}">suivre</a>
+            </p>
+            
         </div>
-    </article>
-{% endfor %}  
+    </div>
+    <div class="body-recipe" style="display:flex;"> 
+        <div class="composition" style="width:25%"> 
+            <h5>Les ingrédients de la recette :</h5>
+            {% for ingredient in ingredients %}
+                <p> - {{ ingredient['quantity'] }} {{ ingredient['unit'] }} de {{ ingredient['name'] }} - <small>{{ ingredient['category'] }}</small></p>
+            {% endfor %}
+        </div>
+        <div class="instructions" style="padding:5em"> 
+            {{recipe.instructions|raw}}
+        </div>
+    </div>
+    
+    {% for comment in recipe.comments %}           
+        <ul class="list-unstyled">
+            <li class="media">
+                <img style="width:64px; height:64px" class="mr-3" src="{{ asset('uploads/profilpicture/' ~ comment.user.picture) }}" alt="Generic placeholder image">
+                <div class="media-body">
+                    <blockquote>
+                    <p class="post">{{ comment.post }}</p>
+                    <footer class="text-small"><a href='{{ path('user_show', {'id': comment.user.id}) }}'>{{ comment.user.pseudo }}</a><p>{{ comment.createdAt | date('d/m/Y') }}</p></footer>
+                    {% if app.user == comment.user %}
+                        <a class="uk-button uk-button-default" href="{{ path('comment_delete', {'id':comment.id})}}">DELETE</a>
+                        <a class="uk-button uk-button-default" href="{{ path('comment_edit', {'id':comment.id})}}">EDIT</a>
+                    {% endif %}
+                </blockquote>
+                </div>
+            </li>
+        </ul>
+    {% endfor %}  
 
 
         {{ form(formComment) }}
 
 
 
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    
+    <script>
+       function onClickBtnLike(event){
+            //
+            event.preventDefault();
+            //on prend l'url du lien pour l'avoir dans ajax
+            const url = this.href; //this sera l'element <a> sur lequel on clique
+            
+            //recher le span avec class js-likes
+            const spanCount = this.querySelector('span.js-likes');
+
+            const icone = this.querySelector('i');
+            
+            //peut etre appelé en POST
+            //axios permet gestion des promesses qui. La reponse sera ensuite mis dans la fonction
+            axios.get(url).then(function(response){
+                // const likes = response.data.likes;
+                spanCount.textContent = response.data.likes;
+                //si contient la class 'fas' = aime, alors remplacera par "far"
+                if(icone.classList.contains('fas')){
+                    icone.classList.replace('fas', 'far');
+                
+                } else {
+                    icone.classList.replace('far', 'fas');
+                }
+                   
+               
+                    
+            })
+        }
+        // selection de tout les <a> avec js-like 
+        document.querySelectorAll('a.js-like').forEach(function(link){
+        //quand clique appel de la finction onClick
+        link.addEventListener('click', onClickBtnLike);
+        })
+    </script>
+        
+    
 {% endblock %}

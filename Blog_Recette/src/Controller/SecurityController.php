@@ -46,7 +46,11 @@ class SecurityController extends AbstractController
      * @Route("/register", name="app_register")
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, SluggerInterface $slugger): Response
-    {
+    {   
+        if($this->getUser()){
+            $this->addFlash("error", "Tu es deja connecté");
+            return $this->redirectToRoute('home');
+        }
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
@@ -85,8 +89,6 @@ class SecurityController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
-
-
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);

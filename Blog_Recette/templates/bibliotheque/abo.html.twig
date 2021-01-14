@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello UserController!{% endblock %}
+{% block title %}Abonnements{% endblock %}
 
 {% block body %}
 <h1>Mes abonnements (les users que je suis)</h1>
@@ -15,16 +15,71 @@
     <ul>
     {% for subscriber in subscribers %}
         <li>{{ subscriber.subscriber.pseudo }}</li>
+        {# <li>{{ subscriber.subscriber.recipes }}</li> #}
     {% endfor %}
     </ul>
  <h2>Les utilisateurs que je ne suis pas encore...</h2>
     <ul>
-     
-    {% for other in others %}
+     {% for subscription in subscriptions %}
+        <li>{{ subscription.targetUser.pseudo }}</li>
+        
+    {% endfor %}
+   {% for other in others %}
         <li>
             {{ other.pseudo }}
             <a href="{{ path('add_following', { id : other.id }) }}">suivre</a>
         </li>
     {% endfor %}
     </ul>
+
+
+    <h1>Les Recettes de mes abonnements</h1>
+    <ul>
+        {% for subscriptionsRecipe in subscriptionsRecipes %}
+        <li>{{ subscriptionsRecipe.targetUser.id }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+
+
+
+{% block javascripts %}
+    // <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    // <script>
+    //     function onClickBtnLike(event){
+    //         //
+    //         event.preventDefault();
+    //         //on prend l'url du lien pour l'avoir dans ajax
+    //         const url = this.href; //this sera l'element <a> sur lequel on clique
+            
+    //         //recher le span avec class js-likes
+    //         const spanCount = this.querySelector('span.js-likes');
+
+    //         const icone = this.querySelector('a');
+            
+    //         //peut etre appelé en POST
+    //         //axios permet gestion des promesses qui. La reponse sera ensuite mis dans la fonction
+    //         axios.get(url).then(function(response){
+    //             // const likes = response.data.likes;
+    //             spanCount.textContent = response.data.likes;
+    //             //si contient la class 'désabonnement' = aime, alors remplacera par "far"
+    //             if(icone.classList.contains('désabonnement')){
+    //                 icone.classList.replace('désabonnement', 'abonnement');
+                
+    //             } else {
+    //                 icone.classList.replace('abonnement', 'désabonnement');
+    //             }
+                   
+               
+                    
+    //         })
+    //     }
+    //     // selection de tout les <a> avec js-like 
+    //     document.querySelectorAll('a.js-like').forEach(function(link){
+    //     //quand clique appel de la finction onClick
+    //     link.addEventListener('click', onClickBtnLike);
+    //     })
+    
+    </script>
+ 
 {% endblock %}

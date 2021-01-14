@@ -1,112 +1,171 @@
+
 *{
-    box-sizing: border-box;
+  box-sizing: border-box;
+}
+.body{
+  display : grid;
+  grid-template-columns : repeat(4,1fr);
+  grid-gap: 20px
+}
+.card-img-top{
+  padding: 1em;
+}
+.wrapper{
+  max-width: 1280px;
+  margin: auto;
+}
+.card img{
+max-height: 20em;
+height: 15em;
+}
+.col-form-label {
+  flex: none;
+  max-width: none;
+}
+@media (min-width: 576px){
+  .col-sm-2 {
+    flex: none;
+    max-width: none;
+  }
+}
+/* COMMENTS */
+.media{
+  background-color: white;
+  padding: 1em;
+  margin: 1em;
+  border-radius: 10px;
+  border: solid 1px;
+}
+
+
+
+
+
+
+
+
+
+.mainhome{
+  display: flex;
+}
+.row{
+  /* margin: auto; */
+  padding-left: 1em;
+  padding-right: 2em;
+
+}
+.card-deck{
+  display : grid;
+  grid-template-columns : repeat(3,1fr);
+  grid-gap: 5px
+}
+
+
+/* The side navigation menu */
+.sidenav {
+  height: 100%; /* 100% Full-height */
+  width: 0; /* 0 width - change this with JavaScript */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Stay on top */
+  top: 0; /* Stay at the top */
+  left: 0;
+  background-color: rgb(92, 78, 78); /* Black*/
+  overflow-x: hidden; /* Disable horizontal scroll */
+  padding-top: 60px; /* Place content 60px from the top */
+  transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+}
+
+/* The navigation menu links */
+.sidenav a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+/* When you mouse over the navigation links, change their color */
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+/* Position and style the close button (top right corner) */
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+/* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+#main {
+  transition: margin-left .5s;
+  padding: 20px;
+}
+
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+
+
+
+/* SEGMENT PROFIL */
+
+body {
+  color: #797979;
+  background: #f1f2f7;
+  font-family: 'Open Sans', sans-serif;  
+}
+
+.profile-nav, .profile-info{
+  margin-top:30px;   
+}
+
+.profile-nav .user-heading {
+  background: #fbc02d;
+  color: #fff;
+  border-radius: 4px 4px 0 0;
+  -webkit-border-radius: 4px 4px 4px 4px;
+  padding: 30px;
+  text-align: center;
+}
+
+.profile-nav .user-heading.round a  {
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border: 10px solid rgba(255,255,255,0.3);
+  display: inline-block;
+}
+
+.profile-nav .user-heading a img {
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+}
+/* SEGMENT LIENS */
+
+.profile-nav ul > li > a {
+  border-radius: 0;
+  -webkit-border-radius: 0;
+  color: #89817f;
+  text-decoration: none;
+  list-style: none;
+}
+
+
+blockquote{
+margin: 0;
 }
 
 .textCentre{
   margin: 0 auto;
   text-align: center;
 }
-
-
-/* The side navigation menu */
-.sidenav {
-    height: 100%; /* 100% Full-height */
-    width: 0; /* 0 width - change this with JavaScript */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Stay on top */
-    top: 0; /* Stay at the top */
-    left: 0;
-    background-color: rgb(92, 78, 78); /* Black*/
-    overflow-x: hidden; /* Disable horizontal scroll */
-    padding-top: 60px; /* Place content 60px from the top */
-    transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
-  }
-  
-  /* The navigation menu links */
-  .sidenav a {
-    padding: 8px 8px 8px 32px;
-    text-decoration: none;
-    font-size: 25px;
-    color: #818181;
-    display: block;
-    transition: 0.3s;
-  }
-  
-  /* When you mouse over the navigation links, change their color */
-  .sidenav a:hover {
-    color: #f1f1f1;
-  }
-  
-  /* Position and style the close button (top right corner) */
-  .sidenav .closebtn {
-    position: absolute;
-    top: 0;
-    right: 25px;
-    font-size: 36px;
-    margin-left: 50px;
-  }
-  
-  /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
-  #main {
-    transition: margin-left .5s;
-    padding: 20px;
-  }
-  
-  /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
-  @media screen and (max-height: 450px) {
-    .sidenav {padding-top: 15px;}
-    .sidenav a {font-size: 18px;}
-  }
-
-  
-
-/* SEGMENT PROFIL */
-
-body {
-    color: #797979;
-    background: #f1f2f7;
-    font-family: 'Open Sans', sans-serif;  
-}
-
-.profile-nav, .profile-info{
-    margin-top:30px;   
-}
-
-.profile-nav .user-heading {
-    background: #fbc02d;
-    color: #fff;
-    border-radius: 4px 4px 0 0;
-    -webkit-border-radius: 4px 4px 4px 4px;
-    padding: 30px;
-    text-align: center;
-}
-
-.profile-nav .user-heading.round a  {
-    border-radius: 50%;
-    -webkit-border-radius: 50%;
-    border: 10px solid rgba(255,255,255,0.3);
-    display: inline-block;
-}
-
-.profile-nav .user-heading a img {
-    width: 112px;
-    height: 112px;
-    border-radius: 50%;
-    -webkit-border-radius: 50%;
-}
-/* SEGMENT LIENS */
-
-.profile-nav ul > li > a {
-    border-radius: 0;
-    -webkit-border-radius: 0;
-    color: #89817f;
-    text-decoration: none;
-    list-style: none;
-}
- 
-
-
-
 
 
 
