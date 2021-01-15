@@ -3,17 +3,6 @@
 {% block title %}Favoris{% endblock %}
 
 {% block body %}
-  {% for recipe in user.likes %}
-    <a href="#">{{ recipe.recipe.name }}</a>
-
-    
-
-
-
-  {% endfor %}
-
-
-
   <div class="body-recipes">
     <div class="card-deck">
         {% for recipe in user.likes %}

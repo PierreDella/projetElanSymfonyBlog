@@ -3,7 +3,7 @@
 {% block title %}Fil d'actualité{% endblock %}
 
 {% block body %}
-<h2>Mon fil d'actualité</h2>
+<h2>Mon fil d'actualités</h2>
     <ul>
     {% for subscription in subscriptions %}
         <div class="card-deck">
@@ -15,7 +15,9 @@
                             <a class="card-text" href="{{ path('detailRecipe', {'id':recipe.id}) }}" class="card-title">{{ recipe.name }}</a>
                             <small>{{ recipe.createdAt | date('d/m/Y') }}</small>
                         </h5>
-                        <a href='{{ path('user_show', {'id': subscription.targetUser.id}) }}'>{{ subscription.targetUser.pseudo }}</a>    
+                        {# <small >
+                            <a style="padding-bottom:1em;" href='{{ path('user_show', {'id': subscription.targetUser.id}) }}'>{{ subscription.targetUser.pseudo }}</a>   
+                        </small> #}
                         <p class="card-text">{{ recipe.description }}</p>
                         <div class="preparationTime">
                             <small class="text-muted">{{ recipe.preparationTime }} minutes</small>

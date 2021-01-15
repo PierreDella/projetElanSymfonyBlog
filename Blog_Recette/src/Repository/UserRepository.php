@@ -33,6 +33,18 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     //             return $query->execute();
     // }
 
+    // public function findByTopic($user)
+    // {
+    //     $entityManager = $this->getEntityManager();
+    //     $query = $entityManager->createQuery(
+    //         'SELECT p
+    //         FROM App\Entity\Post p
+    //         WHERE p.topic = :topic'
+    //         )
+    //     ->setParameter('user', $user);
+
+    //     return $query->getResult(); 
+    // }
     
     public function getAllOrder() {
         $entityManager = $this->getEntityManager();
@@ -46,7 +58,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $query->execute();
     }
 
-    
+
 
 
     // SELECT name, pseudo, COUNT(rl.user_id) AS nblikes, recipe_id

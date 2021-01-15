@@ -14,7 +14,6 @@
 }
 
 
-/* PRESENTATION RECETTES */
 .body{
   display : grid;
   grid-template-columns : repeat(4,1fr);
@@ -36,10 +35,10 @@
   margin-top: 2em;
   /* margin: 1em; */
 }
+
 .card img{
   padding: 1em;
   max-height: 20em;
-  
   height: 15em;
 }
 .row{
@@ -56,6 +55,13 @@
 */
 
  /* RECETTE */
+ .card-recipe{
+  margin-top: 2em;
+}
+.card-recipe img{
+  height: 20em;
+  margin: 0;
+}
 .top-card{
   margin:1em; 
   max-width: 75%;
@@ -68,10 +74,11 @@
 }
 .img-fluid{
   margin:1em;
-min-width: 25%;
+  min-width: 25%;
 }
 .instructions{
-  padding:5em; 
+  padding-left:5em; 
+  padding: 3em;
 }
 .body-recipe{
   display:flex;
