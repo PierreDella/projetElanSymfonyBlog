@@ -110,6 +110,35 @@
                 document.getElementById("mySidenav").style.width = "0";
                 document.getElementById("main").style.marginLeft = "0";
                 }
+
+
+          
+
+
+            </script>
+            <script>
+
+                $('a.confirmation').confirm({
+
+                    title: 'Validation',
+                    content: 'Êtes-vous sûr de vouloir supprimer cet élément ?',
+                    buttons: {
+                        suppression: {
+                            text: 'Supprimer',
+                            btnClass: 'btn btn-danger',
+                            action: function () {
+                                location.href = this.$target.attr('href');
+                            }
+                        },
+                        pasSuppression: {
+                            text: 'Non',
+                            btnClass: 'btn btn-primary',
+                            action: function () {
+                            }
+                        },
+                    },
+                
+                });
             </script>
        {% endblock %}
 	</body>

@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails des abonnements{% endblock %}    
+
+{% block body %}
+
+<div class="subs-page">
+    <div class="head-subs">
+        <div class="user-profil-picture">
+          <img src= "{{ asset('uploads/profilpicture/' ~ user.picture) }}" alt="ProfiPicture">
+        </div>
+        <div class="user-profil">
+          <div class="user-profil-pseudo">
+            <a style="text-decoration:none;" href="{{ path('user_show', { id : user.id}) }}">
+              <h2>{{ user.pseudo }}</h2>
+            </a>
+          </div>
+        </div> 
+    </div>
+    <div class="ligne">
+      <div class="nav-subs">
+        <p>Abonnements</p>
+        <a href="{{ path('subscribers_index', {id : user.id}) }}">Abonnées </a>
+      </div>
+      
+    </div>
+    <div class="body-subs">
+      {% for subscription in user.listSubscriptions %}
+        <div class="card-subs">
+            <div class="card-subs-img">
+              <a href="{{ path('user_show', { id : subscription.targetUser.id}) }}">
+                <img src="{{ asset('uploads/profilpicture/' ~ subscription.targetUser.picture) }}" alt="ProfiPicture">
+              </a>
+            </div>
+            <div class="card-subs-name">
+              <a href="{{ path('user_show', { id : subscription.targetUser.id}) }}">{{ subscription.targetUser.pseudo }}</a>
+            </div>
+            <div class="card-subs-follow">
+              <a href="{{ path('delete_following', { id : subscription.id}) }}">Désabonner</a>
+            </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  
+{% endblock %}
+{% block javascripts %}
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    
+    <script>
+       function onClickBtnLike(event){
+            //
+            event.preventDefault();
+            //on prend l'url du lien pour l'avoir dans ajax
+            const url = this.href; //this sera l'element <a> sur lequel on clique
+            
+            //recher le span avec class js-likes
+            const spanCount = this.querySelector('span.js-likes');
+
+            const icone = this.querySelector('i');
+            
+            //peut etre appelé en POST
+            //axios permet gestion des promesses qui. La reponse sera ensuite mis dans la fonction
+            axios.get(url).then(function(response){
+                // const likes = response.data.likes;
+                spanCount.textContent = response.data.likes;
+                //si contient la class 'fas' = aime, alors remplacera par "far"
+                if(icone.classList.contains('fas')){
+                    icone.classList.replace('fas', 'far');
+                
+                } else {
+                    icone.classList.replace('far', 'fas');
+                }
+                   
+               
+                    
+            })
+        }
+        // selection de tout les <a> avec js-like 
+        document.querySelectorAll('a.js-like').forEach(function(link){
+        //quand clique appel de la finction onClick
+        link.addEventListener('click', onClickBtnLike);
+        })
+    </script>
+        
+    
+{% endblock %}

@@ -48,7 +48,6 @@ class RecipeType extends AbstractType
                     ])
                 ],
             ])
-            ->add('published', CheckboxType::class)
             ->add('description', TextareaType::class, [
                 'constraints' => [
                     new NotBlank([

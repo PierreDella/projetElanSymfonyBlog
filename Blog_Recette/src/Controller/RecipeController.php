@@ -71,13 +71,13 @@ class RecipeController extends AbstractController
         }
   
         //Categorie
-        $categories = $recipe->getCategories();
-        $recipeCategories = [];
-        foreach ($categories as $category) {
-            $recipeCategories[] = [
-                "name" => $category->getName()
-            ];
-        }
+            $categories = $recipe->getCategories();
+            $recipeCategories = [];
+            foreach ($categories as $category) {
+                $recipeCategories[] = [
+                    "name" => $category->getName()
+                ];
+            }
 
         $compos = $recipe->getCompositions();
         $ingredients = [];
@@ -90,21 +90,10 @@ class RecipeController extends AbstractController
             ];  
         }
 
-        $comments = $recipe->getComments();
-        $recipeComments = [];
-        foreach ($comments as $comment) {
-            $recipeComments[] = [
-                'pseudo' => $comment->getUser()->getPseudo(),
-                'post' => $comment->getPost(),
-                'createdAt' => $comment->getCreatedAt(),
-                'id' => $comment->getId()
-            ];
-        }
         return $this->render('recipe/show.html.twig', [
             'recipe'      => $recipe,
             'ingredients' => $ingredients,
             'recipeCategories' => $recipeCategories,
-            'recipeComments' => $recipeComments,
             'formComment' => $form->createView(),
             
             

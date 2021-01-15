@@ -20,9 +20,9 @@
                     </span>
                 {% endfor %}
             </p> 
-            <div class="img-recipe" style="display:inline-flex;" >
-                <img src="{{ asset('uploads/images/' ~ recipe.picture) }}" class="img-fluid" style="margin:1em; min-width: 25%%;" alt="Responsive image">
-                <div class="img card-text" style="margin:1em; max-width: 75%;">
+            <div class="img-recipe">
+                <img src="{{ asset('uploads/images/' ~ recipe.picture) }}" class="img-fluid" alt="Responsive image">
+                <div class="top-card card-text">
                     <p>{{ recipe.description }}</p> 
                     <p>Temps de préparation : {{ recipe.preparationTime }} minutes</p>
                     <p>Temps de cuisson : {{ recipe.cookingTime }} minutes</p>
@@ -47,14 +47,14 @@
             
         </div>
     </div>
-    <div class="body-recipe" style="display:flex;"> 
-        <div class="composition" style="width:25%"> 
+    <div class="body-recipe"> 
+        <div class="composition"> 
             <h5>Les ingrédients de la recette :</h5>
             {% for ingredient in ingredients %}
                 <p> - {{ ingredient['quantity'] }} {{ ingredient['unit'] }} de {{ ingredient['name'] }} - <small>{{ ingredient['category'] }}</small></p>
             {% endfor %}
         </div>
-        <div class="instructions" style="padding:5em"> 
+        <div class="instructions"> 
             {{recipe.instructions|raw}}
         </div>
     </div>
@@ -62,7 +62,7 @@
     {% for comment in recipe.comments %}           
         <ul class="list-unstyled">
             <li class="media">
-                <img style="width:64px; height:64px" class="mr-3" src="{{ asset('uploads/profilpicture/' ~ comment.user.picture) }}" alt="Generic placeholder image">
+                <img class="pp mr-3" src="{{ asset('uploads/profilpicture/' ~ comment.user.picture) }}" alt="Generic placeholder image">
                 <div class="media-body">
                     <blockquote>
                     <p class="post">{{ comment.post }}</p>

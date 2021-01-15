@@ -2,17 +2,18 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use App\Entity\User;
+use App\Form\ChangePasswordType;
 use App\Form\RegistrationFormType;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class SecurityController extends AbstractController
 {
@@ -103,4 +104,39 @@ class SecurityController extends AbstractController
         ]);
     }
     
+    /**
+     * @Route("/user/{id}/changePassword", name="user_edit_password")
+     */
+    public function editUserPassword(User $user = null, Request $request, UserPasswordEncoderInterface $passwordEncoder): Response {
+
+        if ($user){
+            if($user->getId() == $this->getUser()->getId()){
+
+                $form = $this->createForm(ChangePasswordType::class);
+
+                $form->handleRequest($request);
+        
+                if($form->isSubmitted() && $form->isValid()) {
+        
+                    $mdp = $form->get('plainPassword')->getData();
+                    $mdp = $passwordEncoder->encodePassword($user, $mdp);
+                    $this->getDoctrine()->getRepository(User::class)->upgradePassword($user, $mdp);    
+                    $this->addFlash("success", "Le mot de passe a bien été changé.");
+
+                    return $this->redirectToRoute("user_show", ['id'=>$user->getId()]);          
+                }
+        
+                return $this->render("security/editPassword.html.twig", [
+                    "formUser" => $form->createView()
+                ]);
+
+            } else {
+                $this->addFlash("error", "Accès interdit.");
+                return $this->redirectToRoute("home");
+            }
+        }else{
+            $this->addFlash("error", "Cet administrateur n'existe pas.");
+            return $this->redirectToRoute('home');
+        }
+    }
 }

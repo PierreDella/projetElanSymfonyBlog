@@ -84,10 +84,10 @@ class UserController extends AbstractController
      */
     public function show(User $user = null)
     {   
-        
         if ($user) {
             return $this->render('user/show.html.twig', [
                 'user' => $user,
+                
             ]);
         } else {
             return $this->redirectToRoute('home');
@@ -95,31 +95,77 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/{id}/abonnement", name="abonnements_index", methods="GET")
+     * @Route("/user/{id}/subscriptions", name="abonnements_index", methods="GET")
      */
-    public function showAbonnement(User $user = null, EntityManagerInterface $manager)
+    public function showAbonnements(Subscription $subscription = null, User $user = null, EntityManagerInterface $manager)
     {   
-        $subscribers = $this->getUser()->getSubscribers();
-
-        $subscriptions = $this->getUser()->getListSubscriptions();
         
-        $others = $manager->getRepository(User::class)->findAll();
-        
-        $subscriptionsRecipes = $this->getUser()->getListSubscriptions();
-    
         if ($user) {
-            return $this->render('bibliotheque/abo.html.twig', [
-                'user' => $user,
-                "subscriptions" => $subscriptions,
-                "subscribers" => $subscribers,
-                'subscriptionsRecipes' => $subscriptionsRecipes,
-                "others" => $others
+            return $this->render('user/subscriptions.html.twig', [
+                "subscription" =>$subscription,
+                "user" => $user
             ]);
         } else {
             return $this->redirectToRoute('home');
         }
     }
 
+    /**
+     * @Route("/user/{id}/favoris", name="fav")
+     */
+    public function showFav(User $user = null, RecipeLike $recipeLike = null){
+        
+        
+        
+        if($user){
+
+            return $this->render('user/fav.html.twig', [
+                "recipeLike" =>$recipeLike,
+                "user" => $user
+
+            ]);
+
+        }else {
+
+            return $this->redirectToRoute('home');
+        }
+    }
+
+     /**
+     * @Route("/user/{id}/subscribers", name="subscribers_index", methods="GET")
+     */
+    public function showAbonné(Subscription $subscription = null, User $user = null)
+    {   
+        
+        if ($user) {
+            return $this->render('user/subscribers.html.twig', [
+                "subscription" =>$subscription,
+                "user" => $user
+            ]);
+        } else {
+            return $this->redirectToRoute('home');
+        }
+    }
+
+    /**
+     * @Route("/user/{id}/filActu", name="filActu", methods="GET")
+     */
+    public function filActualités( User $user = null, EntityManagerInterface $manager)
+    {   
+        $subscribers = $this->getUser()->getSubscribers();
+        $subscriptions = $this->getUser()->getListSubscriptions();
+        
+        if ($user) {
+            return $this->render('user/actu.html.twig', [
+                'user' => $user,
+                "subscriptions" => $subscriptions,
+                "subscribers" => $subscribers,
+                
+            ]);
+        } else {
+            return $this->redirectToRoute('home');
+        }
+    }
 
 
 //                                                    ******************EDITIONS/AJOUTS*****************
@@ -202,63 +248,25 @@ class UserController extends AbstractController
     /** 
      * @Route("/subscribe/{id}", name="add_following")
      */
-    public function makeSubscription(User $target, EntityManagerInterface $manager, SubscriptionRepository $SubscibRepo) : Response{
+    public function makeSubscription(User $target, EntityManagerInterface $manager) : Response{
         
-        // $user = $this->getUser();
-
-        // if(!$user) return $this->json([
-        //     'code' => 403,
-        //     'message' => "Unauthorized"
-        // ], 403);
-        // //Si j'ai deja aimé supp le j'aime
-        // if($recipe->isSubscribedByUser($user)){
-        //     //On lui demande de retrouver le like du user et de la recette
-        //     $like = $SubscibRepo->findOneBy([
-        //         'recipe' => $recipe,
-        //         'user' => $user
-        //     ]);
-
-        //     $manager->remove($like);
-        //     $manager->flush();
-        //     //On retourne l'info au js
-        //     return $this->json([
-        //         'code' => 200,
-        //         'message' => 'Like supprimé',
-        //         'likes' => $SubscibRepo->count(['recipe' => $recipe])
-        //     ], 200); //donne le statu http
-        // }
-        // $like = new RecipeLike();
-        // $like->setRecipe($recipe)
-        //      ->setUser($user);
-
-        //      $manager->persist($like);
-        //      $manager->flush();
-
-        //      return $this->json([
-        //         'code' => 200,
-        //         'message' => 'Like ajouté',
-        //         'likes' => $SubscibRepo->count(['recipe' => $recipe])
-        //     ], 200); //donne le statu http
-
-        // return $this->json(['code' => 200, ''], 200);
-
+        
         $subscription = new Subscription();
-
         $subscription->setSubscriber($this->getUser());
-        $subscription->setTargetUser($target);
-
+        $subscription->setTargetUser($target); 
         $manager->persist($subscription);
-        $manager->flush();
+        $manager->flush(); 
 
         return $this->redirectToRoute("abonnements_index", ["id"=>$this->getUser()->getId()]);
     }
 
 
+   
+
     /** Permet de liker ou non une recette
      * @Route("/recipe/{id}/like", name="recipe_like")
      */
     public function like(Recipe $recipe, EntityManagerInterface $manager, RecipeLikeRepository $likeRepo) : Response{
-        
         
         $user = $this->getUser();
         //Si l'utilisateur est anonyme et qu'il essaye de like une recette 
@@ -299,41 +307,7 @@ class UserController extends AbstractController
         return $this->json(['code' => 200, ''], 200);
     }
 
-    /**
-     * @Route("/user/{id}/changePassword", name="user_edit_password")
-     */
-    public function editUserPassword(User $user = null, Request $request, UserPasswordEncoderInterface $passwordEncoder): Response {
-
-        if ($user){
-            if($user->getId() == $this->getUser()->getId()){
-
-                $form = $this->createForm(ChangePasswordType::class);
-
-                $form->handleRequest($request);
-        
-                if($form->isSubmitted() && $form->isValid()) {
-        
-                    $mdp = $form->get('plainPassword')->getData();
-                    $mdp = $passwordEncoder->encodePassword($user, $mdp);
-                    $this->getDoctrine()->getRepository(User::class)->upgradePassword($user, $mdp);    
-                    $this->addFlash("success", "Le mot de passe a bien été changé.");
-
-                    return $this->redirectToRoute("user_show", ['id'=>$user->getId()]);          
-                }
-        
-                return $this->render("user/editPassword.html.twig", [
-                    "formUser" => $form->createView()
-                ]);
-
-            } else {
-                $this->addFlash("error", "Accès interdit.");
-                return $this->redirectToRoute("home");
-            }
-        }else{
-            $this->addFlash("error", "Cet administrateur n'existe pas.");
-            return $this->redirectToRoute('home');
-        }
-    }
+    
 
 
 
@@ -375,5 +349,32 @@ class UserController extends AbstractController
             return $this->redirectToRoute("home");
         }
     }
+    /**
+     *  @Route("/delete/bibliotheque/{id}", name="delete_bibliotheque")
+     */
+    public function deleteBibliotheque(Bibliotheque $bibliotheque = null, Request $request, EntityManagerInterface $manager){
+        
+            $recipes = $bibliotheque->getRecipes();
+            foreach ($bibliotheque->getRecipes() as $recipes) {
+                $bibliotheque->removeRecipe($recipes);
+            }
+            $manager->remove($bibliotheque);
+            $manager->flush();
 
+            return $this->redirectToRoute('bibliotheque_index', ["id"=>$this->getUser()->getId()]);
+      
+    }
+
+    /** 
+     * @Route("/unsubscribe/{id}", name="delete_following")
+     */
+    public function unsubsciption(Subscription $subscription, Request $request, EntityManagerInterface $manager){
+
+        
+        $manager->remove($subscription);
+        $manager->flush();
+
+        return $this->redirectToRoute("abonnements_index", ["id"=>$this->getUser()->getId()]);
+    }
+    
 }

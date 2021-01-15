@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Abonnés{% endblock %}    
+
+{% block body %}
+
+<div class="subs-page">
+  <div class="head-subs">
+      <div class="user-profil-picture">
+        <img src= "{{ asset('uploads/profilpicture/' ~ user.picture) }}" alt="ProfiPicture">  
+      </div>
+      <div class="user-profil">
+        <div class="user-profil-pseudo">
+          <a style="text-decoration:none;" href="{{ path('user_show', { id : user.id}) }}">
+              <h2>{{ user.pseudo }}</h2>
+          </a>
+        </div>
+      </div> 
+  </div>
+  <div class="ligne">
+    <div class="nav-subs-bis">
+      <a href="{{ path('abonnements_index', {id : user.id}) }}">Abonnements</a>
+      <p>Abonnées</p>
+    </div>
+    
+  </div>
+  <div class="body-subs">
+    {% for subscriber in user.subscribers %}
+      <div class="card-subs">
+          <div class="card-subs-img">
+            <a href="{{ path('user_show', { id : subscriber.subscriber.id}) }}">
+              <img src="{{ asset('uploads/profilpicture/' ~ subscriber.subscriber.picture) }}" alt="ProfiPicture">
+            </a>
+          </div>
+          <div class="card-subs-name">
+            <a href="{{ path('user_show', { id : subscriber.subscriber.id}) }}">{{ subscriber.subscriber.pseudo }}</a>
+          </div>
+          <div class="card-subs-follow">
+            <a href="{{ path('add_following', { id : subscriber.id}) }}">Ajouter</a>
+          </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+
+{% endblock %}

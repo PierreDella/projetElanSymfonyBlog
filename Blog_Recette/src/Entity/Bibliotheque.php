@@ -97,7 +97,7 @@ class Bibliotheque
     {
         $this->dateUpdate = $dateUpdate;
 
-        return $this;
+        return $this;   
     }
 
     public function getPublique(): ?bool

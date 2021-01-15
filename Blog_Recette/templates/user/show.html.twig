@@ -1,44 +1,119 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello UserController!{% endblock %}
+{% block title %}Profil{% endblock %}
 
 {% block body %}
 
-<div class="container ">
-    <div class="profile-nav">
+    <div class="container ">
+        <div class="profile-nav">
             <div class="user-heading">
-                <a href="#">
-                    <img src= "{{ asset('uploads/profilpicture/' ~ user.picture) }}" alt="ProfiPicture">
-                </a>
-                <h1>{{ user.pseudo }}</h1>
-                
-                <p>{{ user.email }}</p>
-                {# <button href="{{ path('user_edit', {'id':user.id}) }}">Edit</button> #}
-                {# {% if $this %} #}
-                    <button href="{{ path('add_following', { id : user.id }) }}">suivre</button>
-                {# {% endif %} #}
-                
+                <div class="top-profil">
+                    <div class="card-pp">
+                            <img class="profil-picture" src= "{{ asset('uploads/profilpicture/' ~ user.picture) }}" alt="ProfiPicture">
+                    </div>
+                    <div class="card-pp">
+                        <div class="profil-info">
+                            <h1>{{ user.pseudo }}</h1>
+                            <p>{{ user.email }}</p>
+                        </div>
+                        <div class="profil-pi">
+                            <p>Date d'inscription : {{ user.dateInscription | date('d/m/Y') }}</p>
+                        </div>
+                        <div class="profil-stats">
+                            <div class="stat-abonnements" >
+                                <h5>
+                                    <a href="{{ path('abonnements_index', {id : user.id}) }}">Abonnements</a>
+                                </h5>
+                                <p>
+                                    {{ user.listSubscriptions | length }}
+                                </p>
+                            </div>
+                            <div class="stat-abonnes">
+                                <h5>
+                                    <a href="{{ path('subscribers_index', {id : user.id}) }}">Abonnés</a>
+                                </h5>
+                                <p>
+                                    {{ user.subscribers | length }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+                <div class="profil-buttons">
+                    <div class="profil-buttons-supp">
+                        <a class= "confirmation icon_add1"href="{{ path('user_delete', { id : user.id }) }}">Supprimer mon compte</a>
+                    </div>
+                    <div class="profil-buttons-edit">
+                        <a class= "confirmation icon_add2" href="#">Modifier profil</a>
+                    </div>
+                    <div class="profil-buttons-edit-mp">
+                        <a class= "confirmation icon_add3" href="{{ path('user_edit_password', {'id':app.user.id}) }}">Changer mon mot de passe</a>
+                    </div>
+                    <div></div>
+                </div>    
             </div>
-            <ul>
-                <li><a href="{{ path('abonnements_index', {'id':app.user.id}) }}">Mes Abonnements</a></li>
-                <li><a href="{{ path('bibliotheque_index', {'id':app.user.id}) }}">Mes Bibliotheques</a></li>
-                <li><a href="{{ path('recipesUser_index', {'id':app.user.id}) }}">Mes Recettes</a></li>
-                <a class= "icon_add" href="{{ path('user_edit_password', {'id':app.user.id}) }}"><button type="button">Changer mon mot de passe</button></a>
-            </ul>
+        </div>
     </div>
-</div>
-
-
-<div>
-    <p>Date d'inscription : {{ user.dateInscription | date('d/m/Y') }}</p>
-    <p>Date de Naissance : {{ user.dateNaissance | date('d/m/Y') }}</p>
- 
-</div>
-
-
-
-
-   
+    <div class="row biblioRecipes">
+        <div class="col-sm-6">
+            <div class="card">
+            <div class="card-body">
+                <h5 class="card-title textCentre">Recette(s) : {{ user.recipes | length }}</h5>
+                <table  class="table table-striped table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Titre</th>
+                            <th>Date de création</th>
+                            <th>Catégories</th>
+                            <th>Likes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {# {% for subscription in subscriptions %} #}
+                            <tr>
+                                <td>
+                                    <a href="#"></a> 
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        
+                    {# {% endfor %} #}
+                    </tbody>
+                </table>
+                <a href="{{ path('recipesUser_index', {'id':app.user.id}) }}"><button type="button" class="btn btn-primary">Voir recettes</button></a>
+            </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+            <div class="card-body">
+                <h5 class="card-title textCentre"> Bibliothèque(s) : {{ user.Bibliotheques | length }}</h5>
+                <table  class="table table-striped table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Titre</th>
+                            <th>Date de création</th>
+                            <th>Nb de recettes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {# {% for subscriber in subscribers %} #}
+                    <tr>
+                        <td><a href="#"></a></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                        
+                    {# {% endfor %} #}
+                    </tbody>
+                </table>
+                <a href="{{ path('bibliotheque_index', {'id':app.user.id}) }}"><button type="button" class="btn btn-primary">Voir bibliothèques</button></a>
+            </div>
+            </div>
+        </div>
+        </div>
 
 {% endblock %}
 

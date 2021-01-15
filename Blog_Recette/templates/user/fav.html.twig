@@ -1,38 +1,43 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Toutes nos recettes{% endblock %}
+{% block title %}Favoris{% endblock %}
 
-{% block home %}
+{% block body %}
+  {% for recipe in user.likes %}
+    <a href="#">{{ recipe.recipe.name }}</a>
 
-<div class="body-recipes">
-    <div class="row">
-        <div class="filter">
-                {% include 'home/_filter.html.twig' %}
-        </div>      
-    </div>
+    
+
+
+
+  {% endfor %}
+
+
+
+  <div class="body-recipes">
     <div class="card-deck">
-        {% for recipe in recipes %}
+        {% for recipe in user.likes %}
             <div class="card">
-                <img class="card-img-top"  src="{{ asset('uploads/images/' ~ recipe.picture) }}" alt="Card image cap">
+                <img class="card-img-top"  src="{{ asset('uploads/images/' ~ recipe.recipe.picture) }}" alt="Card image cap">
                 <div class="card-body">
                     <h5 class="card-title">
-                        <a class="card-text" href="{{ path('detailRecipe', {'id':recipe.id}) }}" class="card-title">{{ recipe.name }}</a>
-                        <small>{{ recipe.createdAt | date('d/m/Y') }}</small>
+                        <a class="card-text" href="{{ path('detailRecipe', {'id':recipe.recipe.id}) }}" class="card-title">{{ recipe.recipe.name }}</a>
+                        <small>{{ recipe.recipe.createdAt | date('d/m/Y') }}</small>
                     </h5>
-                    <p class="card-text">{{ recipe.description }}</p>
+                    <p class="card-text">{{ recipe.recipe.description }}</p>
                     <div class="preparationTime">
-                        <small class="text-muted">{{ recipe.preparationTime }} minutes</small>
+                        <small class="text-muted">{{ recipe.recipe.preparationTime }} minutes</small>
                     </div>
-                    <small class="text-muted">{{ recipe.comments | length }} commentaire(s)</small>
-                     <a href="{{ path('recipe_like', {'id': recipe.id}) }}" class="btn btn-link js-like">
-                        {% if app.user and recipe.isLikedByUser(app.user) %}
+                    <small class="text-muted">{{ recipe.recipe.comments | length }} commentaire(s)</small>
+                      <a href="{{ path('recipe_like', {'id': recipe.recipe.id}) }}" class="btn btn-link js-like">
+                        {% if app.user and recipe.recipe.isLikedByUser(app.user) %}
                             <i class="fas fa-thumbs-up"></i>
                         {% else %}
                             <i class="far fa-thumbs-up"></i>
                         {% endif %}
-                            <span class="js-likes">{{ recipe.likes | length }}</span>
+                            <span class="js-likes">{{ recipe.recipe.likes | length }}</span>
                             <span class="js-label">like<span>
-                    </a>
+                      </a>
                     
                 </div>
                 <div class="card-footer">
@@ -41,13 +46,9 @@
             </div>
         {% endfor %}
     </div>
-</div>
-                   
-        
-    
+  </div>
     
 {% endblock %}
-
 {% block javascripts %}
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     

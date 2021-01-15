@@ -105,6 +105,7 @@ class Recipe
 
     public function __construct()
     {
+        $this->published = true;
         $this->comments = new ArrayCollection();
         $this->categories = new ArrayCollection();
         $this->bibliotheques = new ArrayCollection();

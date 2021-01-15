@@ -30,13 +30,19 @@
             {% endif %}
                 <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('add_recipe') }}">Recette <i class="fas fa-plus"></i></a>
+                        <a class="nav-link" href="{{ path('add_recipe') }}"><i class="fas fa-plus"></i> Recette</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('fav', {'id':app.user.id}) }}"><i class="fas fa-heart"></i> Favoris</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('new_ingredient') }}">AI</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('recipesUser_index', {'id':app.user.id}) }}">Mes Recettes</a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="{{ path('filActu', {'id':app.user.id}) }}">Mon fil d'actualité</a>
                     </li>
                 </ul>
                 <ul class="nav justify-content-end navbar-nav">
@@ -64,87 +70,34 @@
             {% endif %}
         </div>
     </nav>
+    <div class="wrapper">
+        {% for messageflash in app.flashes('success') %}
+            <div class=" fenalert alert alert-success alert-dismissible fade show mx-auto text-center" role="alert">
+                <strong>SUCCES</strong> {{ messageflash }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>            
+            <br>
+        {% endfor %}
+        {% for messageflash in app.flashes('error') %}
+            <div class=" fenalert alert alert-danger alert-dismissible fade show mx-auto text-center" role="alert">
+                <strong>ERREUR</strong> {{ messageflash }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>            
+            <br>
+        {% endfor %}
 
-    {# <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarColor02"> #}
-            {# {% if app.user %} #}
-                {# <ul class="nav justify-content-end navbar-nav mr-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('home')}}">Accueil</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('new_ingredient') }}">AI</a>
-                    </li>
-                    <li>
-                        <a class="nav-link" href="{{ path('add_recipe') }}">Ajout Recette</a>
-                    </li>
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <li>
-                            <a class="nav-link" href="{{ path('adminHome') }}">Desk</a>
-                        </li> #}
-                    {# {% endif %} #}
-                {# </ul>
-                <ul class="nav justify-content-end navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_logout') }}">Deconnexion</a>
-                    </li>                     
-                    <li class="nav-item">
-                        <a class="nav-link" href='{{ path('user_show', {'id':app.user.id}) }}'>
-                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-person-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                            </svg> Profil
-                        </a>
-                    </li> 
-                </ul>
-            {% else %} #}
-                {# <ul class="nav justify-content-end navbar-nav">
-                    
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
-                    </li>  
-                    <li class="nav-item">   
-                        <a class="nav-link" href="{{ path('app_register') }}">Inscription</a>
-                    </li>
-                    {# <li class="nav-item">
-                        <a class="nav-link" href="{{ path('recipesUser_index', {'id':app.user.id}) }}">Mes Recettes</a>
-                    </li>                     #}
-                {# </ul> #}
-                        
-            {# {% endif %} #}
-
-                {# </div> #}
-            {# </nav>  #}
-            <div class="wrapper">
-                {% for messageflash in app.flashes('success') %}
-                    <div class=" fenalert alert alert-success alert-dismissible fade show mx-auto text-center" role="alert">
-                        <strong>SUCCES</strong> {{ messageflash }}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>            
-                    <br>
-                {% endfor %}
-                {% for messageflash in app.flashes('error') %}
-                    <div class=" fenalert alert alert-danger alert-dismissible fade show mx-auto text-center" role="alert">
-                        <strong>ERREUR</strong> {{ messageflash }}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>            
-                    <br>
-                {% endfor %}
-
-                <div id="main">
-                    {% block body %}{% endblock %}
-                    {% block contenu %}{% endblock %}
-                </div>
-            </div>
-             <div class="mainhome">
-                    {% block home %}{% endblock %}
-            </div>
+        <div id="main">
+            {% block body %}{% endblock %}
+            {% block contenu %}{% endblock %}
+        </div>
+    </div>
+        <div class="mainhome">
+            {% block home %}{% endblock %}
+    </div>
 		
 		
 		{% block javascripts %}
@@ -165,6 +118,33 @@
                 document.getElementById("mySidenav").style.width = "0";
                 document.getElementById("main").style.marginLeft = "0";
                 }
+
+
+
+               $('a.confirmation').confirm({
+
+                    title: 'Validation',
+                    content: 'Êtes-vous sûr de vouloir supprimer cet élément ?',
+                    buttons: {
+                        suppression: {
+                            text: 'Supprimer',
+                            btnClass: 'btn btn-danger',
+                            action: function () {
+                                location.href = this.$target.attr('href');
+                            }
+                        },
+                        pasSuppression: {
+                            text: 'Non',
+                            btnClass: 'btn btn-primary',
+                            action: function () {
+                            }
+                        },
+                        },
+                    
+                    });
+            </script>
+             <script>
+                
             </script>
        {% endblock %}
 	</body>

@@ -30,10 +30,11 @@ class RecipeRepository extends ServiceEntityRepository
         
             ->createQueryBuilder('r')
             //permettra avec join de recupérer les infos en une seule requete
+            
             ->select('c', 'r')
             ->join('r.categories', 'c')
             ->andWhere('r.published=1');
-            // ->orderBy('r.nblikes', 'DESC')
+            // ->orderBy('nblikes', 'DESC');
             // ->orderBy('')
             
 
@@ -59,7 +60,7 @@ class RecipeRepository extends ServiceEntityRepository
      */
     public function isLikedByUser(User $user) : bool {
 
-        foreach($this->likes as $like){
+        foreach($this->likes as $like){ 
                 // si dans les likes se trouve l'utilisateur ca veut dire qu'il aura liké
             if($like->getUser() === $user) return true;
         
