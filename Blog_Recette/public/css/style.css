@@ -25,6 +25,7 @@
 }
 .card-deck{
     /* margin: 1em; */
+    justify-content: center;
     display: flex;
     flex-wrap: wrap;
   
@@ -43,7 +44,7 @@
 }
 .row{
   padding-left: 1em;
-  padding-right: 2em;
+  margin-right: 2em;
 
 }
 .mainhome{
