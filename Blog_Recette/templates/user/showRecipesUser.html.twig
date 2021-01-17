@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello UserController!{% endblock %}
+{% block title %}Mes Recettes{% endblock %}
 
 {% block body %}
 
 
 <h1>Recettes de {{ user.pseudo }}</h1>
     <ul>
-    {% for recipe in recipes %}
+    {% for recipe in user.recipes %}
         <ul>
             <li>
                 <a href="{{ path('detailRecipe', {'id':recipe.id}) }}">{{ recipe.name }}</a>

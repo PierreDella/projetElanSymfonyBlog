@@ -32,35 +32,34 @@ class UserController extends AbstractController
     /**
      * @Route("/show/bibliotheque/{id}", name="show_bibliotheque")
      */
-    public function showBiblio(Bibliotheque $bibliotheque) {
-        
-        $bibliotheques = $bibliotheque->getRecipes();
-        $userBibliotheques = [];
-        foreach ($bibliotheques as $bibliotheque) {
-            $userBibliotheques[] = [
-                "name" => $bibliotheque->getName(),
-                "id" => $bibliotheque->getId(),
-               
-            ];
+    public function showBiblio(User $user = null, Bibliotheque $bibliotheque) {
+        if($this->getUser()){
+            $recipes = $this->getUser()->getBibliotheques();
+
+            return $this->render('bibliotheque/showBiblio.html.twig', [
+                'recipes' => $recipes,
+                'user' => $user,  
+                'bibliotheque' => $bibliotheque
+            ]);
+        } else {
+            $this->addFlash("error", "incrivez-vous ou connectez-vous.");
+            return $this->redirectToRoute('home');
         }
-        return $this->render('bibliotheque/showBiblio.html.twig', [
-            'userBibliotheques' => $userBibliotheques,
-            'bibliotheque' => $bibliotheque        
-        ]);
+        
     }
 
      /**
      * @Route("/user/{id}/bibliotheque", name="bibliotheque_index")
      */
     public function indexBiblio(User $user = null){
-        
-        $bibliotheques = $this->getUser()->getBibliotheques();
 
-        if($user) {
+        if($this->getUser()) {
             return $this->render('bibliotheque/bibliotheque.html.twig',[
-                'bibliotheques' => $bibliotheques,
                 'user' => $user
             ]);
+        } else {
+            $this->addFlash("error", "incrivez-vous ou connectez-vous.");
+            return $this->redirectToRoute('home');
         }
     }
     
@@ -69,13 +68,13 @@ class UserController extends AbstractController
      */
     public function indexRecipes(User $user = null){
         
-        $recipes = $this->getUser()->getRecipes();
-
-        if($user) {
+        if($this->getUser()) {
             return $this->render('user/showRecipesUser.html.twig',[
-                'recipes' => $recipes,
                 'user' => $user
             ]);
+        }else {
+            $this->addFlash("error", "incrivez-vous ou connectez-vous.");
+            return $this->redirectToRoute('home');
         }
     }
 
@@ -84,12 +83,13 @@ class UserController extends AbstractController
      */
     public function show(User $user = null)
     {   
-        if ($user) {
+        if ($this->getUser()) {
             return $this->render('user/show.html.twig', [
                 'user' => $user,
                 
             ]);
         } else {
+            $this->addFlash("error", "incrivez-vous ou connectez-vous.");
             return $this->redirectToRoute('home');
         }
     }
@@ -100,7 +100,7 @@ class UserController extends AbstractController
     public function showAbonnements(Subscription $subscription = null, User $user = null, EntityManagerInterface $manager)
     {   
         
-        if ($user) {
+        if ($this->getUser()) {
             return $this->render('user/subscriptions.html.twig', [
                 "subscription" =>$subscription,
                 "user" => $user
@@ -115,10 +115,7 @@ class UserController extends AbstractController
      */
     public function showFav(User $user = null, RecipeLike $recipeLike = null){
         
-        
-        
-        if($user){
-
+        if($this->getUser()){
             return $this->render('user/fav.html.twig', [
                 "recipeLike" =>$recipeLike,
                 "user" => $user
@@ -126,7 +123,6 @@ class UserController extends AbstractController
             ]);
 
         }else {
-
             return $this->redirectToRoute('home');
         }
     }
@@ -137,7 +133,7 @@ class UserController extends AbstractController
     public function showAbonné(Subscription $subscription = null, User $user = null)
     {   
         
-        if ($user) {
+        if ($this->getUser()) {
             return $this->render('user/subscribers.html.twig', [
                 "subscription" =>$subscription,
                 "user" => $user
@@ -155,7 +151,7 @@ class UserController extends AbstractController
         $subscribers = $this->getUser()->getSubscribers();
         $subscriptions = $this->getUser()->getListSubscriptions();
         
-        if ($user) {
+        if ($this->getUser()) {
             return $this->render('user/actu.html.twig', [
                 'user' => $user,
                 "subscriptions" => $subscriptions,
@@ -163,6 +159,7 @@ class UserController extends AbstractController
                 
             ]);
         } else {
+            $this->addFlash("error", "vous n'avez pas les autorisations nécessaires.");
             return $this->redirectToRoute('home');
         }
     }
@@ -174,19 +171,20 @@ class UserController extends AbstractController
      * @Route("/{id}/public", name="biblio_lock")
      * 
      */
-    public function lock(Bibliotheque $bibliotheque, EntityManagerInterface $manager){
+    public function lock(User $user = null, Bibliotheque $bibliotheque, EntityManagerInterface $manager){
 
-        if($this->getUser()){
-            if($this->getUser()->isAdmin()){
+        if($this->getUser()->isAdmin() || $this->getUser() == $bibliotheque->getUser()){
+            // if($this->getUser()->isAdmin()){
                 $closeState = $bibliotheque->getPublique() ? false : true;
                 $bibliotheque->setPublique($closeState);
                 $manager->persist($bibliotheque);
                 $manager->flush($bibliotheque);
 
                 return $this->redirectToRoute('bibliotheque_index', ["id"=>$this->getUser()->getId()]);
-            }
+            // }
         }
-        return $this->redirectToRoute('bibliotheque_index');
+        $this->addFlash("error", "vous n'avez pas les autorisations nécessaires.");
+        return $this->redirectToRoute('home');
     }
 
     
@@ -195,19 +193,17 @@ class UserController extends AbstractController
      * @Route("/{id}/publicRecipe", name="recipe_lock")
      * 
      */
-    public function lockRecipe(Recipe $recipe, EntityManagerInterface $manager){
+    public function lockRecipe(User $user = null, Recipe $recipe, EntityManagerInterface $manager){
 
-        if($this->getUser()){
-            if($this->getUser()->isAdmin()){
-                $closeState = $recipe->getPublished() ? false : true;
-                $recipe->setPublished($closeState);
-                $manager->persist($recipe);
-                $manager->flush($recipe);
+        if($this->getUser()->isAdmin() || $this->getUser() == $recipe->getUser()){
+            $closeState = $recipe->getPublished() ? false : true;
+            $recipe->setPublished($closeState);
+            $manager->persist($recipe);
+            $manager->flush($recipe);
 
-                return $this->redirectToRoute('recipesUser_index', ["id"=>$this->getUser()->getId()]);
-            }
+            return $this->redirectToRoute('recipesUser_index', ["id"=>$this->getUser()->getId()]);
         }
-        return $this->redirectToRoute('recipesUser_index');
+        return $this->redirectToRoute('home');
     }
 
     /**
@@ -228,7 +224,6 @@ class UserController extends AbstractController
         if($form->isSubmitted() && $form->isValid()) {
 
             $em = $manager->getManager();
-            $user->addBibliotheque($bibliotheque);
             $bibliotheque->setUser($this->getuser());
             $em->persist($bibliotheque);
             $em->flush();
@@ -250,14 +245,19 @@ class UserController extends AbstractController
      */
     public function makeSubscription(User $target, EntityManagerInterface $manager) : Response{
         
-        
-        $subscription = new Subscription();
-        $subscription->setSubscriber($this->getUser());
-        $subscription->setTargetUser($target); 
-        $manager->persist($subscription);
-        $manager->flush(); 
+        if($this->getUser()){
+            $subscription = new Subscription();
+            $subscription->setSubscriber($this->getUser());
+            $subscription->setTargetUser($target); 
+            $manager->persist($subscription);
+            $manager->flush(); 
 
         return $this->redirectToRoute("abonnements_index", ["id"=>$this->getUser()->getId()]);
+        }else{
+            $this->addFlash("error", "vous n'avez pas les autorisations nécessaires.");
+
+        }
+        
     }
 
 
@@ -319,7 +319,7 @@ class UserController extends AbstractController
      */
     public function deleteUser(User $user = null, EntityManagerInterface $manager){
        
-        if($this->getUser()->isAdmin()){
+        if($this->getUser()->isAdmin() or $this->getUser() == $user){
             $comments = $user->getComments();
             foreach($comments as $comment){
                 $manager->remove($comment);
@@ -343,7 +343,7 @@ class UserController extends AbstractController
             $manager->remove($user);
             $manager->flush();
         
-            return $this->redirectToRoute('user_index');
+            return $this->redirectToRoute('login');
         }else{
             $this->addFlash("error", "Suppression non autorisé.");
             return $this->redirectToRoute("home");
@@ -354,15 +354,21 @@ class UserController extends AbstractController
      */
     public function deleteBibliotheque(Bibliotheque $bibliotheque = null, Request $request, EntityManagerInterface $manager){
         
+        if($this->getUser()->isAdmin() or $this->getUser() == $bibliotheque->getUser()){
             $recipes = $bibliotheque->getRecipes();
+
             foreach ($bibliotheque->getRecipes() as $recipes) {
                 $bibliotheque->removeRecipe($recipes);
             }
+
             $manager->remove($bibliotheque);
             $manager->flush();
 
             return $this->redirectToRoute('bibliotheque_index', ["id"=>$this->getUser()->getId()]);
-      
+        } else {
+            $this->addFlash("error", "Suppression non autorisé.");
+            return $this->redirectToRoute('bibliotheque_index', ["id"=>$this->getUser()->getId()]);
+        }
     }
 
     /** 
@@ -370,11 +376,16 @@ class UserController extends AbstractController
      */
     public function unsubsciption(Subscription $subscription, Request $request, EntityManagerInterface $manager){
 
-        
-        $manager->remove($subscription);
-        $manager->flush();
+        if($this->getUser()->isAdmin() or $this->getUser() == $subscription->getSubscriber()){
+            $manager->remove($subscription);
+            $manager->flush();
 
-        return $this->redirectToRoute("abonnements_index", ["id"=>$this->getUser()->getId()]);
+            return $this->redirectToRoute("abonnements_index", ["id"=>$this->getUser()->getId()]);
+        } else {
+            $this->addFlash("error", "Suppression non autorisé.");
+            return $this->redirectToRoute('bibliotheque_index', ["id"=>$this->getUser()->getId()]);
+        }
+        
     }
     
 }

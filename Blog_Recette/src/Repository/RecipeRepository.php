@@ -28,19 +28,19 @@ class RecipeRepository extends ServiceEntityRepository
     {   
         $query = $this
         
-            ->createQueryBuilder('r')
+            ->createQueryBuilder('r') // recupere recipes
             //permettra avec join de recupérer les infos en une seule requete
             
             ->select('c', 'r')
-            ->join('r.categories', 'c')
+            ->join('r.categories', 'c') //recuperera toutes les infos en une seule requete
             ->andWhere('r.published=1');
             // ->orderBy('nblikes', 'DESC');
             // ->orderBy('')
             
 
-        if( ! empty($search->q)) {
+        if( ! empty($search->q)) { //recupere requete q si pas vide
             $query = $query 
-                ->andWhere('r.name LIKE :q')
+                ->andWhere('r.name LIKE :q') //on veut que le nom de la recette soit le même que le parametre q
                 ->setParameter('q', "%{$search->q}%");
         }
 

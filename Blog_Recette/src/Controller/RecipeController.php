@@ -22,6 +22,7 @@ use App\Repository\RecipeLikeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Repository\CategoryRecipeRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\User\User;
@@ -34,7 +35,7 @@ class RecipeController extends AbstractController
 {
 //                                                    ******************AFFICHAGES*****************
 
-/**
+    /**
      * @Route("/recipes", name="recipe_index")
      */
     public function index(RecipeRepository $repo)
@@ -46,7 +47,7 @@ class RecipeController extends AbstractController
         ]);
     }
 
-    
+
 
     /**
      * @Route("/recipe/composition/{id}", name="detailRecipe")
@@ -69,7 +70,7 @@ class RecipeController extends AbstractController
 
             return $this->redirectToRoute('detailRecipe', ["id"=>$recipe->getId()]);
         }
-  
+
         //Categorie
             $categories = $recipe->getCategories();
             $recipeCategories = [];
@@ -104,12 +105,12 @@ class RecipeController extends AbstractController
 
 
     /**
-     *@Route("/recipe/add", name="add_recipe")
-     *@Route("/recipe/edit/{id}", name="edit_recipe")
-     */
+    * @Route("/recipe/add", name="add_recipe")
+    * @Route("/recipe/edit/{id}", name="edit_recipe")
+    */
     public function addRecipe(ManagerRegistry $manager, Request $request, Recipe $recipe = null, SluggerInterface $slugger): Response{
-        
-        
+
+
         if ( ! $recipe){
             //On crée une nouvelle recette
             $recipe = new Recipe();
@@ -119,45 +120,44 @@ class RecipeController extends AbstractController
         //On crée un formulaire, où on remove un certain nombre de fields
         $form = $this->createForm(RecipeType::class, $recipe);
         $form->handleRequest($request);
-        
-        if($form->isSubmitted() && $form->isValid()) {
-                /** @var UploadedFile $picture */
-                $picture = $form->get('picture')->getData();
-                // this condition is needed because the 'brochure' field is not required
-                // so the PDF file must be processed only when a file is uploaded
-                if ($picture) {
-                        $originalPicture = pathinfo($picture->getClientOriginalName(), PATHINFO_FILENAME);
-                        // this is needed to safely include the file name as part of the URL
-                        $safePicture = $slugger->slug($originalPicture);
-                        $newPicture = $safePicture.'-'.uniqid().'.'.$picture->guessExtension();
-                        // $newPicture = $safePicture.'-'.uniqid().'-'.$user->getId().'.'.$picture->guessExtension();
-                        // Move the file to the directory where brochures are stored
-                        try {
-                            $picture->move(
-                                $this->getParameter('picturesRecipe_directory'),
-                                $newPicture
-                            );
-                        } catch (FileException $e) {
-                            // ... handle exception if something happens during file upload
-                        }
-                        // updates the 'brochureFilename' property to store the PDF file name
-                        // instead of its contents
-                        $recipe->setPicture($newPicture);
-                        $time = ($request->request->get('recipe'));
 
-                        if (($time['preparationTime']) >= $time['cookingTime']){ //securité
-                        
-                            $em = $manager->getManager();
-                            $em->persist($recipe);
-                            $em->flush();
-            
-                            return $this->redirectToRoute('home');
-            
-                        }else{
-                            $this->addFlash("error", "Merci de mettre un temps de préparation inférieur au temps de cuisson");
-                        }
-                
+        if($form->isSubmitted() && $form->isValid()) {
+            /** @var UploadedFile $picture */
+            $picture = $form->get('picture')->getData();
+            // this condition is needed because the 'brochure' field is not required
+            // so the PDF file must be processed only when a file is uploaded
+            if ($picture) {
+                $originalPicture = pathinfo($picture->getClientOriginalName(), PATHINFO_FILENAME);
+                // this is needed to safely include the file name as part of the URL
+                $safePicture = $slugger->slug($originalPicture);
+                $newPicture = $safePicture.'-'.uniqid().'.'.$picture->guessExtension();
+                // $newPicture = $safePicture.'-'.uniqid().'-'.$user->getId().'.'.$picture->guessExtension();
+                // Move the file to the directory where brochures are stored
+                try {
+                    $picture->move(
+                        $this->getParameter('picturesRecipe_directory'),
+                        $newPicture
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
                 }
+                // updates the 'brochureFilename' property to store the PDF file name
+                // instead of its contents
+                $recipe->setPicture($newPicture);
+                $time = ($request->request->get('recipe'));
+
+                if (($time['preparationTime']) >= $time['cookingTime']){ //securité
+                
+                    $em = $manager->getManager();
+                    $em->persist($recipe);
+                    $em->flush();
+
+                    return $this->redirectToRoute('home');
+
+                }else{
+                    $this->addFlash("error", "Merci de mettre un temps de préparation inférieur au temps de cuisson");
+                }
+            }
         }
             return $this->render('recipe/addRecipe.html.twig', 
             [
@@ -165,7 +165,7 @@ class RecipeController extends AbstractController
                 'recipe' => $recipe,
                 'editMode' => $recipe->getId() !== null,
             ]);
-        }
+    }
 
     
     /** Permet de liker ou non une recette
@@ -199,12 +199,12 @@ class RecipeController extends AbstractController
         }
         $like = new RecipeLike();
         $like->setRecipe($recipe)
-             ->setUser($user);
+                ->setUser($user);
 
-             $manager->persist($like);
-             $manager->flush();
+                $manager->persist($like);
+                $manager->flush();
 
-             return $this->json([
+                return $this->json([
                 'code' => 200,
                 'message' => 'Like ajouté',
                 'likes' => $likeRepo->count(['recipe' => $recipe])
@@ -225,7 +225,7 @@ class RecipeController extends AbstractController
 
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()) {   
-           
+            
             $manager->persist($ingredient);
             $manager->flush();
 
@@ -248,7 +248,7 @@ class RecipeController extends AbstractController
      */
     public function deleteRecipe(Recipe $recipe = null, EntityManagerInterface $manager){
       
-        if($this->getUser() == $recipe->getUser()){
+        if($this->getUser() == $recipe->getUser() or $this->IsGranted('ROLE_ADMIN')){
             $comments = $recipe->getComments();
             foreach($comments as $comment){
                 $manager->remove($comment);
@@ -266,8 +266,8 @@ class RecipeController extends AbstractController
         
             return $this->redirectToRoute('home');
         }else{
-            $this->addFlash("error", "Cette recette n'existe pas.");
-            return $this->redirectToRoute("home");
+            $this->addFlash("error", "Action interdite");
+            return $this->redirectToRoute("detailRecipe", ["id"=>$recipe->getId()]);
         }
     }
 

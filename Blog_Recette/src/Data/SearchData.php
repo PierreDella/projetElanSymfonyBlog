@@ -1,7 +1,7 @@
 <?php 
 namespace App\Data;
 
-class SearchData {
+class SearchData {//represente les données donné  a ce formulaire
     
     
     /**

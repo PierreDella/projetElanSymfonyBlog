@@ -1,6 +1,6 @@
 {% extends 'admin.html.twig' %}
 
-{% block title %}Hello RecipeController!{% endblock %}
+{% block title %}Recettes{% endblock %}
 
 {% block body %}
 {# <div id="page-recipes">
@@ -21,7 +21,7 @@
     {% for recipe in recipes %}
         <a href="{{ path('detailRecipe', {'id':recipe.id}) }}">{{ recipe.name }}</a>
         <a href="{{ path('edit_recipe', { id: recipe.id }) }}">EDIT</a>
-        <a href="#">SUPP</a><br>
+        <a href="{{ path('recipe_delete', { id: recipe.id }) }}">SUPP</a><br>
         {# {{ recipe.categoryRecipe.name }} #}
     {% endfor %}
 </div>

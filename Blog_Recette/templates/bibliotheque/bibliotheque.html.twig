@@ -1,16 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello UserController!{% endblock %}
+{% block title %}Ma bibliotheque{% endblock %}
 
 {% block body %}
 
-
 <h1>Bibliotheque de {{ user.pseudo }}</h1>
-    <ul>
-    {% for bibliotheque in bibliotheques %}
-        <ul>
-            <li>
-                <a href="{{ path('show_bibliotheque', {'id':bibliotheque.id}) }}">{{ bibliotheque.titre }}</a>
+
+    {% for bibliotheque in user.bibliotheques %}
+            {% if app.user.id == user.id or bibliotheque.publique == 0 %}
+                <p><a href="{{ path('show_bibliotheque', {'id':bibliotheque.id}) }}">{{ bibliotheque.titre }}</a> : {{ bibliotheque.recipes | length }}</p>
                 <a href="{{ path('edit_bibliotheque', { id: bibliotheque.id }) }}"> <i class="fas fa-edit"></i></a>
                 <a href="{{ path('delete_bibliotheque', { id: bibliotheque.id }) }}"><i class="fas fa-trash-alt"></i></a>
                 
@@ -22,12 +20,9 @@
                     <a class="uk-button uk-button-default" href="{{ path('biblio_lock', {'id':bibliotheque.id} ) }}">Vérrouiller</a>
                 {% endif %}
                 <br>
-        
-            </li>
-        </ul>
-    
-    {% endfor %}
-    </ul>
+            {% endif %}
+                
+        {% endfor %}
 <br>
     <a href="{{ path('add_bibliotheque', { 'id':user.id }) }}">Créer une bibliotheque</a>
 <br><br>

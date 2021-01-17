@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Fil d'actualité{% endblock %}
+{% block title %}Fil d'actualités{% endblock %}
 
 {% block body %}
 <h2>Mon fil d'actualités</h2>
@@ -8,35 +8,37 @@
     {% for subscription in subscriptions %}
         <div class="card-deck">
             {% for recipe in subscription.targetUser.recipes %}
-                <div class="card">
-                    <img class="card-img-top"  src="{{ asset('uploads/images/' ~ recipe.picture) }}" alt="Card image cap">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <a class="card-text" href="{{ path('detailRecipe', {'id':recipe.id}) }}" class="card-title">{{ recipe.name }}</a>
-                            <small>{{ recipe.createdAt | date('d/m/Y') }}</small>
-                        </h5>
-                        {# <small >
-                            <a style="padding-bottom:1em;" href='{{ path('user_show', {'id': subscription.targetUser.id}) }}'>{{ subscription.targetUser.pseudo }}</a>   
-                        </small> #}
-                        <p class="card-text">{{ recipe.description }}</p>
-                        <div class="preparationTime">
-                            <small class="text-muted">{{ recipe.preparationTime }} minutes</small>
+                {% if recipe.published == 1 %}
+                    <div class="card">
+                        <img class="card-img-top"  src="{{ asset('uploads/images/' ~ recipe.picture) }}" alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a class="card-text" href="{{ path('detailRecipe', {'id':recipe.id}) }}" class="card-title">{{ recipe.name }}</a>
+                                <small>{{ recipe.createdAt | date('d/m/Y') }}</small>
+                            </h5>
+                            {# <small >
+                                <a style="padding-bottom:1em;" href='{{ path('user_show', {'id': subscription.targetUser.id}) }}'>{{ subscription.targetUser.pseudo }}</a>   
+                            </small> #}
+                            <p class="card-text">{{ recipe.description }}</p>
+                            <div class="preparationTime">
+                                <small class="text-muted">{{ recipe.preparationTime }} minutes</small>
+                            </div>
+                            <small class="text-muted">{{ recipe.comments | length }} commentaire(s)</small>
+                            <a href="{{ path('recipe_like', {'id': recipe.id}) }}" class="btn btn-link js-like">
+                                {% if app.user and recipe.isLikedByUser(app.user) %}
+                                    <i class="fas fa-thumbs-up"></i>
+                                {% else %}
+                                    <i class="far fa-thumbs-up"></i>
+                                {% endif %}
+                                    <span class="js-likes">{{ recipe.likes | length }}</span>
+                                    <span class="js-label">like<span>
+                            </a>
                         </div>
-                        <small class="text-muted">{{ recipe.comments | length }} commentaire(s)</small>
-                        <a href="{{ path('recipe_like', {'id': recipe.id}) }}" class="btn btn-link js-like">
-                            {% if app.user and recipe.isLikedByUser(app.user) %}
-                                <i class="fas fa-thumbs-up"></i>
-                            {% else %}
-                                <i class="far fa-thumbs-up"></i>
-                            {% endif %}
-                                <span class="js-likes">{{ recipe.likes | length }}</span>
-                                <span class="js-label">like<span>
-                        </a>
+                        <div class="card-footer">
+                        <a  href="{{ path('detailRecipe', {'id':recipe.id}) }}" type="button" class="btn btn-outline-secondary">Lire la suite</a>
+                        </div>
                     </div>
-                    <div class="card-footer">
-                    <a  href="{{ path('detailRecipe', {'id':recipe.id}) }}" type="button" class="btn btn-outline-secondary">Lire la suite</a>
-                    </div>
-                </div>
+                {% endif %}
             {% endfor %}    
         </div>      
     {% endfor %}

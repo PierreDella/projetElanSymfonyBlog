@@ -29,11 +29,12 @@ class HomeController extends AbstractController
      */
     public function searchIndex(RecipeRepository $repo, Request $request){
         
-        $data = new SearchData();
-        $data->page = $request->get('page', 1);
-        $form = $this->createForm(SearchForm::class, $data);
+        $data = new SearchData();//initialisation des données
+        // $data->page = $request->get('page', 1);
+        //creation formulaire qui utiliser search form 
+        $form = $this->createForm(SearchForm::class, $data); // creation d'un autrre objet $data qui represente les données et qui pourra ete modifié
         $form->handleRequest($request);
-        $recipes = $repo->findSearch($data);
+        $recipes = $repo->findSearch($data); //recupere l'ensemble des données lié a une recherche
         return $this->render('home/index.html.twig', [
             'recipes' => $recipes,
             'form' => $form->createView(),
@@ -147,7 +148,7 @@ class HomeController extends AbstractController
      */
     public function deleteCategoryRecipe(CategoryRecipe $categoryRecipe = null, EntityManagerInterface $manager){
         
-        if($this->getUser()){
+        if($this->getUser()->isAdmin()){
             $recipes = $categoryRecipe->getRecipes();
             foreach($recipes as $recipe){
                 $manager->remove($recipe);

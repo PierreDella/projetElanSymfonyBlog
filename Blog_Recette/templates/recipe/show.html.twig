@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello RecipeController!{% endblock %}
+{% block title %}{{ recipe.name }}{% endblock %}
 
 {% block body %}
 
@@ -8,11 +8,14 @@
         <div class="card-body">
         
             <h4 class="text-center card-title">{{ recipe.name }}</h4>
-            <div class="text-center card-tools">
-                <a href="{{ path('edit_recipe', { id: recipe.id }) }}"> <i class="fas fa-edit"></i></a>
-                <a href="{{ path('recipe_delete', { id: recipe.id }) }}"><i class="fas fa-trash-alt"></i></a>
-            </div>
-            
+            {% if app.user %}
+                {% if app.user.id == recipe.user.id or is_granted('ROLE_ADMIN') %}
+                    <div class="text-center card-tools">
+                        <a href="{{ path('edit_recipe', { id: recipe.id }) }}"> <i class="fas fa-edit"></i></a>
+                        <a href="{{ path('recipe_delete', { id: recipe.id }) }}"><i class="fas fa-trash-alt"></i></a>
+                    </div>
+                {% endif %}
+            {% endif %}
             <p class="text-left">
                 {% for recipeCategory in recipeCategories %}
                     <span class="badge badge-secondary">
@@ -26,15 +29,17 @@
                     <p>{{ recipe.description }}</p> 
                     <p>Temps de préparation : {{ recipe.preparationTime }} minutes</p>
                     <p>Temps de cuisson : {{ recipe.cookingTime }} minutes</p>
-                    <a href="{{ path('recipe_like', {'id': recipe.id}) }}" class="btn btn-link js-like">
-                        {% if app.user and recipe.isLikedByUser(app.user) %}
-                            <i class="fas fa-thumbs-up"></i>
-                        {% else %}
-                            <i class="far fa-thumbs-up"></i>
+                        {% if app.user %}
+                            <a href="{{ path('recipe_like', {'id': recipe.id}) }}" class="btn btn-link js-like">
+                                {% if app.user and recipe.isLikedByUser(app.user) %}
+                                    <i class="fas fa-thumbs-up"></i>
+                                {% else %}
+                                    <i class="far fa-thumbs-up"></i>
+                                {% endif %}
+                                    <span class="js-likes">{{ recipe.likes | length }}</span>
+                                    <span class="js-label">like(s)<span>
+                            </a>
                         {% endif %}
-                            <span class="js-likes">{{ recipe.likes | length }}</span>
-                            <span class="js-label">like<span>
-                    </a>
                 </div>  
             </div>
             <p class="card-text">
@@ -42,7 +47,9 @@
                 <div class="recipe-detail-pseudo">
                     par <a href='{{ path('user_show', {'id': recipe.user.id}) }}'>{{ recipe.user.pseudo }}</a> 
                 </div> 
-                <a href="{{ path('add_following', { id : recipe.user.id }) }}">suivre</a>
+                {% if app.user %}
+                    <a href="{{ path('add_following', { id : recipe.user.id }) }}">suivre</a>
+                {% endif %}   
             </p>
             
         </div>
@@ -67,7 +74,7 @@
                     <blockquote>
                     <p class="post">{{ comment.post }}</p>
                     <footer class="text-small"><a href='{{ path('user_show', {'id': comment.user.id}) }}'>{{ comment.user.pseudo }}</a><p>{{ comment.createdAt | date('d/m/Y') }}</p></footer>
-                    {% if app.user == comment.user %}
+                    {% if app.user == comment.user or is_granted('ROLE_ADMIN') %}
                         <a class="uk-button uk-button-default" href="{{ path('comment_delete', {'id':comment.id})}}">DELETE</a>
                         <a class="uk-button uk-button-default" href="{{ path('comment_edit', {'id':comment.id})}}">EDIT</a>
                     {% endif %}
@@ -76,10 +83,9 @@
             </li>
         </ul>
     {% endfor %}  
-
-
+    {% if app.user %}
         {{ form(formComment) }}
-
+    {% endif %}
 
 
 {% endblock %}

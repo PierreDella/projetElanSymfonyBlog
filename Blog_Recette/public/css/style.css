@@ -171,6 +171,12 @@ blockquote{
 .stat-abonnes p{
   color: rgba(105, 99, 99, 0.486);
 }
+.stat-abonnements h5 a:hover{
+  color: rgb(228, 157, 26);
+}
+.stat-abonnes h5 a:hover{
+  color: rgb(228, 157, 26);
+}
 .stat-abonnes a{
   text-decoration: none;
   color: rgba(105, 99, 99, 0.486);

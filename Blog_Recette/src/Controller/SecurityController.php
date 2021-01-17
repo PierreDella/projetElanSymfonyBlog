@@ -48,15 +48,15 @@ class SecurityController extends AbstractController
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, SluggerInterface $slugger): Response
     {   
-        if($this->getUser()){
+        if($this->getUser()){ //On vérifie si l'utilisateur est connecté
             $this->addFlash("error", "Tu es deja connecté");
             return $this->redirectToRoute('home');
         }
-        $user = new User();
+        $user = new User();//Si utilisateur pas connecté on fait un nouvel obejt user
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) { // Si le formulaire est valide
             
              //On recupere les images 
              /** @var UploadedFile $picture */
@@ -66,7 +66,7 @@ class SecurityController extends AbstractController
                 $originalPicture = pathinfo($picture->getClientOriginalName(), PATHINFO_FILENAME);
 
                 // On genere un nouveau nom de fichier
-                // On en fait une part de l'URL  
+                // On en fait une part de l'URL
                 $safePicture = $slugger->slug($originalPicture);
                 $newPicture = $safePicture.'-'.uniqid().'.'.$picture->guessExtension();
 
@@ -77,7 +77,7 @@ class SecurityController extends AbstractController
                         $newPicture
                     );
                 } catch (FileException $e){
-                    //Mise en place des exceptions a faire plus tard
+                    //Permet de récuperer l'upload en cas d'erreur
                 }
                 
                 $user->setPicture($newPicture);
@@ -92,10 +92,8 @@ class SecurityController extends AbstractController
             );
 
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($user);
+            $entityManager->persist($user); 
             $entityManager->flush();
-            // do anything else you need here, like send an email
-
             return $this->redirectToRoute('app_login');
         }
 

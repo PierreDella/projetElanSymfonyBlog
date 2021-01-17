@@ -39,18 +39,22 @@
                         </div>
                     </div>
                 </div> 
-                <div class="profil-buttons">
-                    <div class="profil-buttons-supp">
-                        <a class= "confirmation icon_add1"href="{{ path('user_delete', { id : user.id }) }}">Supprimer mon compte</a>
-                    </div>
-                    <div class="profil-buttons-edit">
-                        <a class= "confirmation icon_add2" href="#">Modifier profil</a>
-                    </div>
-                    <div class="profil-buttons-edit-mp">
-                        <a class= "confirmation icon_add3" href="{{ path('user_edit_password', {'id':app.user.id}) }}">Changer mon mot de passe</a>
-                    </div>
-                    <div></div>
-                </div>    
+                {% if app.user.id == user.id or is_granted('ROLE_ADMIN')%}
+                    <div class="profil-buttons">
+                        <div class="profil-buttons-supp">
+                        <a class= "confirmation icon_add1"href="{{ path('user_delete', { id : user.id }) }}">Supprimer compte</a>
+                        </div>
+                {% endif %}
+                {% if app.user.id == user.id %}
+                        <div class="profil-buttons-edit">
+                            <a class= "confirmation icon_add2" href="#">Modifier profil</a>
+                        </div>
+                        <div class="profil-buttons-edit-mp">
+                            <a class= "confirmation icon_add3" href="{{ path('user_edit_password', {'id':app.user.id}) }}">Changer mon mot de passe</a>
+                        </div>
+                        <div></div>
+                    </div>    
+                {% endif %}
             </div>
         </div>
     </div>
@@ -82,7 +86,7 @@
                     {# {% endfor %} #}
                     </tbody>
                 </table>
-                <a href="{{ path('recipesUser_index', {'id':app.user.id}) }}"><button type="button" class="btn btn-primary">Voir recettes</button></a>
+                <a href="{{ path('recipesUser_index', {'id': user.id}) }}"><button type="button" class="btn btn-primary">Voir recettes</button></a>
             </div>
             </div>
         </div>
@@ -109,7 +113,7 @@
                     {# {% endfor %} #}
                     </tbody>
                 </table>
-                <a href="{{ path('bibliotheque_index', {'id':app.user.id}) }}"><button type="button" class="btn btn-primary">Voir bibliothèques</button></a>
+                <a href="{{ path('bibliotheque_index', {'id':user.id}) }}"><button type="button" class="btn btn-primary">Voir bibliothèques</button></a>
             </div>
             </div>
         </div>
