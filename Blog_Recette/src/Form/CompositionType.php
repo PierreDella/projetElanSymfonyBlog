@@ -20,9 +20,7 @@ class CompositionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            // ->add('name', TextType::class, [
-            //     'class' => Recipe::class,   
-            // ])
+            
             ->add('ingredient', EntityType::class, [
                 'class' => Ingredient::class,
                 'choice_label' => 'name',

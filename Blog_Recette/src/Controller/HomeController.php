@@ -25,7 +25,7 @@ class HomeController extends AbstractController
     
 //                                                    ******************AFFICHAGES*****************
     /**
-     * @Route("/home", name="home")
+     * @Route("/", name="home")
      */
     public function searchIndex(RecipeRepository $repo, Request $request){
         

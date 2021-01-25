@@ -21,6 +21,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserController extends AbstractController
@@ -207,19 +208,24 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/add/bibliotheque/{id}", name="add_bibliotheque")
+     * @Route("/add/bibliotheque", name="add_bibliotheque")
      * @Route("/edit/bibliotheque/{id}", name="edit_bibliotheque")
      */
-    public function createBibliotheque( User $user = null, Bibliotheque $bibliotheque = null, Request $request, ManagerRegistry $manager): Response {
-        
-            if ( ! $bibliotheque){
-
-                $bibliotheque = new Bibliotheque();
-            }
+    public function createBibliotheque(Bibliotheque $bibliotheque = null, Request $request, ManagerRegistry $manager): Response {
             
+        if(!$bibliotheque){ //Si pas de bibliotheque
+            $bibliotheque = new Bibliotheque();
+        }
+        //recupère l'objet de request
+        $recipeId = $request->query->get("recipeid");
+        //Si recette on trouve l'id de la recette et on l'ajoute dans la biblio
+        if ($recipeId){
+            $recipe = $manager->getRepository(Recipe::class)->findOneBy(["id" => $recipeId]);
+            $bibliotheque->addRecipe($recipe);
+        }
+
         $form = $this->createForm(BibliothequeType::class, $bibliotheque);
         $form->handleRequest($request);
-
 
         if($form->isSubmitted() && $form->isValid()) {
 
@@ -229,15 +235,34 @@ class UserController extends AbstractController
             $em->flush();
 
             return $this->redirectToRoute('bibliotheque_index', ["id"=>$this->getUser()->getId()]);
-        }
+        }   
 
         return $this->render('bibliotheque/addBibliotheque.html.twig', [
             
             'formBiblio'=> $form->createView(),
             'bibliotheque' => $bibliotheque,
-            'user' => $user
 
         ]);
+    }
+
+
+    /**
+     * @Route("/add-recipe-collection", name="addRecipeToCollection")
+     */
+    public function addRecipeToCollection(EntityManagerInterface $manager, Request $request){
+
+        $recipeId = $request->query->get("recipeid");
+        $biblioId = $request->query->get("biblioid");
+
+        $bibliotheque = $manager->getRepository(Bibliotheque::class)->findOneBy(["id" => $biblioId]);
+        $recipe = $manager->getRepository(Recipe::class)->findOneBy(["id" => $recipeId]);
+        $bibliotheque->addRecipe($recipe);
+        
+        $manager->flush();
+
+        return $this->redirectToRoute('bibliotheque_index', ["id"=>$this->getUser()->getId()]);
+        
+
     }
 
     /** 
@@ -343,7 +368,7 @@ class UserController extends AbstractController
             $manager->remove($user);
             $manager->flush();
         
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('home');
         }else{
             $this->addFlash("error", "Suppression non autorisé.");
             return $this->redirectToRoute("home");

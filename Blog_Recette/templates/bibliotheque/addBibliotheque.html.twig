@@ -6,7 +6,7 @@
 
         {{ form_start(formBiblio) }}
             {{ form_row(formBiblio.titre) }} 
-                <div id="recipe_bibliotheques_container">
+                {# <div id="recipe_bibliotheques_container">
                     <ul id="recipes" data-prototype="{{ form_widget(formBiblio.recipes.vars.prototype)|e('html_attr') }}">
                         {% for recipe in formBiblio.recipes %}
                             <div class="categories-form"style="display:flex;">
@@ -16,7 +16,7 @@
                         {% endfor %}
                     </ul>
                     <button type="button" class="add_recipe_link" data-collection-holder-class="recipe">Ajout de recette</button>
-                </div>
+                </div> #}
 
         {{ form_end(formBiblio) }}
 
@@ -28,46 +28,46 @@
     <script>
    
 
-        $(document).ready(function() {
-            //On définit le contenant 
-            var $collectionHolder = $('#recipes');
-            var proto = $collectionHolder.data("prototype");
+        // $(document).ready(function() {
+        //     //On définit le contenant 
+        //     var $collectionHolder = $('#recipes');
+        //     var proto = $collectionHolder.data("prototype");
                        
-            //ajoute un attribut data-index qui compte le nbre d'inputs dans la collection
-            $collectionHolder.data('index', $collectionHolder.find(':input').length);
+        //     //ajoute un attribut data-index qui compte le nbre d'inputs dans la collection
+        //     $collectionHolder.data('index', $collectionHolder.find(':input').length);
 
-            addFormToCollection($collectionHolder, proto);
+        //     addFormToCollection($collectionHolder, proto);
             
-            $('.add_recipe_link').on('click', function(e){
-                e.preventDefault();
-                //ajoute un nouvel recipe  formulaire
-                addFormToCollection($collectionHolder, proto);
-            })
-        });
+        //     $('.add_recipe_link').on('click', function(e){
+        //         e.preventDefault();
+        //         //ajoute un nouvel recipe  formulaire
+        //         addFormToCollection($collectionHolder, proto);
+        //     })
+        // });
 
-        function addFormToCollection($holder, newForm){
-            console.log(newForm)
-            var index = $holder.data('index');
+        // function addFormToCollection($holder, newForm){
+        //     console.log(newForm)
+        //     var index = $holder.data('index');
             
-            newForm = newForm.replace(/__name__/g, index);
+        //     newForm = newForm.replace(/__name__/g, index);
             
-            //définit le nombred 'index qu'on veut ajouter qu'en on appuie sur le bouton
-            $holder.data('index', index + 1);
-            //Ajoute un form avec <li> avant le bouton ajouter recipe
-            var $newFormLi = $('<li></li>').append(newForm);
+        //     //définit le nombred 'index qu'on veut ajouter qu'en on appuie sur le bouton
+        //     $holder.data('index', index + 1);
+        //     //Ajoute un form avec <li> avant le bouton ajouter recipe
+        //     var $newFormLi = $('<li></li>').append(newForm);
 
-            $newFormLi.append('<a href="#" class="remove">x</a>');
+        //     $newFormLi.append('<a href="#" class="remove">x</a>');
     
-            $holder.append($newFormLi)
+        //     $holder.append($newFormLi)
 
-            $('.remove').click(function(e) {
-                e.preventDefault();
+        //     $('.remove').click(function(e) {
+        //         e.preventDefault();
                 
-                $(this).parent().remove();
+        //         $(this).parent().remove();
                 
-                return false;
-            });
+        //         return false;
+        //     });
 
-        }
+        // }
     </script>
 {% endblock %}

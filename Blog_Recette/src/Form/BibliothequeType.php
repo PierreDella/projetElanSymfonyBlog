@@ -27,16 +27,6 @@ class BibliothequeType extends AbstractType
                     ]),
                     ],
             ])
-            ->add('recipes', CollectionType::class, [
-                'entry_type' => EntityType::class,
-                'entry_options' => [
-                    'class' => Recipe::class,
-                    'choice_label' => 'name',
-                    'label' => false
-                ],
-                'allow_add' => true,
-                'by_reference' => false
-            ])
             ->add('Valider', SubmitType::class)
             ->getForm();
         ;

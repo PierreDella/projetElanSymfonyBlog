@@ -47,7 +47,9 @@
                 <div class="recipe-detail-pseudo">
                     par <a href='{{ path('user_show', {'id': recipe.user.id}) }}'>{{ recipe.user.pseudo }}</a> 
                 </div> 
-                {% if app.user %}
+                {% if recipe.user.id == app.user.id %}
+                    
+                {% else %}
                     <a href="{{ path('add_following', { id : recipe.user.id }) }}">suivre</a>
                 {% endif %}   
             </p>

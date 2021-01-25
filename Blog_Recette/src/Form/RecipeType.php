@@ -2,11 +2,16 @@
 
 namespace App\Form;
 
-use App\Entity\CategoryIngredient;
 use App\Entity\Recipe;
 use App\Form\CompositionType;
 use App\Entity\CategoryRecipe;
+use App\Entity\CategoryIngredient;
+use App\Entity\Composition;
+use App\Entity\Ingredient;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormInterface;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -76,22 +81,71 @@ class RecipeType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('catIngredient', EntityType::class,[
+            
+            ->add('categoryIngredient', EntityType::class,[
                 'class' => CategoryIngredient::class,
                 'mapped' => false,
                 'choice_label' => 'name'
             ])
-            ->add('compositions', CollectionType::class, [
-                'entry_type' => CompositionType::class,
-                'entry_options' => [
+            ;
+            // ->add('compositions', CollectionType::class, [
+            //     'entry_type' => CompositionType::class,
+            //     'entry_options' => [
                    
-                    'label' => 'ajouter des ingredients',
-                ],
-                'allow_add' => true,
-                'label' => false,
-                'allow_delete' => true,
-                'by_reference' => false
-            ])
+            //         'label' => 'ajouter des ingredients',
+            //     ],
+            //     'allow_add' => true,
+            //     'label' => false,
+            //     'allow_delete' => true,
+            //     'by_reference' => false
+            // ])
+
+            
+            $formModifier = function (FormInterface $form, CategoryIngredient $categoryIngredient) {
+                $ingredients = null === $categoryIngredient ? [] : $categoryIngredient->getIngredients(); //->getCompostions();
+
+
+                $form->add('compositions', CollectionType::class, [
+                    'entry_type' => CompositionType::class,
+                    'entry_options' => [
+                    
+                        'label' => 'ajouter des ingredients',
+                    ],
+                    // 'class' => 'App\Entity\Composition',
+                    'choices' => $ingredients,
+                    'allow_add' => true,
+                    'label' => false,
+                    'allow_delete' => true,
+                    'by_reference' => false
+                ]);
+            };
+
+            $builder->addEventListener(
+                //PRE_SET permet : pour modifier les donnees pre-envoie
+                //garde synchronisation du form sur la donnée choisie
+                //FormEvent donne un procédé pour modifier son form dynamiquement
+                FormEvents::PRE_SET_DATA,// ? 
+                function (FormEvent $event) use ($formModifier) {
+                    // deviendra la recette
+                    $data = $event->getData();
+    
+                    $formModifier($event->getForm(), $data->getCategoryIngredient());
+                }
+            );
+
+            $builder->get('categoryIngredient')->addEventListener(
+                //permet l'affichage form modifié
+                FormEvents::POST_SUBMIT,
+                function (FormEvent $event) use ($formModifier) {
+                    //methode fetch qui permet d'avoir l'id de la catégorie d'ingrédient
+                    $categoryIngredient = $event->getForm()->getData();
+    
+                    //une fois le listener ajouté et le choix d'ingrédients prit en compte
+                    //on passe l'info à l'autre fonction d'ajout au formulaire
+                    $formModifier($event->getForm()->getParent(), $categoryIngredient);
+                }
+            )
+
             ->add('categories', CollectionType::class, [
                 'label' => false,
                 'entry_type' => EntityType::class,
@@ -110,7 +164,12 @@ class RecipeType extends AbstractType
     }
 
     public function configureOptions(OptionsResolver $resolver)
-    {
+    {   
+        // $defaults = array(
+        //     'compound' => true,
+        //     'inherit_data' => true,
+        // );
+        
         $resolver->setDefaults([
             'data_class' => Recipe::class,
         ]);

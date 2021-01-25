@@ -117,36 +117,33 @@ class RecipeController extends AbstractController
         }
         //La recette aura comme user la personne connecté
         $recipe->setUser($this->getUser());
-        //On crée un formulaire, où on remove un certain nombre de fields
+        //On crée un formulaire
         $form = $this->createForm(RecipeType::class, $recipe);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()) {
             /** @var UploadedFile $picture */
             $picture = $form->get('picture')->getData();
-            // this condition is needed because the 'brochure' field is not required
-            // so the PDF file must be processed only when a file is uploaded
+          
             if ($picture) {
                 $originalPicture = pathinfo($picture->getClientOriginalName(), PATHINFO_FILENAME);
-                // this is needed to safely include the file name as part of the URL
+                
                 $safePicture = $slugger->slug($originalPicture);
                 $newPicture = $safePicture.'-'.uniqid().'.'.$picture->guessExtension();
-                // $newPicture = $safePicture.'-'.uniqid().'-'.$user->getId().'.'.$picture->guessExtension();
-                // Move the file to the directory where brochures are stored
+                
                 try {
                     $picture->move(
                         $this->getParameter('picturesRecipe_directory'),
                         $newPicture
                     );
                 } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
+                   
                 }
-                // updates the 'brochureFilename' property to store the PDF file name
-                // instead of its contents
+                
                 $recipe->setPicture($newPicture);
                 $time = ($request->request->get('recipe'));
 
-                if (($time['preparationTime']) >= $time['cookingTime']){ //securité
+                if (($time['preparationTime']) >= $time['cookingTime']){     
                 
                     $em = $manager->getManager();
                     $em->persist($recipe);
