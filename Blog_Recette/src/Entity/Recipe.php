@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Entity;
+use App\Entity\Ingredient;
+use App\Entity\Composition;
+use App\Entity\CategoryIngredient;
 
 use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;

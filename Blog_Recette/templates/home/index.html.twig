@@ -42,9 +42,9 @@
                     <li class="dropdown">
                         <a href="javascript:void(0)" class="dropbtn">Ajouter dans ma collection</a>
                         <div class="dropdown-content">
-                            {% for bibliotheque in app.user.bibliotheques %}
+                            {# {% for bibliotheque in app.user.bibliotheques %}
                                 <a href="{{ path('addRecipeToCollection', {'recipeid' : recipe.id, 'biblioid' : bibliotheque.id}) }}">{{ bibliotheque.titre }}</a>
-                            {% endfor %}
+                            {% endfor %} #}
                             <a href="{{ path('add_bibliotheque', { 'recipeid' : recipe.id }) }}">Créer une collection</a>
                         </div>
                     </li>

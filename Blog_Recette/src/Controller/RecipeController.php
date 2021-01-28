@@ -164,7 +164,29 @@ class RecipeController extends AbstractController
             ]);
     }
 
-    
+    /**
+     * @Route("/ingrList", name="ingrList")
+     */
+    public function ingrList(Request $request, EntityManagerInterface $manager){
+        $idCat = $request->query->get('idcat');
+        $categorie = $manager->getRepository(CategoryIngredient::class)->findOneBy(['id' => $idCat]);
+        $ingredients = $manager->getRepository(Ingredient::class)->findByCategorie($categorie);
+
+        $html = "";
+        foreach($ingredients as $i){
+            $html.= "<option ";
+            $html.= "value='".$i->getId()."'>";
+            $html.= $i->getName();
+            $html.= "</option>";
+        }
+        if(empty($ingredients))
+            $html = "<option value='0'>Aucun ingrédient dans cette catégorie...</option>";
+        
+        
+        return new Response($html);
+
+    }
+
     /** Permet de liker ou non une recette
      * @Route("/recipe/{id}/like", name="recipe_like")
      */

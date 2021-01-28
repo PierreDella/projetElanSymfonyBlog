@@ -39,29 +39,22 @@
         <div id="recipe_compositions_container">
             <ul data-prototype="{{ form_widget(form.compositions.vars.prototype)|e('html_attr') }}">
                 {% for composition in form.compositions %}
-                    <div id="composition-form"style="display:flex;">
-                            {{ form_row(composition) }}
-                            <div class="remove-ingredient"style="padding-top: 3em;">
-                                <a class="remove">X</a>    
-                            </div> 
-                            
+                    <div id="composition-form" style="display:flex;">
+                        {{ form_row(composition) }}
+                        <a class="remove">X</a>      
                     </div>  
+                   
                 {% endfor %}
             </ul>
+                 
+                
             <p class="d-flex">
                 <button type="button" class="add_ingredient_link btn btn-dark" data-collection-holder-class="ingredient">Ma liste d'ingredients</button>
-                <div id="catIngredient_recipe_container">
-                    {{ form_widget(form.categoryIngredient) }}
-                </div>    
-                
-            
             </p>
-            
         </div>
-
-        <br>
+        {# <br>
             <a class= "icon_add" href="{{ path('new_ingredient') }}"><button type="button" class="btn btn-dark">Manque d'un ingrédient ajouter le ici</button></a>
-        <br><br>
+        <br><br> #}
          
     {{ form_end(form) }}
 
@@ -71,43 +64,49 @@
 
 {# On récupère jquery de base.html.twig #}
     {{ parent() }}
-    <script
-        src="https://code.jquery.com/jquery-3.5.1.min.js"
-        integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
-        crossorigin="anonymous"></script>
     <script>
-    
-        $(document).ready(function() {
-            //On définit le contenant 
-            var $collectionHolderCategories = $('#categories');
-            var proto = $collectionHolderCategories.data("prototype");
-                       
-            //ajoute un attribut data-index qui compte le nbre d'inputs dans la collection
-            $collectionHolderCategories.data('index', $collectionHolderCategories.find(':input').length);
 
-            addFormToCollection($collectionHolderCategories, proto);
-            
-            $('.add_categorie_link').on('click', function(e){
-                e.preventDefault();
-                //ajoute un nouvel recipe  formulaire
-                addFormToCollection($collectionHolderCategories, proto);
-            })
-        });
+        function displayListByCategorie(){
+            var $cat = $('.catList');
+            console.log($cat)
+            // Quand la categorie d'ingredient a été selectionné
+            $cat.change(function() {
+                
+                let idSource = $(this).attr('id')
+                let idCible = idSource.replace('categoryIngredient', 'ingredient')
+                // reprend le formulaire correspondant
+                var $ingrList = $("#"+idCible);
+                $ingrList.fadeOut(400)
+                // simule un formulaire avec les données sélectionnées
+               
+                // Soumet les données via AJAX au formulaire 
+                $.ajax({
+                    url : "{{ path('ingrList') }}",
+                    type: 'GET',
+                    data : { idcat : $(this).val() },
+                    success: function(html) {
+                        // Replace l'actuel champ ...
+                        $ingrList.fadeIn(400)
+                        $ingrList.html(html)
+                    }
+                });
+            });
+        }
 
-        function addFormToCollectionC($holderR, newFormSec){
-            console.log(newFormSec)
-            var index = $holderR.data('index');
+        function addFormToCollectionCategories($holderCategories, newFormSec){
+            // console.log(newFormSec)
+            var index = $holderCategories.data('index');
             
             newFormSec = newFormSec.replace(/__nameSec__/g, index);
             
             //définit le nombred 'index qu'on veut ajouter qu'en on appuie sur le bouton
-            $holderR.data('index', index + 1);
+            $holderCategories.data('index', index + 1);
             //Ajoute un form avec <li> avant le bouton ajouter recipe
             var $newFormCatLi = $('<li></li>').append(newFormSec);
 
             $newFormCatLi.append('<a href="#" class="remove">x</a>');
     
-            $holderR.append($newFormCatLi)
+            $holderCategories.append($newFormCatLi)
 
             $('.remove').click(function(e) {
                 e.preventDefault();
@@ -120,24 +119,8 @@
         }
 
 
-
-        $(document).ready(function() {
-            //On définit le contenant 
-            var $collectionHolder = $('#recipe_compositions_container ul');
-            var proto = $collectionHolder.data("prototype");
-                       
-            //ajoute un attribut data-index qui compte le nbre d'inputs dans la collection
-            $collectionHolder.data('index', $collectionHolder.find(':input').length);
-            
-            $('.add_ingredient_link').on('click', function(e){
-                e.preventDefault();
-                //ajoute un nouvel ingredient formulaire
-                addFormToCollection($collectionHolder, proto);
-            })
-        });
-
         function addFormToCollection($holder, newForm){
-            console.log(newForm)
+            // console.log(newForm)
             var index = $holder.data('index');
             
             newForm = newForm.replace(/__name__/g, index);
@@ -161,6 +144,42 @@
 
         }
 
+        $(document).ready(function() {
+            //On définit le contenant 
+            var $collectionHolderCategories = $('#categories');
+            var protoCat = $collectionHolderCategories.data("prototype");
+                       
+            //ajoute un attribut data-index qui compte le nbre d'inputs dans la collection
+            $collectionHolderCategories.data('index', $collectionHolderCategories.find(':input').length);
+
+            addFormToCollection($collectionHolderCategories, protoCat);
+            
+            $('.add_categorie_link').on('click', function(e){
+                e.preventDefault();
+                //ajoute un nouvel recipe  formulaire
+                addFormToCollection($collectionHolderCategories, protoCat);
+                
+            })
+
+             //On définit le contenant 
+            var $collectionHolder = $('#recipe_compositions_container ul');
+            var protoCI = $collectionHolder.data("prototype");
+                       
+            //ajoute un attribut data-index qui compte le nbre d'inputs dans la collection
+            $collectionHolder.data('index', $collectionHolder.find(':input').length);
+            
+            $('.add_ingredient_link').on('click', function(e){
+                e.preventDefault();
+                //ajoute un nouvel ingredient formulaire
+                addFormToCollection($collectionHolder, protoCI);
+                displayListByCategorie()
+            })
+
+
+        });
+
+        
+
 
 // $("#add_category").click(function(){
 //             let proto = $("#recipe_categories").data("prototype")
@@ -170,29 +189,7 @@
 //         }) 
 
 
-        var $cat = $('#catIngredient_recipe_container');
-        // Quand la categorie d'ingredient a été selectionné
-        $sport.change(function() {
-            // reprend le formulaire correspondant
-            var $form = $(this).closest('form');
-            // simule un formulaire avec les données sélectionnées
-            var data = {};
-            data[$sport.attr('name')] = $sport.val();
-            // Soumet les données via AJAX au formulaire 
-            $.ajax({
-                url : $form.attr('action'),
-                type: $form.attr('method'),
-                data : data,
-                success: function(html) {
-                    // Replace l'actuel champ ...
-                    $('#sport_meetup_position').replaceWith(
-                        // ... with the returned one from the AJAX response.
-                        $(html).find('#sport_meetup_position')
-                    );
-                    // Position field now displays the appropriate positions.
-                }
-            });
-        });
+        
     </script>
 {% endblock %}
 
