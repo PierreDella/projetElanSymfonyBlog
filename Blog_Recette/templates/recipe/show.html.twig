@@ -47,11 +47,15 @@
                 <div class="recipe-detail-pseudo">
                     par <a href='{{ path('user_show', {'id': recipe.user.id}) }}'>{{ recipe.user.pseudo }}</a> 
                 </div> 
-                {% if recipe.user.id == app.user.id %}
+                {% if app.user %}
+                    {% if recipe.user.id == app.user.id %}
                     
-                {% else %}
-                    <a href="{{ path('add_following', { id : recipe.user.id }) }}">suivre</a>
-                {% endif %}   
+                    {% else %}
+                        <a href="{{ path('add_following', { id : recipe.user.id }) }}">suivre</a>
+                    {% endif %}
+                {% endif %}
+                
+                   
             </p>
             
         </div>
@@ -75,7 +79,7 @@
                 <div class="media-body">
                     <blockquote>
                     <p class="post">{{ comment.post }}</p>
-                    <footer class="text-small"><a href='{{ path('user_show', {'id': comment.user.id}) }}'>{{ comment.user.pseudo }}</a><p>{{ comment.createdAt | date('d/m/Y') }}</p></footer>
+                    <div class="text-small"><a href='{{ path('user_show', {'id': comment.user.id}) }}'>{{ comment.user.pseudo }}</a><p>{{ comment.createdAt | date('d/m/Y') }}</p></div>
                     {% if app.user == comment.user or is_granted('ROLE_ADMIN') %}
                         <a class="uk-button uk-button-default" href="{{ path('comment_delete', {'id':comment.id})}}">DELETE</a>
                         <a class="uk-button uk-button-default" href="{{ path('comment_edit', {'id':comment.id})}}">EDIT</a>

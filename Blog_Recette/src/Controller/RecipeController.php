@@ -168,17 +168,22 @@ class RecipeController extends AbstractController
      * @Route("/ingrList", name="ingrList")
      */
     public function ingrList(Request $request, EntityManagerInterface $manager){
+        //on recupere l'id du form dans la vue
         $idCat = $request->query->get('idcat');
+        //on trouve la catégorie lié à l'id
         $categorie = $manager->getRepository(CategoryIngredient::class)->findOneBy(['id' => $idCat]);
+        // on retrouve les ingredients en liens avec la catégorie en se servant de requete dans le repository
         $ingredients = $manager->getRepository(Ingredient::class)->findByCategorie($categorie);
-
+        //code html des ingrédients sera chaine de caractere vide par defaut
         $html = "";
-        foreach($ingredients as $i){
+        //qu'on remplira    
+        foreach($ingredients as $i){  //boucle qui donnera a chaque ingrédient leurs valeurs repésenté par leurs id
             $html.= "<option ";
             $html.= "value='".$i->getId()."'>";
-            $html.= $i->getName();
+            $html.= $i->getName(); // recupere leur nom 
             $html.= "</option>";
         }
+        //donne valeur par defaut quand aucun ingredient dans une categorie
         if(empty($ingredients))
             $html = "<option value='0'>Aucun ingrédient dans cette catégorie...</option>";
         

@@ -3,7 +3,6 @@
 {% block title %}Toutes nos recettes{% endblock %}
 
 {% block home %}
-
 <div class="body-recipes">
     <div class="row">
         <div class="filter">
@@ -39,15 +38,19 @@
                 </div>
                 <div class="card-footer">
                     <a href="{{ path('detailRecipe', {'id':recipe.id}) }}" type="button" class="btn btn-outline-secondary">Lire la suite</a>
-                    <li class="dropdown">
+                    {% if app.user %}
+                        <li class="dropdown">
                         <a href="javascript:void(0)" class="dropbtn">Ajouter dans ma collection</a>
                         <div class="dropdown-content">
-                            {# {% for bibliotheque in app.user.bibliotheques %}
+                            {% for bibliotheque in app.user.bibliotheques %}
                                 <a href="{{ path('addRecipeToCollection', {'recipeid' : recipe.id, 'biblioid' : bibliotheque.id}) }}">{{ bibliotheque.titre }}</a>
-                            {% endfor %} #}
+                            {% endfor %}
                             <a href="{{ path('add_bibliotheque', { 'recipeid' : recipe.id }) }}">Créer une collection</a>
                         </div>
                     </li>
+                    {% endif %}
+                    
+                    
                 </div>
             </div>
         {% endfor %}

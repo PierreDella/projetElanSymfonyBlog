@@ -14,7 +14,6 @@
     
 
     {{ form_start(form) }}
-
         {{ form_row(form.name) }}
         {# {{ form_row(form.published) }}  #}
         {{ form_row(form.description) }}
@@ -46,8 +45,6 @@
                    
                 {% endfor %}
             </ul>
-                 
-                
             <p class="d-flex">
                 <button type="button" class="add_ingredient_link btn btn-dark" data-collection-holder-class="ingredient">Ma liste d'ingredients</button>
             </p>
@@ -68,24 +65,25 @@
 
         function displayListByCategorie(){
             var $cat = $('.catList');
-            console.log($cat)
-            // Quand la categorie d'ingredient a été selectionné
-            $cat.change(function() {
-                
+            // console.log($cat)
+            
+            $cat.change(function() { // Quand la categorie d'ingredient a été selectionné donnera les changement vouluent
+                //On recupere l'id de la catégorie d'ingredient
                 let idSource = $(this).attr('id')
+                //on prépare le code de la balise contenant les ingrédients en reprenant l'id de la catégorie et replacant categorieIngredient par ingrédient
                 let idCible = idSource.replace('categoryIngredient', 'ingredient')
-                // reprend le formulaire correspondant
+                //on donne ce nouvel id à la liste d'ingrédient
                 var $ingrList = $("#"+idCible);
                 $ingrList.fadeOut(400)
-                // simule un formulaire avec les données sélectionnées
-               
-                // Soumet les données via AJAX au formulaire 
-                $.ajax({
+                
+                $.ajax({ //donnera en passant par la fonction du controller ingrList
+                // la liste des ingredients vouluent en fonction de leur catégorie
+                //tout en distribuant de nouvelles valeurs aux ingrédients qui seront séléctionnés
                     url : "{{ path('ingrList') }}",
                     type: 'GET',
                     data : { idcat : $(this).val() },
                     success: function(html) {
-                        // Replace l'actuel champ ...
+                        
                         $ingrList.fadeIn(400)
                         $ingrList.html(html)
                     }
@@ -99,15 +97,15 @@
             
             newFormSec = newFormSec.replace(/__nameSec__/g, index);
             
-            //définit le nombred 'index qu'on veut ajouter qu'en on appuie sur le bouton
+            // Définit le nombred 'index qu'on veut ajouter qu'en on appuie sur le bouton
             $holderCategories.data('index', index + 1);
-            //Ajoute un form avec <li> avant le bouton ajouter recipe
+            // Ajoute un form avec <li> avant le bouton ajouter recipe
             var $newFormCatLi = $('<li></li>').append(newFormSec);
 
             $newFormCatLi.append('<a href="#" class="remove">x</a>');
     
             $holderCategories.append($newFormCatLi)
-
+            // Mise en place du bouton remove avec chaque nouveau formulaire
             $('.remove').click(function(e) {
                 e.preventDefault();
                 
@@ -121,19 +119,20 @@
 
         function addFormToCollection($holder, newForm){
             // console.log(newForm)
+            // on définit la variable index qui contiendra 
             var index = $holder.data('index');
-            
+            // définition du nouveau formulaire qui contiendra 
             newForm = newForm.replace(/__name__/g, index);
             
-            //définit le nombre 'index qu'on veut ajouter qu'en on appuie sur le bouton
+            //définit le nombre 'index qu'on a ajouté qu'en on appuie sur le bouton
             $holder.data('index', index + 1);
-            //Ajoute un form avec <li> avant le bouton ajouter ingredient
+            //Définition d'un nouveau du nouveau formulaire qui sera ajouté Ajoute un form avec <li> avant le bouton ajouter ingredient
             var $newFormLi = $('<li></li>').append(newForm);
 
             $newFormLi.append('<a href="#" class="remove">x</a>');
     
             $holder.append($newFormLi)
-
+            // Mise en place du bouton remove avec chaque nouveau formulaire
             $('.remove').click(function(e) {
                 e.preventDefault();
                 
@@ -156,21 +155,23 @@
             
             $('.add_categorie_link').on('click', function(e){
                 e.preventDefault();
-                //ajoute un nouvel recipe  formulaire
                 addFormToCollection($collectionHolderCategories, protoCat);
                 
             })
 
              //On définit le contenant 
             var $collectionHolder = $('#recipe_compositions_container ul');
+            //on définit le prototype qui contiendra la liste des ingrédients 
             var protoCI = $collectionHolder.data("prototype");
                        
-            //ajoute un attribut data-index qui compte le nbre d'inputs dans la collection
+            //ajoute un attribut data-index qui compte le nbre d'inputs dans la collection  
             $collectionHolder.data('index', $collectionHolder.find(':input').length);
             
             $('.add_ingredient_link').on('click', function(e){
+                //Si l'événement n'est pas traité explicitement, son action par défaut ne doit pas être prise en compte 
                 e.preventDefault();
                 //ajoute un nouvel ingredient formulaire
+                //aura pour fonction d'utilisé les attributs de data-prototype pour dynamiquement ajouter un nouveau formulaire  
                 addFormToCollection($collectionHolder, protoCI);
                 displayListByCategorie()
             })

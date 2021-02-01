@@ -5,13 +5,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
         <title>{% block title %}Bienvenue{% endblock %}</title>
         {% block stylesheets %}     
-             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.5.7/dist/css/uikit.min.css" />
+             {# <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.5.7/dist/css/uikit.min.css" />
             <script src="https://cdn.jsdelivr.net/npm/uikit@3.5.7/dist/js/uikit.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/uikit@3.5.7/dist/js/uikit-icons.min.js"></script>  
+            <script src="https://cdn.jsdelivr.net/npm/uikit@3.5.7/dist/js/uikit-icons.min.js"></script>   #}
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.4/jquery-confirm.min.css" integrity="sha512-0V10q+b1Iumz67sVDL8LPFZEEavo6H/nBSyghr7mm9JEQkOAm91HNoZQRvQdjennBb/oEuW+8oZHVpIKq+d25g==" crossorigin="anonymous" />
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
             <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
             <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+            <link rel="stylesheet" href="{{ asset('css/styleResponsive.css') }}">
         
             <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous">
         {% endblock %}
@@ -21,12 +21,14 @@
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
         {% if app.user %}
             <a class="navbar-brand" href="{{ path('home')}}">Accueil</a>
             {% if is_granted('ROLE_ADMIN') %}
                 <a class="navbar-brand" href="{{ path('adminHome') }}">Desk</a>
             {% endif %}
+
                 <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('add_recipe') }}"><i class="fas fa-plus"></i> Recette</a>
@@ -44,6 +46,7 @@
                         <a class="nav-link" href="{{ path('filActu', {'id':app.user.id}) }}">Mon fil d'actualités</a>
                     </li>
                 </ul>
+
                 <ul class="nav justify-content-end navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('app_logout') }}">Deconnexion</a>
@@ -56,6 +59,7 @@
                         </a>
                     </li> 
                 </ul>
+
             {% else %}
                 <ul class="nav justify-content-end navbar-nav">
                     <a class="navbar-brand" href="{{ path('home')}}">Accueil</a>
@@ -67,6 +71,7 @@
                     </li>
                 </ul>
             {% endif %}
+
         </div>
     </nav>
     <div class="wrapper">
@@ -88,22 +93,59 @@
             </div>            
             <br>
         {% endfor %}
+    </div>
 
-        <div id="main">
+        <div class="main">
             {% block body %}{% endblock %}
             {% block contenu %}{% endblock %}
-        </div>
-    </div>
-        <div class="mainhome">
             {% block home %}{% endblock %}
-    </div>
-		
-		
+        </div>
+
+        <section class="section_fin"> 
+            <div class="AboutIdeesCuisine">
+                <h3>A propos d'idées cuisine</h3>
+                <div class="line_fin"></div>
+                <p>
+                    <strong>Idées Cuisine</strong> est un site idéale pour toutes les personnes souhaitant partager sa passion ou voulant apprendre de nouvelles choses en matière culinaire.
+                </p>
+            </div>
+            <div class="dontForget">
+                <h3>Ne pas oublier</h3>
+                <div class="line_fin"></div>
+                    <a href="register" style="display:block">M'inscrire</a>
+                    <a href="" style="display:block">Se connecter</a>
+                    <a href="" style="display:block">Se déconnecter</a>
+            </div>
+            <div class="share_links">   
+                <h3>Réseaux sociaux</h3>
+                <div class="line_fin"></div>
+                <p>
+                    <a style="display:block">Twitter</a>
+                    <a style="display:block">Facebook</a>
+                    <a style="display:block">Instagram</a>
+                </p>
+            </div>
+        </section>
+
+        <footer>
+            <div id="buy">
+                <p>Le plaisir de partager &copy; 2021 - <a>Idées Cuisine</a> - Elan Formation</p>
+            </div>
+            <div id="else">
+                <a>
+                    Accueil -
+                </a>
+                <a>
+                    Politique de confidentialité
+                </a>
+            </div>
+        </footer>
+        
 		{% block javascripts %}
             <script src="https://code.jquery.com/jquery-3.5.1.min.js" 
             integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" 
             crossorigin="anonymous"></script>
-            
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
             <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
             
             <script>
