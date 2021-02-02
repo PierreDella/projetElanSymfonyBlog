@@ -1,14 +1,17 @@
-{{ form_start(form) }}
-    <div class="filter">
-        
+
+    <div class="searchSection">
         <div>
-        {{ form_row(form.q) }}
-            <h4>Categories Recette:</h4>
-            <div class="filter-categorie" style="flex">
-                <p class="balises">{{ form_row(form.categoriesRecipe) }}</p>
+             {{ form_widget(form.q) }}
+            <button type="submit" class="submitSearch">Rechercher</button>
+        </div>
+        <div class="dropdown show">
+            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Categories Recette
+            </a>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <p class="dropdown-item">{{ form_widget(form.categoriesRecipe) }}</p>
             </div>
         </div>
-        <button type="submit" class="">Rechercher</button>
-    </div> 
 
-{{ form_end(form) }} 
+    </div>
+

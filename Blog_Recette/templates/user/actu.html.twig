@@ -50,69 +50,40 @@
     
     {% endblock %}
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-   
-
-
-
 {% block javascripts %}
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script>
-    //     function onClickBtnLike(event){
-    //         //
-    //         event.preventDefault();
-    //         //on prend l'url du lien pour l'avoir dans ajax
-    //         const url = this.href; //this sera l'element <a> sur lequel on clique
-            
-    //         //recher le span avec class js-likes
-    //         const spanCount = this.querySelector('span.js-likes');
-
-    //         const icone = this.querySelector('a');
-            
-    //         //peut etre appelé en POST
-    //         //axios permet gestion des promesses qui. La reponse sera ensuite mis dans la fonction
-    //         axios.get(url).then(function(response){
-    //             // const likes = response.data.likes;
-    //             spanCount.textContent = response.data.likes;
-    //             //si contient la class 'désabonnement' = aime, alors remplacera par "far"
-    //             if(icone.classList.contains('désabonnement')){
-    //                 icone.classList.replace('désabonnement', 'abonnement');
-                
-    //             } else {
-    //                 icone.classList.replace('abonnement', 'désabonnement');
-    //             }
-                   
-               
-                    
-    //         })
-    //     }
-    //     // selection de tout les <a> avec js-like 
-    //     document.querySelectorAll('a.js-like').forEach(function(link){
-    //     //quand clique appel de la finction onClick
-    //     link.addEventListener('click', onClickBtnLike);
-    //     })
     
+    <script>
+       function onClickBtnLike(event){
+            //
+            event.preventDefault();
+            //on prend l'url du lien pour l'avoir dans ajax
+            const url = this.href; //this sera l'element <a> sur lequel on clique
+            
+            //recher le span avec class js-likes
+            const spanCount = this.querySelector('span.js-likes');
+
+            const icone = this.querySelector('i');
+            
+            //peut etre appelé en POST
+            //axios permet gestion des promesses qui. La reponse sera ensuite mis dans la fonction
+            axios.get(url).then(function(response){
+                // const likes = response.data.likes;
+                spanCount.textContent = response.data.likes;
+                //si contient la class 'fas' = aime, alors remplacera par "far"
+                if(icone.classList.contains('fas')){
+                    icone.classList.replace('fas', 'far');
+                
+                } else {
+                    icone.classList.replace('far', 'fas');
+                }        
+            })
+        }
+        // selection de tout les <a> avec js-like 
+        document.querySelectorAll('a.js-like').forEach(function(link){
+        //quand clique appel de la finction onClick
+        link.addEventListener('click', onClickBtnLike);
+        })
     </script>
- 
+    
 {% endblock %}

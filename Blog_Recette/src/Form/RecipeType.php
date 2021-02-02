@@ -31,6 +31,7 @@ class RecipeType extends AbstractType
         $builder
         // ->add('valider', SubmitType::class)
             ->add('name', TextType::class, [
+                'required' => true,
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Veuillez entrer un nom de recette',
@@ -49,6 +50,7 @@ class RecipeType extends AbstractType
                 ],
             ])
             ->add('description', TextareaType::class, [
+                'required' => true,
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Entrez une description de votre recette',
@@ -62,6 +64,7 @@ class RecipeType extends AbstractType
                 'label' => 'temps de préparation (en minutes) :  ',
             ])
             ->add('instructions', CKEditorType::class, [
+                'required' => true,
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Veuillez entrer des instructions',
@@ -82,6 +85,7 @@ class RecipeType extends AbstractType
             //     'choice_label' => 'name'
             // ])
             ->add('compositions', CollectionType::class, [
+                'required' => true,
                 'entry_type' => CompositionType::class,
                 'entry_options' => [
                    
@@ -93,7 +97,10 @@ class RecipeType extends AbstractType
                 'by_reference' => false
             ])
             ->add('categories', CollectionType::class, [
-                'label' => false,
+                // 'label_html' => 'choisir',  
+                // 'prototype_data' => 'New Tag Placeholder',   
+
+                // 'label' => 'choisir une catégorie   ',
                 'entry_type' => EntityType::class,
                 'entry_options' => [
                     'class' => CategoryRecipe::class,
@@ -102,7 +109,6 @@ class RecipeType extends AbstractType
                 ],
                 'allow_add' => true,
                 'allow_delete' => true,
-                'by_reference' => false
             ])
             ->add('Valider', SubmitType::class)
             

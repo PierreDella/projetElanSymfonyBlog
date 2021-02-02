@@ -1,4 +1,9 @@
-/* FORMULAIRES */
+@media (min-width: 450px){
+    .container {
+      padding: 0;
+    }
+  }
+/* Présentation des recettes */
 
 @media (min-width: 576px){
     .col-sm-2 {
@@ -7,16 +12,20 @@
     }
   }
 @media (max-width: 1350px){
-.body-recipes {
-    flex-direction: column;
-  align-items: center;
-}
+    .body-recipes {
+        flex-direction: column;
+    align-items: center;
+    }
 }
 @media (max-width: 920px){
+    .AboutIdeesCuisine{
+        padding-top: 1em;
+    }
     .section_fin {
        flex-direction: column;
        align-items: center;
        padding: 0;
+       text-align: center;
     }
     .AboutIdeesCuisine{
         width: 100%;
@@ -32,4 +41,67 @@
     .section_fin{
         padding: 0;
     }
+}
+/* SUBSCRIPTIONS/SUBSCRIBERS */
+@media (max-width: 485px){
+    .body-subs{
+        justify-content: center;
+    }
+}
+@media (max-width: 450px){
+    .ligne{
+        padding-left: 1em;
+    }
+}
+/* PROFIL */
+
+@media (max-width: 995px){
+    .biblioUser{
+    flex-direction: column; 
+    align-content: center;
+    }
+}
+@media (max-width: 920px){
+    .line_fin{
+        display: none;
+    }
+}
+@media (max-width: 770px){
+    .profil-info{
+    display: block;
+    }
+}
+@media (max-width: 652px){
+    .top-profil{
+    flex-direction: column;
+    align-items: center;
+    }
+    
+    .card-pi{
+        text-align: center;
+        padding: 0;
+    }
+    .card-pp{
+        margin: 0;
+    }
+    .profil-info h1{
+        width: auto;
+    }
+}
+@media (max-width: 465px){
+    .profil-buttons{
+    display: block;
+    text-align: center;
+    }
+    
+    .profil-buttons-supp{
+        
+    }
+    .profil-buttons-edit{
+        padding-top: 1em;
+    }
+    .profil-buttons-edit-mp{
+        padding-top: 1em;
+    }
+    
 }

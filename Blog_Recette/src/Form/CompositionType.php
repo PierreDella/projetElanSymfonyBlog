@@ -12,11 +12,13 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class CompositionType extends AbstractType
@@ -27,6 +29,7 @@ class CompositionType extends AbstractType
         
         ->add('categoryIngredient', EntityType::class,[
             'class' => CategoryIngredient::class,
+            'label' => "Choisir dans l'une des catégories proposées :",
             'attr' => [ 
                 'class' => 'catList'
              ], 
@@ -43,8 +46,9 @@ class CompositionType extends AbstractType
             'choice_label' => 'name',
             'label' => false
         ])
-        ->add("quantity")
-        ->add("unit")
+        ->add('quantity')             
+        ->add('unit')         
+            
         ;
     }
 

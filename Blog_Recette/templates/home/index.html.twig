@@ -3,63 +3,63 @@
 {% block title %}Toutes nos recettes{% endblock %}
 
 {% block home %}
-<div class="body-recipes">
     <div class="row">
         <div class="filter">
                 {% include 'home/_filter.html.twig' %}
         </div>      
     </div>
-    <div class="card-deck">
-        {% for recipe in recipes %}
-            <div class="card">
-                <img class="card-img-top"  src="{{ asset('uploads/images/' ~ recipe.picture) }}" alt="Card image cap">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <a class="card-text" href="{{ path('detailRecipe', {'id':recipe.id}) }}" class="card-title">{{ recipe.name }}</a>
-                        <small>{{ recipe.createdAt | date('d/m/Y') }}</small>
-                    </h5>
-                    <div class="card-text-desc">
-                        <p>{{ recipe.description }}</p>
-                    </div>
-                    <div class="preparationTime">
-                        <small class="text-muted">{{ recipe.preparationTime }} minutes</small>
-                    </div>
-                    <small class="text-muted">{{ recipe.comments | length }} commentaire(s)</small>
-                     <a href="{{ path('recipe_like', {'id': recipe.id}) }}" class="btn btn-link js-like">
-                        {% if app.user and recipe.isLikedByUser(app.user) %}
-                            <i class="fas fa-thumbs-up"></i>
-                        {% else %}
-                            <i class="far fa-thumbs-up"></i>
-                        {% endif %}
-                            <span class="js-likes">{{ recipe.likes | length }}</span>
-                            <span class="js-label">like<span>
-                    </a>
-                    
-                </div>
-                <div class="card-footer">
-                    <a href="{{ path('detailRecipe', {'id':recipe.id}) }}" type="button" class="btn btn-outline-secondary">Lire la suite</a>
-                    {% if app.user %}
-                        <li class="dropdown">
-                        <a href="javascript:void(0)" class="dropbtn">Ajouter dans ma collection</a>
-                        <div class="dropdown-content">
-                            {% for bibliotheque in app.user.bibliotheques %}
-                                <a href="{{ path('addRecipeToCollection', {'recipeid' : recipe.id, 'biblioid' : bibliotheque.id}) }}">{{ bibliotheque.titre }}</a>
-                            {% endfor %}
-                            <a href="{{ path('add_bibliotheque', { 'recipeid' : recipe.id }) }}">Créer une collection</a>
+    <div class="body-recipes">
+        <div class="card-deck">
+            {% for recipe in recipes %}
+                <div class="card">
+                    <img class="card-img-top"  src="{{ asset('uploads/images/' ~ recipe.picture) }}" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a class="card-text" href="{{ path('detailRecipe', {'id':recipe.id}) }}" class="card-title">{{ recipe.name }}</a>
+                            <small>{{ recipe.createdAt | date('d/m/Y') }}</small>
+                        </h5>
+                        <div class="card-text-desc">
+                            <p>{{ recipe.description }}</p>
                         </div>
-                    </li>
-                    {% endif %}
-                    
-                    
+                        <div class="preparationTime">
+                            <small class="text-muted">{{ recipe.preparationTime }} minutes</small>
+                        </div>
+                        <small class="text-muted">{{ recipe.comments | length }} commentaire(s)</small>
+                        <a href="{{ path('recipe_like', {'id': recipe.id}) }}" class="btn btn-link js-like">
+                            {% if app.user and recipe.isLikedByUser(app.user) %}
+                                <i class="fas fa-thumbs-up"></i>
+                            {% else %}
+                                <i class="far fa-thumbs-up"></i>
+                            {% endif %}
+                                <span class="js-likes">{{ recipe.likes | length }}</span>
+                                <span class="js-label">like<span>
+                        </a>
+                        
+                    </div>
+                    <div class="card-footer">
+                        <a href="{{ path('detailRecipe', {'id':recipe.id}) }}" type="button" class="btn btn-outline-secondary">Lire la suite</a>
+                        {% if app.user %}
+                            <li class="dropdown">
+                            <a href="javascript:void(0)" class="dropbtn">Ajouter dans ma collection</a>
+                            <div class="dropdown-content">
+                                {% for bibliotheque in app.user.bibliotheques %}
+                                    <a href="{{ path('addRecipeToCollection', {'recipeid' : recipe.id, 'biblioid' : bibliotheque.id}) }}">{{ bibliotheque.titre }}</a>
+                                {% endfor %}
+                                <a href="{{ path('add_bibliotheque', { 'recipeid' : recipe.id }) }}">Créer une collection</a>
+                            </div>
+                        </li>
+                        {% endif %}
+                        
+                        
+                    </div>
                 </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
     </div>
-</div>
-                   
+                    
+            
         
-    
-    
+        
 {% endblock %}
 
 {% block javascripts %}

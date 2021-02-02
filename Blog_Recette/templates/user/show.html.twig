@@ -11,7 +11,7 @@
                     <div class="card-pp">
                             <img class="profil-picture" src= "{{ asset('uploads/profilpicture/' ~ user.picture) }}" alt="ProfiPicture">
                     </div>
-                    <div class="card-pp">
+                    <div class="card-pi">
                         <div class="profil-info">
                             <h1>{{ user.pseudo }}</h1>
                             <p>{{ user.email }}</p>
@@ -57,8 +57,7 @@
                 {% endif %}
             </div>
         </div>
-    </div>
-    <div class="row biblioRecipes">
+        <div class="biblioUser">
         <div class="col-sm-6">
             <div class="card">
             <div class="card-body">
@@ -92,32 +91,37 @@
         </div>
         <div class="col-md-6">
             <div class="card">
-            <div class="card-body">
-                <h5 class="card-title textCentre"> Bibliothèque(s) : {{ user.Bibliotheques | length }}</h5>
-                <table  class="table table-striped table-responsive">
-                    <thead>
+                <div class="card-body">
+                    <h5 class="card-title textCentre"> Bibliothèque(s) : {{ user.Bibliotheques | length }}</h5>
+                    <table  class="table table-striped table-responsive">
+                        <thead>
+                            <tr>
+                                <th>Titre</th>
+                                <th>Date de création</th>
+                                <th>Nb de recettes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {# {% for subscriber in subscribers %} #}
                         <tr>
-                            <th>Titre</th>
-                            <th>Date de création</th>
-                            <th>Nb de recettes</th>
+                            <td><a href="#"></a></td>
+                            <td></td>
+                            <td></td>
                         </tr>
-                    </thead>
-                    <tbody>
-                    {# {% for subscriber in subscribers %} #}
-                    <tr>
-                        <td><a href="#"></a></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                        
-                    {# {% endfor %} #}
-                    </tbody>
-                </table>
-                <a href="{{ path('bibliotheque_index', {'id':user.id}) }}"><button type="button" class="btn btn-primary">Voir bibliothèques</button></a>
+                            
+                        {# {% endfor %} #}
+                        </tbody>
+                    </table>
+                    <a href="{{ path('bibliotheque_index', {'id':user.id}) }}"><button type="button" class="btn btn-primary">Voir bibliothèques</button></a>
+                </div>
+                </div>
             </div>
             </div>
         </div>
-        </div>
+    
 
 {% endblock %}
 
+{% block javascripts %}
+  
+{% endblock %}
