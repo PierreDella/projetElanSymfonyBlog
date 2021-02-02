@@ -32,6 +32,7 @@ body{
 }
 
 .body-recipes{
+  justify-content: center;
   display: flex;
 }
 .card-deck{
@@ -73,7 +74,7 @@ body{
 }
 
 
-/* Dropdown Bouton */
+/* Dropdown Bouton hover */
 
 li.dropdown {
   display: inline-block;
@@ -110,7 +111,8 @@ li.dropdown {
 */
 
  /* RECETTE */
- .card-recipe{
+ 
+ /* .card-recipe{
   margin-top: 2em;
 }
 .card-recipe img{
@@ -134,7 +136,7 @@ li.dropdown {
 }
 .body-recipe{
   display:flex;
-}
+} */
 
 
 /* 

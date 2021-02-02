@@ -21,7 +21,7 @@
     {% for recipe in recipes %}
         <a href="{{ path('detailRecipe', {'id':recipe.id}) }}">{{ recipe.name }}</a>
         <a href="{{ path('edit_recipe', { id: recipe.id }) }}">EDIT</a>
-        <a href="{{ path('recipe_delete', { id: recipe.id }) }}">SUPP</a><br>
+        <a class="confirmation" href="{{ path('recipe_delete', { id: recipe.id }) }}">SUPP</a><br>
         {# {{ recipe.categoryRecipe.name }} #}
     {% endfor %}
 </div>

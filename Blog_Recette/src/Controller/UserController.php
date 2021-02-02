@@ -172,11 +172,11 @@ class UserController extends AbstractController
      * @Route("/{id}/public", name="biblio_lock")
      * 
      */
-    public function lock(User $user = null, Bibliotheque $bibliotheque, EntityManagerInterface $manager){
-
+    public function lock(Bibliotheque $bibliotheque, EntityManagerInterface $manager){
+        //Gestion des droits d'accès
         if($this->getUser()->isAdmin() || $this->getUser() == $bibliotheque->getUser()){
-            // if($this->getUser()->isAdmin()){
-                $closeState = $bibliotheque->getPublique() ? false : true;
+                $closeState = $bibliotheque->getPublique() ? false : true; //ternaire
+                //set le nouvel état de la biblio
                 $bibliotheque->setPublique($closeState);
                 $manager->persist($bibliotheque);
                 $manager->flush($bibliotheque);
@@ -184,6 +184,7 @@ class UserController extends AbstractController
                 return $this->redirectToRoute('bibliotheque_index', ["id"=>$this->getUser()->getId()]);
             // }
         }
+        //Si les droits d'accès ne sont pas donnés
         $this->addFlash("error", "vous n'avez pas les autorisations nécessaires.");
         return $this->redirectToRoute('home');
     }
@@ -194,7 +195,7 @@ class UserController extends AbstractController
      * @Route("/{id}/publicRecipe", name="recipe_lock")
      * 
      */
-    public function lockRecipe(User $user = null, Recipe $recipe, EntityManagerInterface $manager){
+    public function lockRecipe(Recipe $recipe, EntityManagerInterface $manager){
 
         if($this->getUser()->isAdmin() || $this->getUser() == $recipe->getUser()){
             $closeState = $recipe->getPublished() ? false : true;

@@ -1,4 +1,5 @@
 
+{{ form_start(form) }}
     <div class="searchSection">
         <div>
              {{ form_widget(form.q) }}
@@ -12,6 +13,5 @@
                 <p class="dropdown-item">{{ form_widget(form.categoriesRecipe) }}</p>
             </div>
         </div>
-
     </div>
-
+{{ form_end(form) }} 

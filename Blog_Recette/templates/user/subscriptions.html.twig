@@ -36,7 +36,7 @@
               <a href="{{ path('user_show', { id : subscription.targetUser.id}) }}">{{ subscription.targetUser.pseudo }}</a>
             </div>
             <div class="card-subs-follow">
-              <a href="{{ path('delete_following', { id : subscription.id}) }}">Désabonner</a>
+              <a class="confirmation" href="{{ path('delete_following', { id : subscription.id}) }}">Désabonner</a>
             </div>
         </div>
       {% endfor %}

@@ -12,7 +12,7 @@
             <li>
                 <a href="{{ path('detailRecipe', {'id':recipe.id}) }}">{{ recipe.name }}</a>
                 <a href="{{ path('edit_recipe', { id: recipe.id }) }}"> <i class="fas fa-edit"></i></a>
-                <a href="{{ path('recipe_delete', { id: recipe.id }) }}"><i class="fas fa-trash-alt"></i></a>
+                <a class="confirmation" href="{{ path('recipe_delete', { id: recipe.id }) }}"><i class="fas fa-trash-alt"></i></a>
                 
                 {{ recipe.published == '0' ? '<span uk-icon="icon: lock"></span>' : '<span uk-icon="icon: unlock"></span>' }}
            

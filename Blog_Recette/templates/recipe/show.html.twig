@@ -12,7 +12,7 @@
                 {% if app.user.id == recipe.user.id or is_granted('ROLE_ADMIN') %}
                     <div class="text-center card-tools">
                         <a href="{{ path('edit_recipe', { id: recipe.id }) }}"> <i class="fas fa-edit"></i></a>
-                        <a href="{{ path('recipe_delete', { id: recipe.id }) }}"><i class="fas fa-trash-alt"></i></a>
+                        <a class="confirmation" href="{{ path('recipe_delete', { id: recipe.id }) }}"><i class="fas fa-trash-alt"></i></a>
                     </div>
                 {% endif %}
             {% endif %}

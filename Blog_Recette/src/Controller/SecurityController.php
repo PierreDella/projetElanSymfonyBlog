@@ -52,7 +52,7 @@ class SecurityController extends AbstractController
             $this->addFlash("error", "Tu es deja connecté");
             return $this->redirectToRoute('home');
         }
-        $user = new User();//Si utilisateur pas connecté on fait un nouvel obejt user
+        $user = new User();//Si pas connecté instanciation d'un nouvel objet User
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
