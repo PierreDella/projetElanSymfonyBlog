@@ -1,5 +1,4 @@
 
-
 *{
   box-sizing: border-box;
 }
@@ -124,9 +123,6 @@ li.dropdown {
 }
 .composition{
   width:25%
-}
-.img-recipe{
-  /* display:inline-flex; */
 }
 .img-fluid{
   margin:1em;
