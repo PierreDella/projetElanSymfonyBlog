@@ -3,23 +3,23 @@
 {% block title %}Bibliotheque{% endblock %}
 
 {% block body %}
-  <div class="body-recipes">
-    <div class="card-deck">
+  <div class="body-recipes" alt="">
+    <div class="card-deck" alt="">
         {% for recipe in bibliotheque.recipes %}
           {% if recipe.published == 1 %}
-            <div class="card">
-                <img class="card-img-top"  src="{{ asset('uploads/images/' ~ recipe.picture) }}" alt="Card image cap">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <a class="card-text" href="{{ path('detailRecipe', {'id':recipe.id}) }}" class="card-title">{{ recipe.name }}</a>
+            <div class="card" alt="">
+                <img class="card-img-top" alt=""  src="{{ asset('uploads/images/' ~ recipe.picture) }}" alt="Card image cap">
+                <div class="card-body" alt="">
+                    <h5 class="card-title" alt="">
+                        <a class="card-text" alt="" href="{{ path('detailRecipe', {'id':recipe.id}) }}" class="card-title">{{ recipe.name }}</a>
                         <small>{{ recipe.createdAt | date('d/m/Y') }}</small>
                     </h5>
-                    <p class="card-text">{{ recipe.description }}</p>
-                    <div class="preparationTime">
-                        <small class="text-muted">{{ recipe.preparationTime }} minutes</small>
+                    <p class="card-text" alt="">{{ recipe.description }}</p>
+                    <div class="preparationTime" alt="">
+                        <small class="text-muted" alt="">{{ recipe.preparationTime }} minutes</small>
                     </div>
-                    <small class="text-muted">{{ recipe.comments | length }} commentaire(s)</small>
-                      <a href="{{ path('recipe_like', {'id': recipe.id}) }}" class="btn btn-link js-like">
+                    <small class="text-muted" alt="">{{ recipe.comments | length }} commentaire(s)</small>
+                      <a href="{{ path('recipe_like', {'id': recipe.id}) }}" class="btn btn-link js-like" alt="">
                         {% if app.user and recipe.isLikedByUser(app.user) %}
                             <i class="fas fa-thumbs-up"></i>
                         {% else %}
@@ -30,7 +30,7 @@
                       </a>
                     
                 </div>
-                <div class="card-footer">
+                <div class="card-footer" alt="">
                    <a  href="{{ path('detailRecipe', {'id':recipe.id}) }}" type="button" class="btn btn-outline-secondary">Lire la suite</a>
                 </div>
             </div>

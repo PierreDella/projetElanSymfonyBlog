@@ -101,3 +101,41 @@
     }
     
 }
+/* DETAILS RECETTE */
+@media (max-width: 1250px){
+    .recipe-details{
+        width: 90%;
+    }
+}
+@media (max-width: 990px){
+    .top-card{
+        margin-right: 20%;
+        margin-left: 20%;
+    }
+}
+@media (max-width: 600px){
+    .top-card{
+       position: initial;
+       margin: 0;
+    }
+    .recipe-desc{
+        padding-top: 3em;
+        padding-left: 0;
+        padding-right: 0;
+        text-align: center;
+    }
+    .body-recipe{
+        text-align: center;
+        display: block;
+        padding-left: 0;
+        padding-right: 0;
+        padding-bottom: 3em;
+    }
+    .instructions{
+        padding-top: 2em;
+        padding: 0.5em;
+    }
+    .card-body{
+        padding: 1em;
+    }
+}

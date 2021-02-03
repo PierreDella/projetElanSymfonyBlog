@@ -16,9 +16,9 @@
                 
                 {% if bibliotheque.publique == 1 %} 
                 {# si biblio est vérouillé #}
-                    <a class="uk-button uk-button-default" href="{{ path('biblio_lock', {'id':bibliotheque.id} ) }}">Déverrouiller</a>
+                    <a alt="" class="uk-button uk-button-default" href="{{ path('biblio_lock', {'id':bibliotheque.id} ) }}">Déverrouiller</a>
                 {% else %}
-                    <a class="uk-button uk-button-default" href="{{ path('biblio_lock', {'id':bibliotheque.id} ) }}">Vérrouiller</a>
+                    <a alt="" class="uk-button uk-button-default" href="{{ path('biblio_lock', {'id':bibliotheque.id} ) }}">Vérrouiller</a>
                 {% endif %}
                 <br>
             {% endif %}

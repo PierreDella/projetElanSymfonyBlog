@@ -285,6 +285,7 @@ class RecipeController extends AbstractController
             foreach ($likes as $like) {
                 $manager->remove($like);
             }
+            // $user = $recipe->getUser()
             $manager->remove($recipe);
             $manager->flush();
         

@@ -251,12 +251,13 @@ class UserController extends AbstractController
      * @Route("/add-recipe-collection", name="addRecipeToCollection")
      */
     public function addRecipeToCollection(EntityManagerInterface $manager, Request $request){
-
+        //requtes pour récupérer l'id de la bibli selec et de la recette
         $recipeId = $request->query->get("recipeid");
         $biblioId = $request->query->get("biblioid");
-
+        //On retrouve la bibli et la recette dans la BDD
         $bibliotheque = $manager->getRepository(Bibliotheque::class)->findOneBy(["id" => $biblioId]);
         $recipe = $manager->getRepository(Recipe::class)->findOneBy(["id" => $recipeId]);
+        //Ajout de la recette dans biblio
         $bibliotheque->addRecipe($recipe);
         
         $manager->flush();
@@ -346,6 +347,7 @@ class UserController extends AbstractController
     public function deleteUser(User $user = null, EntityManagerInterface $manager){
        
         if($this->getUser()->isAdmin() or $this->getUser() == $user){
+            
             $comments = $user->getComments();
             foreach($comments as $comment){
                 $manager->remove($comment);
@@ -366,6 +368,9 @@ class UserController extends AbstractController
             foreach ($likes as $like) {
                 $manager->remove($like);
             }
+            // if (condition) {
+            //     # code...
+            // }
             $manager->remove($user);
             $manager->flush();
         
