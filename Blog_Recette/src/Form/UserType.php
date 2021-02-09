@@ -37,20 +37,20 @@ class UserType extends AbstractType
                 'label' => 'photoProfil ',
                 'mapped' => false
             ])
-            ->add('dateNaissance', DateType::class,[
-                "widget" => 'single_text',
-                'label' => 'Date de naissance',
-                'constraints' => [
-                    new LessThan([
-                        'value' => 'now',
-                        'message' => 'La date doit être inférieure à celle du jour.'
-                    ]),
-                    new NotBlank([
-                        'message' => 'Veuillez entrer une date',
-                    ]),
-                ],
+            // ->add('dateNaissance', DateType::class,[
+            //     "widget" => 'single_text',
+            //     'label' => 'Date de naissance',
+            //     'constraints' => [
+            //         new LessThan([
+            //             'value' => 'now',
+            //             'message' => 'La date doit être inférieure à celle du jour.'
+            //         ]),
+            //         new NotBlank([
+            //             'message' => 'Veuillez entrer une date',
+            //         ]),
+            //     ],
             
-            ])
+            // ])
             ->add('Valider', SubmitType::class)
             ;
     }

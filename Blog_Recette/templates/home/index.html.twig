@@ -3,6 +3,9 @@
 {% block title %}Toutes nos recettes{% endblock %}
 
 {% block home %}
+    <header>
+    
+    </header>
     <div class="row" alt="">
         <div class="filter" alt="">
                 {% include 'home/_filter.html.twig' %}
@@ -34,7 +37,6 @@
                                 <span class="js-likes" alt="">{{ recipe.likes | length }}</span>
                                 <span class="js-label" alt="">like<span>
                         </a>
-                        
                     </div>
                     <div class="card-footer" alt="">
                         <a href="{{ path('detailRecipe', {'id':recipe.id}) }}" type="button" class="btn btn-outline-secondary">Lire la suite</a>
@@ -49,8 +51,6 @@
                             </div>
                         </li>
                         {% endif %}
-                        
-                        
                     </div>
                 </div>
             {% endfor %}
