@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Recipe;
 use App\Data\SearchData;
 use App\Form\SearchForm;
 use App\Entity\Bibliotheque;
@@ -39,6 +40,23 @@ class HomeController extends AbstractController
             'recipes' => $recipes,
             'form' => $form->createView(),
         ]);
+    }
+    /**
+     * @Route("/abo/{id}", name="recipes_abo")
+     */
+    public function getRecipesAbonnements(){
+        // if($this->getUser()){
+
+            $recipes = $this->getDoctrine()->getRepository(Recipe::class)->findRecipesByUserSubscription($this->getUser());
+            return $this->render('user/aboHome.html.twig', [
+                "recipes" => $recipes,
+            ]);
+            // dd($recipes);
+            
+        // } else {
+        //     $this->addFlash("error", "Accès interdit.");
+        //     return $this->redirectToRoute("home");
+        // }
     }
 
     /**

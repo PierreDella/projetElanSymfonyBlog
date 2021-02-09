@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Fil d'actualités{% endblock %}
+
+{% block body %}
+
+    {% for recipe in recipes %}
+
+                <p>{{ recipe.name }}</p>
+    {% endfor %}
+        
+{% endblock %}

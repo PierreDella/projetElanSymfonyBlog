@@ -97,4 +97,20 @@ class RecipeRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    /**
+    * @return Recipe[] Returns an array of Recipe objects
+    */
+    public function findRecipesByUserSubscription($user)
+    {
+        return $this->createQueryBuilder('r')
+            ->join('r.user', 'u')
+            ->join('u.subscribers', 's')
+            ->where('s.subscriber = :me')
+            ->setParameter('me', $user)
+            ->orderBy('r.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

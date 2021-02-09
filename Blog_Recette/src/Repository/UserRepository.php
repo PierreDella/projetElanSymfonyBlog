@@ -45,7 +45,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     //     return $query->getResult(); 
     // }
-    
+
     public function getAllOrder() {
         $entityManager = $this->getEntityManager();
         $query = $entityManager->createQuery(
@@ -60,13 +60,15 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
 
 
-
     // SELECT name, pseudo, COUNT(rl.user_id) AS nblikes, recipe_id
     // FROM recipe_like rl, recipe r, user u
     // WHERE rl.recipe_id = r.id
     // AND r.user_id = u.id
     // GROUP BY rl.recipe_id	 
     // ORDER BY nblikes DESC
+
+
+    
     // public function getByMostliked() {
     //     $entityManager = $this->getEntityManager();
     //     $query = $entityManager->createQuery(

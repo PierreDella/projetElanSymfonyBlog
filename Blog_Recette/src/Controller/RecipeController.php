@@ -9,6 +9,7 @@ use App\Form\CommentType;
 use App\Entity\Ingredient;
 use App\Entity\RecipeLike;
 use App\Entity\Composition;
+use App\Entity\Subscription;
 use App\Form\IngredientType;
 use App\Form\CompositionType;
 use App\Entity\CategoryRecipe;
@@ -22,12 +23,12 @@ use App\Repository\RecipeLikeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Repository\CategoryRecipeRepository;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\User\User;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
@@ -52,7 +53,7 @@ class RecipeController extends AbstractController
     /**
      * @Route("/recipe/composition/{id}", name="detailRecipe")
      */
-    public function indexComposition(Recipe $recipe, Comment $comment = null, Request $request, EntityManagerInterface $manager) {
+    public function indexComposition(Recipe $recipe, Comment $comment = null, Subscription $subscription = null, Request $request, EntityManagerInterface $manager) {
         
         $comment = new Comment();
 
@@ -96,6 +97,7 @@ class RecipeController extends AbstractController
             'ingredients' => $ingredients,
             'recipeCategories' => $recipeCategories,
             'formComment' => $form->createView(),
+            'subscription' => $subscription,
             
             
         ]);

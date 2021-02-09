@@ -19,13 +19,22 @@
                                         par <a href='{{ path('user_show', {'id': recipe.user.id}) }}'>{{ recipe.user.pseudo }}</a> 
                                     </div> 
                                  {% endif %}
-                                {% if app.user %}
-                                    {% if recipe.user %}
-                                         {% if not recipe.user.id == app.user.id %}
-                                            <a href="{{ path('add_following', { id : recipe.user.id }) }}">suivre</a>
+                                    {% if app.user %}
+                                        {% if recipe.user %} 
+                                            {# {% if not recipe.user.id == app.user.id %} #}
+                                               
+                                            {# {% endif %} #}
+                                            {% if recipe.user.subscribers.user.id == app.user.id %}
+                                                <p>hola</p>
+                                            {% else %}
+                                                <a href="{{ path('add_following', { id : recipe.user.id }) }}">suivre</a>
+                                            {% endif %}
+                                            
+                                            
                                         {% endif %}
                                     {% endif %}
-                                {% endif %} 
+                                   
+                                      
                             </p>
                             {% if recipe.user %}
                                 {% if app.user %}
