@@ -144,27 +144,6 @@ class UserController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/user/{id}/filActu", name="filActu", methods="GET")
-     */
-    public function filActualités( User $user = null, EntityManagerInterface $manager)
-    {   
-        $subscribers = $this->getUser()->getSubscribers();
-        $subscriptions = $this->getUser()->getListSubscriptions();
-        
-        if ($this->getUser()) {
-            return $this->render('user/actu.html.twig', [
-                'user' => $user,
-                "subscriptions" => $subscriptions,
-                "subscribers" => $subscribers,
-                
-            ]);
-        } else {
-            $this->addFlash("error", "vous n'avez pas les autorisations nécessaires.");
-            return $this->redirectToRoute('home');
-        }
-    }
-
 
 //                                                    ******************EDITIONS/AJOUTS*****************
 

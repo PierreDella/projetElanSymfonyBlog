@@ -10,7 +10,7 @@
                 <div class="recipe-details" alt=""> 
                     <div class="img-recipe" alt="">
                         <img src="{{ asset('uploads/images/' ~ recipe.picture) }}" class="img-fluid" alt="Responsive image">
-                        <div class="top-card card-text" alt="">
+                        <div style="background-color: antiquewhite;" class="top-card card-text" alt="">
                             <h4 class="text-center card-title" alt="">{{ recipe.name }}</h4>
                             <p class="card-text" alt="">
                                  <small class="text-muted" alt="">{{ recipe.createdAt | date('d/m/Y') }}</small>
@@ -24,11 +24,11 @@
                                             {# {% if not recipe.user.id == app.user.id %} #}
                                                
                                             {# {% endif %} #}
-                                            {% if recipe.user.subscribers.user.id == app.user.id %}
+                                            {# {% if recipe.user.subscribers.user.id == app.user.id %}
                                                 <p>hola</p>
-                                            {% else %}
+                                            {% else %} #}
                                                 <a href="{{ path('add_following', { id : recipe.user.id }) }}">suivre</a>
-                                            {% endif %}
+                                            {# {% endif %} #}
                                             
                                             
                                         {% endif %}

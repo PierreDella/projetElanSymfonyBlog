@@ -2,11 +2,98 @@
 
 {% block title %}Fil d'actualités{% endblock %}
 
-{% block body %}
-
-    {% for recipe in recipes %}
-
-                <p>{{ recipe.name }}</p>
-    {% endfor %}
+{% block home %}
+    <div class="body-recipes" alt="">
+        <div class="card-deck" alt="">
+            {% for recipe in recipes %}
+                <div class="card" alt="">
+                    <img class="card-img-top" alt=""  src="{{ asset('uploads/images/' ~ recipe.picture) }}" alt="Card image cap">
+                    <div class="card-body" alt="">
+                        <h5 class="card-title" alt="">
+                            <a alt="" class="card-text" href="{{ path('detailRecipe', {'id':recipe.id}) }}" class="card-title">{{ recipe.name }}</a>
+                            <small>{{ recipe.createdAt | date('d/m/Y') }}</small>
+                        </h5>
+                        <div class="author" alt="">
+                            <small>crée par <a href="{{ path('user_show', {'id': recipe.user.id}) }}" class="link-author" alt="">{{ recipe.user.pseudo }}</a></small>
+                        </div>
+                        <div class="card-text-desc" alt="">
+                            <p>{{ recipe.description }}</p>
+                        </div>
+                        <div class="preparationTime" alt="">
+                            <small class="text-muted" alt="">{{ recipe.preparationTime }} minutes</small>
+                        </div>
+                        <small class="text-muted" alt="">{{ recipe.comments | length }} commentaire(s)</small>
+                        <a href="{{ path('recipe_like', {'id': recipe.id}) }}" class="btn btn-link js-like"  alt="">
+                            {% if app.user and recipe.isLikedByUser(app.user) %}
+                                <i class="fas fa-thumbs-up"></i>
+                            {% else %}
+                                <i class="far fa-thumbs-up"></i>
+                            {% endif %}
+                                <span class="js-likes" alt="">{{ recipe.likes | length }}</span>
+                                <span class="js-label" alt="">like<span>
+                        </a>
+                    </div>
+                    <div class="card-footer" alt="">
+                        <a href="{{ path('detailRecipe', {'id':recipe.id}) }}" type="button" class="btn btn-outline-secondary">Lire la suite</a>
+                        {% if app.user %}
+                            <li class="dropdown" alt="">
+                            <a href="javascript:void(0)" class="dropbtn">Ajouter dans ma collection</a>
+                            <div class="dropdown-content" alt="">
+                                {% for bibliotheque in app.user.bibliotheques %}
+                                    <a href="{{ path('addRecipeToCollection', {'recipeid' : recipe.id, 'biblioid' : bibliotheque.id}) }}">{{ bibliotheque.titre }}</a>
+                                {% endfor %}
+                                <a href="{{ path('add_bibliotheque', { 'recipeid' : recipe.id }) }}">Créer une collection</a>
+                            </div>
+                        </li>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+                    
+            
         
+        
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+    
+    <script>
+       function onClickBtnLike(event){
+            //
+            event.preventDefault();
+            //on prend l'url du lien pour l'avoir dans ajax
+            const url = this.href; //this sera l'element <a> sur lequel on clique
+            
+            //recher le span avec class js-likes
+            const spanCount = this.querySelector('span.js-likes');
+
+            const icone = this.querySelector('i');
+            
+            //peut etre appelé en POST
+            //axios permet gestion des promesses qui. La reponse sera ensuite mis dans la fonction
+            axios.get(url).then(function(response){
+                // const likes = response.data.likes;
+                spanCount.textContent = response.data.likes;
+                //si contient la class 'fas' = aime, alors remplacera par "far"
+                if(icone.classList.contains('fas')){
+                    icone.classList.replace('fas', 'far');
+                
+                } else {
+                    icone.classList.replace('far', 'fas');
+                }
+                   
+               
+                    
+            })
+        }
+        // selection de tout les <a> avec js-like 
+        document.querySelectorAll('a.js-like').forEach(function(link){
+        //quand clique appel de la finction onClick
+        link.addEventListener('click', onClickBtnLike);
+        })
+    </script>
+    
 {% endblock %}

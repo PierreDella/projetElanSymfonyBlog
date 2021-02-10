@@ -41,11 +41,12 @@ class HomeController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-    /**
-     * @Route("/abo/{id}", name="recipes_abo")
+
+     /**
+     * @Route("/user/{id}/filActu", name="filActu", methods="GET")
      */
-    public function getRecipesAbonnements(){
-        // if($this->getUser()){
+    public function filActualités(){
+        if($this->getUser()){
 
             $recipes = $this->getDoctrine()->getRepository(Recipe::class)->findRecipesByUserSubscription($this->getUser());
             return $this->render('user/aboHome.html.twig', [
@@ -53,10 +54,10 @@ class HomeController extends AbstractController
             ]);
             // dd($recipes);
             
-        // } else {
-        //     $this->addFlash("error", "Accès interdit.");
-        //     return $this->redirectToRoute("home");
-        // }
+        } else {
+            $this->addFlash("error", "Accès interdit.");
+            return $this->redirectToRoute("home");
+        }
     }
 
     /**
