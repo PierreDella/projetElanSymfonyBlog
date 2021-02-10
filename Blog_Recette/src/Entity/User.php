@@ -52,11 +52,6 @@ class User implements UserInterface
     private $dateInscription;
 
     /**
-     * @ORM\Column(type="date")
-     */
-    private $dateNaissance;
-
-    /**
      * @ORM\OneToMany(targetEntity=Bibliotheque::class, mappedBy="user")
      */
     private $bibliotheques;
@@ -203,18 +198,6 @@ class User implements UserInterface
     public function setDateInscription(\DateTimeInterface $dateInscription): self
     {
         $this->dateInscription = $dateInscription;
-
-        return $this;
-    }
-
-    public function getDateNaissance(): ?\DateTimeInterface
-    {
-        return $this->dateNaissance;
-    }
-
-    public function setDateNaissance(\DateTimeInterface $dateNaissance): self
-    {
-        $this->dateNaissance = $dateNaissance;
 
         return $this;
     }

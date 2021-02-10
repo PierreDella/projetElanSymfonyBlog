@@ -50,11 +50,6 @@ class Recipe
     private $preparationTime;
 
     /**
-     * @ORM\Column(type="blob", nullable=true)
-     */
-    private $steps;
-
-    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $instructions;
@@ -178,18 +173,6 @@ class Recipe
     public function setPreparationTime(int $preparationTime): self
     {
         $this->preparationTime = $preparationTime;
-
-        return $this;
-    }
-
-    public function getSteps()
-    {
-        return $this->steps;
-    }
-
-    public function setSteps($steps): self
-    {
-        $this->steps = $steps;
 
         return $this;
     }

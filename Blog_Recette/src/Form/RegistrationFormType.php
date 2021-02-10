@@ -46,19 +46,6 @@ class RegistrationFormType extends AbstractType
                 'mapped' => false,
                 'required' => false
             ])
-            ->add('dateNaissance', DateType::class,[
-                "widget" => 'single_text',
-                'label' => 'Date de naissance',
-                'constraints' => [
-                    new LessThan([
-                        'value' => 'now',
-                        'message' => 'La date doit être inférieure à celle du jour.'
-                    ]),
-                    new NotBlank([
-                        'message' => 'Veuillez entrer une date',
-                    ]),
-                ],
-            ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 // instead of being set onto the object directly,

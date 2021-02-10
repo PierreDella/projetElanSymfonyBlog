@@ -24,9 +24,10 @@ body{
 /* PRESENTATION DES RECETTES */
 /* Header */
 
-header{
-  padding: 8em;
-  background-image: url("public/uploads/header/sandw.jpg");
+.header{
+  height: 20em;
+  padding: 5em; 
+  background-image: url("/uploads/header/alimentation-saine.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   font-size: large;
@@ -34,8 +35,32 @@ header{
   text-align: center;
   background-attachment: fixed;
   background-position: center;
+  color: #f1f1f1;
+  text-shadow: 1px 1px 2px black;
 }
 
+.link_header{
+  display: flex;
+  justify-content: center;
+}
+.link_header a{
+  color: white;
+  text-decoration: none;
+  padding: 0.5em;
+}
+.link_header a:hover{
+  color: black;
+}
+.bouton-banner-top-f{
+  border-radius: 10px;
+  margin-right: 1em;
+  background-color: rgba(228, 157, 26, 0.76);
+}
+.bouton-banner-top-s{
+  border-radius: 10px;
+  margin-left: 1em;
+  background-color: rgba(228, 157, 26, 0.76);
+}
 /* Recettes */
 
 .author{
