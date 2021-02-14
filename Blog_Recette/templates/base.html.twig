@@ -23,19 +23,11 @@
              <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="nav justify-content-end navbar-nav mr-auto">
                     {% if app.user %}
-                        {% if is_granted('ROLE_ADMIN') %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ path('adminHome') }}">Desk</a>
-                            </li>
-                        {% endif %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('add_recipe') }}"><i class="fas fa-plus"></i> Recette</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('fav', {'id':app.user.id}) }}"><i class="fas fa-heart"></i> Favoris</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('new_ingredient') }}">AI</a>
                     </li>
                     <li class="nav-item">
                         
@@ -55,6 +47,9 @@
                                     <path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
                                 </svg> Profil
                             </a>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                    <a class="dropdown-item" href="{{ path('adminHome') }}"><i class="fas fa-users-cog"></i> Bureau Admin</a>
+                            {% endif %}
                             <a class="dropdown-item" href="{{ path('bibliotheque_index', {'id':app.user.id}) }}"><i class="fas fa-book-open"></i> Bibliothèque</a>
                             <a class="dropdown-item" href="{{ path('recipesUser_index', {'id':app.user.id}) }}"><i class="far fa-edit"></i> Mes Recettes</a>
                             <a class="dropdown-item" href="{{ path('app_logout') }}"><i class="fas fa-sign-out-alt"></i> Deconnexion</a>
@@ -92,32 +87,7 @@
                 <br>
             {% endfor %}
         </div>
-        {# <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="mb-3">
-                                <label for="recipient-name" class="col-form-label">Recipient:</label>
-                                <input type="text" class="form-control" id="recipient-name">
-                            </div>
-                            <div class="mb-3">
-                                <label for="message-text" class="col-form-label">Message:</label>
-                                <textarea class="form-control" id="message-text"></textarea>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Send message</button>
-                    </div>
-                </div>
-            </div>
-        </div> #}
+        
         <div class="main" alt="">
                 {% block body %}{% endblock %}
                 {% block contenu %}{% endblock %}
@@ -165,6 +135,7 @@
         </footer>
             
 		{% block javascripts %}
+            
             <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
             <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>

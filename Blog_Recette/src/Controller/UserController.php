@@ -19,9 +19,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserController extends AbstractController
@@ -29,56 +31,6 @@ class UserController extends AbstractController
 
 
 //                                                    ******************AFFICHAGES*****************
-
-    /**
-     * @Route("/show/bibliotheque/{id}", name="show_bibliotheque")
-     */
-    public function showBiblio(User $user = null, Bibliotheque $bibliotheque) {
-        if($this->getUser()){
-            $recipes = $this->getUser()->getBibliotheques();
-
-            return $this->render('bibliotheque/showBiblio.html.twig', [
-                'recipes' => $recipes,
-                'user' => $user,  
-                'bibliotheque' => $bibliotheque
-            ]);
-        } else {
-            $this->addFlash("error", "incrivez-vous ou connectez-vous.");
-            return $this->redirectToRoute('home');
-        }
-        
-    }
-
-     /**
-     * @Route("/user/{id}/bibliotheque", name="bibliotheque_index")
-     */
-    public function indexBiblio(User $user = null){
-
-        if($this->getUser()) {
-            return $this->render('bibliotheque/bibliotheque.html.twig',[
-                'user' => $user
-            ]);
-        } else {
-            $this->addFlash("error", "incrivez-vous ou connectez-vous.");
-            return $this->redirectToRoute('home');
-        }
-    }
-    
-    /**
-     * @Route("/user/{id}/recipes", name="recipesUser_index")
-     */
-    public function indexRecipes(User $user = null){
-        
-        if($this->getUser()) {
-            return $this->render('user/showRecipesUser.html.twig',[
-                'user' => $user
-            ]);
-        }else {
-            $this->addFlash("error", "incrivez-vous ou connectez-vous.");
-            return $this->redirectToRoute('home');
-        }
-    }
-
     /**
      * @Route("/user/{id}", name="user_show", methods="GET")
      */
@@ -94,55 +46,7 @@ class UserController extends AbstractController
             return $this->redirectToRoute('home');
         }
     }
-
-    /**
-     * @Route("/user/{id}/subscriptions", name="abonnements_index", methods="GET")
-     */
-    public function showAbonnements(Subscription $subscription = null, User $user = null, EntityManagerInterface $manager)
-    {   
-        
-        if ($this->getUser()) {
-            return $this->render('user/subscriptions.html.twig', [
-                "subscription" =>$subscription,
-                "user" => $user
-            ]);
-        } else {
-            return $this->redirectToRoute('home');
-        }
-    }
-
-    /**
-     * @Route("/user/{id}/favoris", name="fav")
-     */
-    public function showFav(User $user = null, RecipeLike $recipeLike = null){
-        
-        if($this->getUser()){
-            return $this->render('user/fav.html.twig', [
-                "recipeLike" =>$recipeLike,
-                "user" => $user
-
-            ]);
-
-        }else {
-            return $this->redirectToRoute('home');
-        }
-    }
-
-     /**
-     * @Route("/user/{id}/subscribers", name="subscribers_index", methods="GET")
-     */
-    public function showAbonné(Subscription $subscription = null, User $user = null)
-    {   
-        
-        if ($this->getUser()) {
-            return $this->render('user/subscribers.html.twig', [
-                "subscription" =>$subscription,
-                "user" => $user
-            ]);
-        } else {
-            return $this->redirectToRoute('home');
-        }
-    }
+    
 
 
 //                                                    ******************EDITIONS/AJOUTS*****************
@@ -218,7 +122,8 @@ class UserController extends AbstractController
         }   
 
         return $this->render('bibliotheque/addBibliotheque.html.twig', [
-            
+
+            'editMode' => $bibliotheque->getId() !== null,
             'formBiblio'=> $form->createView(),
             'bibliotheque' => $bibliotheque,
 
@@ -230,7 +135,7 @@ class UserController extends AbstractController
      * @Route("/add-recipe-collection", name="addRecipeToCollection")
      */
     public function addRecipeToCollection(EntityManagerInterface $manager, Request $request){
-        //requtes pour récupérer l'id de la bibli selec et de la recette
+        //requetes pour récupérer l'id de la bibli selec et de la recette
         $recipeId = $request->query->get("recipeid");
         $biblioId = $request->query->get("biblioid");
         //On retrouve la bibli et la recette dans la BDD
@@ -313,9 +218,63 @@ class UserController extends AbstractController
         return $this->json(['code' => 200, ''], 200);
     }
 
-    
+    /**
+     * @Route("/user/{id}/edit", name="user_edit")
+     */
+    public function editUser(User $user = null, Request $request, EntityManagerInterface $manager, SluggerInterface $slugger): Response {
+
+        if ($user){
+            if($user->getId() == $this->getUser()->getId()){
+                
+                $form = $this->createForm(UserType::class, $user);
+
+                $form->handleRequest($request);
+        
+                if($form->isSubmitted() && $form->isValid()) {
+                    /** @var UploadedFile $picture */
+                    $picture = $form->get('picture')->getData();
+                
+                    if ($picture) {
+                        $originalPicture = pathinfo($picture->getClientOriginalName(), PATHINFO_FILENAME);
+                        $safePicture = $slugger->slug($originalPicture);
+                        $newPicture = $safePicture.'-'.uniqid().'.'.$picture->guessExtension();
+                        
+                        try {
+                            $picture->move(
+                                $this->getParameter('pictures_directory'),
+                                $newPicture
+                            );
+                        } catch (FileException $e) {
+                        
+                        }
+                        
+                        $user->setPicture($newPicture);
+                        $manager->persist($user);
+                        $manager->flush();
+                        $this->addFlash("success", "Le profil a bien été édité.");
+                        return $this->redirectToRoute("user_show", ['id'=>$user->getId()]);
+                    }
 
 
+                   
+                }
+        
+                return $this->render("user/edit.html.twig", [
+                    "formUser" => $form->createView(),
+                    'user' => $user
+                ]);
+
+            } else {
+                $this->addFlash("error", "Accès interdit.");
+                return $this->redirectToRoute("home");
+            }
+        }else{
+            $this->addFlash("error", "Cet ustilisateur n'existe pas.");
+            return $this->redirectToRoute('home');
+        }
+       
+
+    }
 
 //                                                     ******************SUPPRESSIONS*****************
     
@@ -397,5 +356,26 @@ class UserController extends AbstractController
         }
         
     }
+    
+    /**
+     * @Route("/bibliotheque/{bibliotheque_id}/programme/unsubscribe/{recipe_id}", name="remove_recipe")
+     * @ParamConverter("bibliotheque", options={"id" = "bibliotheque_id"})
+     * @ParamConverter("recipe", options={"id" = "recipe_id"})
+     */
+    public function removeRecipe(Recipe $recipe = null, Bibliotheque $bibliotheque = null, EntityManagerInterface $manager){
+
+        if ($bibliotheque && $recipe){
+            // dump($bibliotheque);
+            // dump($recipe);
+            $bibliotheque->removeRecipe($recipe);
+            $manager->persist($bibliotheque);
+            $manager->flush();
+
+            return $this->redirectToRoute('show_bibliotheque', ['id' => $bibliotheque->getId()]);
+        }else{
+            $this->addFlash("error", "Veuillez vérifier la bibliotheque et/ou la recette.");
+            return $this->redirectToRoute('home');
+        }
+    } 
     
 }

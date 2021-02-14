@@ -13,14 +13,16 @@
                             <a alt="" class="card-text" href="{{ path('detailRecipe', {'id':recipe.id}) }}" class="card-title">{{ recipe.name }}</a>
                             <small>{{ recipe.createdAt | date('d/m/Y') }}</small>
                         </h5>
-                        <div class="author" alt="">
-                            <small>crée par <a href="{{ path('user_show', {'id': recipe.user.id}) }}" class="link-author" alt="">{{ recipe.user.pseudo }}</a></small>
-                        </div>
-                        <div class="card-text-desc" alt="">
-                            <p>{{ recipe.description }}</p>
-                        </div>
                         <div class="preparationTime" alt="">
                             <small class="text-muted" alt="">{{ recipe.preparationTime }} minutes</small>
+                        </div>
+                        {% if recipe.user %}
+                            <div class="author" alt="author">
+                                <small>crée par <a href="{{ path('user_show', {'id': recipe.user.id}) }}" class="link-author" alt="">{{ recipe.user.pseudo }}</a></small>
+                            </div>
+                        {% endif %}
+                        <div class="card-text-desc" alt="">
+                            <p>{{ recipe.description }}</p>
                         </div>
                         <small class="text-muted" alt="">{{ recipe.comments | length }} commentaire(s)</small>
                         <a href="{{ path('recipe_like', {'id': recipe.id}) }}" class="btn btn-link js-like"  alt="">

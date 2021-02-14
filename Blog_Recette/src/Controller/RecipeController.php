@@ -28,6 +28,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\User\User;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -35,21 +36,6 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 class RecipeController extends AbstractController
 {
 //                                                    ******************AFFICHAGES*****************
-
-    /**
-     * @Route("/recipes", name="recipe_index")
-     */
-    public function index(RecipeRepository $repo)
-    {
-        // $repo = $this->getDoctrine()->getRepository(Recipe::class);
-        $recipes = $repo->findAll();
-        return $this->render('recipe/index.html.twig', [
-            'recipes' => $recipes,
-        ]);
-    }
-
-
-
     /**
      * @Route("/recipe/composition/{id}", name="detailRecipe")
      */
@@ -129,7 +115,6 @@ class RecipeController extends AbstractController
           
             if ($picture) {
                 $originalPicture = pathinfo($picture->getClientOriginalName(), PATHINFO_FILENAME);
-                
                 $safePicture = $slugger->slug($originalPicture);
                 $newPicture = $safePicture.'-'.uniqid().'.'.$picture->guessExtension();
                 
@@ -198,8 +183,6 @@ class RecipeController extends AbstractController
      * @Route("/recipe/{id}/like", name="recipe_like")
      */
     public function like(Recipe $recipe, EntityManagerInterface $manager, RecipeLikeRepository $likeRepo) : Response{
-        
-        
         $user = $this->getUser();
         //Si l'utilisateur est anonyme et qu'il essaye de like une recette 
         if(!$user) return $this->json([
@@ -263,8 +246,6 @@ class RecipeController extends AbstractController
             
         ]);
     }
-
-    
 
 
 //                                              ******************SUPPRESSIONS*****************

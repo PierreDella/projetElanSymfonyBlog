@@ -4,7 +4,42 @@
     }
   }
 /* Présentation des recettes */
-
+/* Header */
+@media (max-width: 740px){
+    .header{
+        padding: 3em;
+    }
+}
+@media (max-width: 630px){
+    .header{
+        padding: 1em;
+    }
+    .link_header a{
+        display: block;
+    }
+}
+@media (max-width: 550px){
+    .link_header a{
+        padding: 6px;
+    }
+}
+@media (max-width: 536px){
+    .link_header a{
+        padding: 3px;
+    }
+}
+@media (max-width: 415px){
+    .link_header{
+        display: block;
+    }
+    .link_header a{
+        margin: 0;
+    }
+    .s-link{
+        padding-top: 1em;
+    }
+}
+/* cards */
 @media (min-width: 576px){
     .col-sm-2 {
       flex: none;
@@ -137,5 +172,14 @@
     }
     .card-body{
         padding: 1em;
+    }
+}
+/* ADMIN INTERFACE */
+@media (max-width: 400px){
+    .body-dash{
+        flex: none;
+    }
+    .body-users-index{
+        flex: none;
     }
 }

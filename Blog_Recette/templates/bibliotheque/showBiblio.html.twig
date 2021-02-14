@@ -3,45 +3,63 @@
 {% block title %}Bibliotheque{% endblock %}
 
 {% block body %}
-  <div class="body-recipes" alt="">
-    <div class="card-deck" alt="">
-        {% for recipe in bibliotheque.recipes %}
-          {% if recipe.published == 1 %}
-            <div class="card" alt="">
-                <img class="card-img-top" alt=""  src="{{ asset('uploads/images/' ~ recipe.picture) }}" alt="Card image cap">
-                <div class="card-body" alt="">
-                    <h5 class="card-title" alt="">
-                        <a class="card-text" alt="" href="{{ path('detailRecipe', {'id':recipe.id}) }}" class="card-title">{{ recipe.name }}</a>
-                        <small>{{ recipe.createdAt | date('d/m/Y') }}</small>
-                    </h5>
-                    <p class="card-text" alt="">{{ recipe.description }}</p>
-                    <div class="preparationTime" alt="">
-                        <small class="text-muted" alt="">{{ recipe.preparationTime }} minutes</small>
-                    </div>
-                    <small class="text-muted" alt="">{{ recipe.comments | length }} commentaire(s)</small>
-                      <a href="{{ path('recipe_like', {'id': recipe.id}) }}" class="btn btn-link js-like" alt="">
-                        {% if app.user and recipe.isLikedByUser(app.user) %}
-                            <i class="fas fa-thumbs-up"></i>
-                        {% else %}
-                            <i class="far fa-thumbs-up"></i>
-                        {% endif %}
-                            <span class="js-likes">{{ recipe.likes | length }}</span>
-                            <span class="js-label">like<span>
-                      </a>
-                    
-                </div>
-                <div class="card-footer" alt="">
-                   <a  href="{{ path('detailRecipe', {'id':recipe.id}) }}" type="button" class="btn btn-outline-secondary">Lire la suite</a>
-                </div>
-            </div>
-          {% endif %}
-        {% endfor %}
+    <div class="title">
+        <h1><i class="fas fa-book-open"></i> {{ bibliotheque.titre }}</h1>
     </div>
-  </div>
+    <div class="body-recipes" alt="">
+        <div class="card-deck" alt="">
+            {% for recipe in bibliotheque.recipes %}
+                <div class="card" alt="">
+                    <img class="card-img-top" alt=""  src="{{ asset('uploads/images/' ~ recipe.picture) }}" alt="Card image cap">
+                    <div class="card-body" alt="">
+                        <h5 class="card-title" alt="">
+                            <a alt="" class="card-text" href="{{ path('detailRecipe', {'id':recipe.id}) }}" class="card-title">{{ recipe.name }}</a>
+                            <small>{{ recipe.createdAt | date('d/m/Y') }}</small>
+                        </h5>
+                        <div class="preparationTime" alt="">
+                            <small class="text-muted" alt="">{{ recipe.preparationTime }} minutes</small>
+                        </div>
+                        {% if recipe.user %}
+                            <div class="author" alt="author">
+                                <small>crée par <a href="{{ path('user_show', {'id': recipe.user.id}) }}" class="link-author" alt="">{{ recipe.user.pseudo }}</a></small>
+                            </div>
+                        {% endif %}
+                        <div class="card-text-desc" alt="">
+                            <p>{{ recipe.description }}</p>
+                        </div>
+                        <small class="text-muted" alt="">{{ recipe.comments | length }} commentaire(s)</small>
+                        <a href="{{ path('recipe_like', {'id': recipe.id}) }}" class="btn btn-link js-like"  alt="">
+                            {% if app.user and recipe.isLikedByUser(app.user) %}
+                                <i class="fas fa-thumbs-up"></i>
+                            {% else %}
+                                <i class="far fa-thumbs-up"></i>
+                            {% endif %}
+                                <span class="js-likes" alt="">{{ recipe.likes | length }}</span>
+                                <span class="js-label" alt="">like<span>
+                        </a>  
+                    </div>
+                    <div class="card-footer" alt="">
+                        <a href="{{ path('detailRecipe', {'id':recipe.id}) }}" type="button" class="btn btn-outline-secondary">Lire la suite</a>
+                        {% if app.user %}
+                            <li class="dropdown" alt="">
+                                <a href="javascript:void(0)" class="dropbtn">Ajouter dans ma collection</a>
+                                <div class="dropdown-content" alt="">
+                                    {% for bibliotheque in app.user.bibliotheques %}
+                                        <a href="{{ path('addRecipeToCollection', {'recipeid' : recipe.id, 'biblioid' : bibliotheque.id}) }}">{{ bibliotheque.titre }}</a>
+                                    {% endfor %}
+                                    <a href="{{ path('add_bibliotheque', { 'recipeid' : recipe.id }) }}">Créer une collection</a>
+                                    <a href="{{ path('remove_recipe', { 'recipe_id':recipe.id, 'bibliotheque_id':bibliotheque.id }) }}" class="button">Supprimer de ma collection</a>
+                                </div>
+                            </li>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
     
 {% endblock %}
 {% block javascripts %}
-
     {{ parent() }}   
     <script>
        function onClickBtnLike(event){

@@ -4,70 +4,16 @@
 
 {% block body %}
 
-        {{ form_start(formBiblio) }}
-            {{ form_row(formBiblio.titre) }} 
-                {# <div id="recipe_bibliotheques_container">
-                    <ul id="recipes" data-prototype="{{ form_widget(formBiblio.recipes.vars.prototype)|e('html_attr') }}">
-                        {% for recipe in formBiblio.recipes %}
-                            <div class="categories-form"style="display:flex;">
-                                {{ form_row(recipe) }} 
-                                <a class="remove">X</a>
-                            </div>  
-                        {% endfor %}
-                    </ul>
-                    <button type="button" class="add_recipe_link" data-collection-holder-class="recipe">Ajout de recette</button>
-                </div> #}
-
-        {{ form_end(formBiblio) }}
-
-{{ dump(formBiblio) }}
+    {{ form_start(formBiblio) }}
+        {{ form_row(formBiblio.titre) }} 
+    {{ form_end(formBiblio) }}
+    
+{# {{ dump(formBiblio) }} #}
 {% endblock %}
 {% block javascripts %}
 {# On récupère jquery de base.html.twig #}
     {{ parent() }}
     <script>
-   
 
-        // $(document).ready(function() {
-        //     //On définit le contenant 
-        //     var $collectionHolder = $('#recipes');
-        //     var proto = $collectionHolder.data("prototype");
-                       
-        //     //ajoute un attribut data-index qui compte le nbre d'inputs dans la collection
-        //     $collectionHolder.data('index', $collectionHolder.find(':input').length);
-
-        //     addFormToCollection($collectionHolder, proto);
-            
-        //     $('.add_recipe_link').on('click', function(e){
-        //         e.preventDefault();
-        //         //ajoute un nouvel recipe  formulaire
-        //         addFormToCollection($collectionHolder, proto);
-        //     })
-        // });
-
-        // function addFormToCollection($holder, newForm){
-        //     console.log(newForm)
-        //     var index = $holder.data('index');
-            
-        //     newForm = newForm.replace(/__name__/g, index);
-            
-        //     //définit le nombred 'index qu'on veut ajouter qu'en on appuie sur le bouton
-        //     $holder.data('index', index + 1);
-        //     //Ajoute un form avec <li> avant le bouton ajouter recipe
-        //     var $newFormLi = $('<li></li>').append(newForm);
-
-        //     $newFormLi.append('<a href="#" class="remove">x</a>');
-    
-        //     $holder.append($newFormLi)
-
-        //     $('.remove').click(function(e) {
-        //         e.preventDefault();
-                
-        //         $(this).parent().remove();
-                
-        //         return false;
-        //     });
-
-        // }
     </script>
 {% endblock %}

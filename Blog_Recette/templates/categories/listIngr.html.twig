@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+{% block title %}Nos ingrédients{% endblock %}
+{% block body %}
+<div class="title">
+    <h1>Liste des Ingrédients</h1>
+    <a href="{{ path('new_ingredient') }}">Ajouter un ingrédient</a>
+</div>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th class="table-success">Ingrédients</th>
+            <th class="table-success"></th>
+            <th class="table-success"></th>
+        </tr>
+    </thead>
+    <tbody>
+    {% set verif = 0 %}
+    {% for ingredient in ingredients %}
+        <tr>
+            {% if verif != ingredient.category.id %}
+                <th class="table-warning">
+                    {% set verif = ingredient.category.id %}
+                    {{ ingredient.category.name }}
+                </th>
+                <th colspan="2" class="table-warning">
+                </th>
+            {% endif %}
+        </tr>
+    <tr>
+        <td>
+            {{ ingredient.name }}
+        </td>
+        <td></td>
+        <td></td>
+    </tr>
+
+
+{% endfor %}
+
+    </tbody>
+</table>
+    
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

@@ -32,7 +32,15 @@ class IngredientRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-    
+    public function getAll(){
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager->createQuery(
+            'SELECT i
+                FROM App\Entity\Ingredient i
+                ORDER  BY i.category    '
+        );
+        return $query->execute();
+    }
 
     /*
     public function findOneBySomeField($value): ?Ingredient

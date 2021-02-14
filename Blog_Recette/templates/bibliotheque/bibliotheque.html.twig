@@ -3,29 +3,31 @@
 {% block title %}Ma bibliotheque{% endblock %}
 
 {% block body %}
-
-<h1>Bibliotheque de {{ user.pseudo }}</h1>
-
-    {% for bibliotheque in user.bibliotheques %}
-            {% if app.user.id == user.id or bibliotheque.publique == 0 %}
-                <p><a href="{{ path('show_bibliotheque', {'id':bibliotheque.id}) }}">{{ bibliotheque.titre }}</a> : {{ bibliotheque.recipes | length }}</p>
-                <a href="{{ path('edit_bibliotheque', { id: bibliotheque.id }) }}"> <i class="fas fa-edit"></i></a>
-                <a href="{{ path('delete_bibliotheque', { id: bibliotheque.id }) }}"><i class="fas fa-trash-alt"></i></a>
-                
-                {{ bibliotheque.publique == '1' ? '<span uk-icon="icon: lock"></span>' : '<span uk-icon="icon: unlock"></span>' }}
-                
-                {% if bibliotheque.publique == 1 %} 
-                {# si biblio est vérouillé #}
-                    <a alt="" class="uk-button uk-button-default" href="{{ path('biblio_lock', {'id':bibliotheque.id} ) }}">Déverrouiller</a>
-                {% else %}
-                    <a alt="" class="uk-button uk-button-default" href="{{ path('biblio_lock', {'id':bibliotheque.id} ) }}">Vérrouiller</a>
-                {% endif %}
-                <br>
-            {% endif %}
-            
+    <div class="title">
+        <h1><i class="fas fa-book-open"></i> Bibliothèque</h1>
+        <a href="{{ path('add_bibliotheque', { 'id':user.id }) }}">Créer une bibliotheque</a>
+    </div>
+    <div class="biblio-cards">
+        {% for bibliotheque in user.bibliotheques %}
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="{{ path('show_bibliotheque', {'id':bibliotheque.id}) }}">{{ bibliotheque.titre }}</a>
+                            </h5>
+                            <p class="card-text">contient : {{ bibliotheque.recipes | length }} recette(s)</p>
+                            <a href="{{ path('edit_bibliotheque', { id: bibliotheque.id }) }}" class="btn btn-primary"><i class="fas fa-edit"></i> Modifier</a>
+                            <a href="{{ path('delete_bibliotheque', { id: bibliotheque.id }) }}" class="btn btn-primary"><i class="fas fa-trash-alt"></i> Supprimer</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         {% endfor %}
+    </div>
+    
 <br>
-    <a href="{{ path('add_bibliotheque', { 'id':user.id }) }}">Créer une bibliotheque</a>
+    
 <br><br>
 
 {% endblock %}
@@ -34,3 +36,18 @@
 {% endblock %}
 
 
+{# {% if app.user.id == user.id or bibliotheque.publique == 0 %} #}
+                {# <p><a href="{{ path('show_bibliotheque', {'id':bibliotheque.id}) }}">{{ bibliotheque.titre }}</a> : {{ bibliotheque.recipes | length }}</p>
+                <a href="{{ path('edit_bibliotheque', { id: bibliotheque.id }) }}"> <i class="fas fa-edit"></i></a>
+                <a href="{{ path('delete_bibliotheque', { id: bibliotheque.id }) }}"><i class="fas fa-trash-alt"></i></a> #}
+                
+                {# {{ bibliotheque.publique == '1' ? '<span uk-icon="icon: lock"></span>' : '<span uk-icon="icon: unlock"></span>' }} #}
+                
+                {# {% if bibliotheque.publique == 1 %} 
+                    {# si biblio est vérouillé #}
+                        {# <a alt="" class="uk-button uk-button-default" href="{{ path('biblio_lock', {'id':bibliotheque.id} ) }}">Déverrouiller</a> #}
+                    {# {% else %} #}
+                        {# <a alt="" class="uk-button uk-button-default" href="{{ path('biblio_lock', {'id':bibliotheque.id} ) }}">Vérrouiller</a>
+                    {% endif %} #}
+                {# <br>
+                {% endif %}  #}

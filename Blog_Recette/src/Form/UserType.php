@@ -35,7 +35,8 @@ class UserType extends AbstractType
             ])
             ->add('picture', FileType::class, [
                 'label' => 'photoProfil ',
-                'mapped' => false
+                'mapped' => false,
+                'required' => false
             ])
             // ->add('dateNaissance', DateType::class,[
             //     "widget" => 'single_text',

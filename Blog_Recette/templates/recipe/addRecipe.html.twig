@@ -42,7 +42,6 @@
                         {{ form_row(composition) }}
                         <a class="remove" alt="">X</a>      
                     </div>  
-                   
                 {% endfor %}
             </ul>
             <p class="d-flex" alt="">
@@ -52,13 +51,24 @@
         {# <br>
             <a class= "icon_add" href="{{ path('new_ingredient') }}"><button type="button" class="btn btn-dark">Manque d'un ingrédient ajouter le ici</button></a>
         <br><br> #}
-         
+        <div id="allo">
+            {{ form_row(form.Valider) }}
+        </div>
     {{ form_end(form) }}
 
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
+    <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#allo').click(function(event) {
+                // Traitement
+                $(this).attr('disabled', 'disabled');
+            });
+        })
+    </script>
     <script>
 
         function displayListByCategorie(){

@@ -59,9 +59,12 @@ class RecipeType extends AbstractType
             ])
             ->add('cookingTime', IntegerType::class, [
                 'label' => 'temps de cuisson (en minutes) ',
+                'attr' => array('min' => 0),
+                'required' => false,
             ])
             ->add('preparationTime', IntegerType::class, [
                 'label' => 'temps de préparation (en minutes) :  ',
+                'attr' => array('min' => 0),
             ])
             ->add('instructions', CKEditorType::class, [
                 'required' => true,

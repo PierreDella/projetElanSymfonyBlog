@@ -3,25 +3,22 @@
 {% block title %}Toutes nos recettes{% endblock %}
 
 {% block home %}
-    <header class="header">
-        <h1>
+    <header class="header" alt="">
+        <h2 class="title-header" alt="">
             Bienvenue sur Idées Cuisine lieu de partage d'expériences culinaires
-        </h1>
+        </h2>
         <p>
             Notre site est avant tout un lieu libre que chacun peut améliorer en ajoutant
             les ingrédients ou les recettes que vous préférez !      
         </p>
         <div class="link_header">
             <div class="f-link">
-                <a href="#" class="bouton-banner-top-f"> Ajouter vos recettes </a>
+                <a href="{{ path('add_recipe') }}" class="bouton-banner-top-f"> Ajouter vos recettes </a>
             </div>
             <div class="s-link">
-                <a href="#" class="bouton-banner-top-s"> Regarder notre liste d'ingrédients </a>
+                <a href="{{ path('catIngredientList') }}" class="bouton-banner-top-s"> Regarder notre liste d'ingrédients </a>
             </div>
-            
-            
         </div>
-        
     </header>
     <div class="row" alt="">
         <div class="filter" alt="">
@@ -32,23 +29,25 @@
         <div class="card-deck" alt="">
             {% for recipe in recipes %}
                 <div class="card" alt="">
-                    <img class="card-img-top" alt=""  src="{{ asset('uploads/images/' ~ recipe.picture) }}" alt="Card image cap">
-                    <div class="card-body" alt="">
-                        <h5 class="card-title" alt="">
+                    <img class="card-img-top" alt="card-top"  src="{{ asset('uploads/images/' ~ recipe.picture) }}" alt="Card image cap">
+                    <div class="card-body" alt="card-body">
+                        <h5 class="card-title" alt="card-title">
                             <a alt="" class="card-text" href="{{ path('detailRecipe', {'id':recipe.id}) }}" class="card-title">{{ recipe.name }}</a>
                             <small>{{ recipe.createdAt | date('d/m/Y') }}</small>
                         </h5>
-                        <div class="author" alt="">
-                            <small>crée par <a href="{{ path('user_show', {'id': recipe.user.id}) }}" class="link-author" alt="">{{ recipe.user.pseudo }}</a></small>
+                        <div class="preparationTime" alt="preparationTime">
+                            <small class="text-muted" alt="text">{{ recipe.preparationTime }} minutes</small>
                         </div>
+                        {% if recipe.user %}
+                            <div class="author" alt="author">
+                                <small>crée par <a href="{{ path('user_show', {'id': recipe.user.id}) }}" class="link-author" alt="">{{ recipe.user.pseudo }}</a></small>
+                            </div>
+                        {% endif %}
                         <div>
                         
                         </div>
                         <div class="card-text-desc" alt="">
                             <p>{{ recipe.description }}</p>
-                        </div>
-                        <div class="preparationTime" alt="">
-                            <small class="text-muted" alt="">{{ recipe.preparationTime }} minutes</small>
                         </div>
                         <small class="text-muted" alt="">{{ recipe.comments | length }} commentaire(s)</small>
                         <a href="{{ path('recipe_like', {'id': recipe.id}) }}" class="btn btn-link js-like"  alt="">

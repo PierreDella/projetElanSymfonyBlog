@@ -25,7 +25,7 @@ body{
 /* Header */
 
 .header{
-  height: 20em;
+  height: fit-content;
   padding: 5em; 
   background-image: url("/uploads/header/alimentation-saine.jpg");
   background-repeat: no-repeat;
@@ -38,7 +38,9 @@ body{
   color: #f1f1f1;
   text-shadow: 1px 1px 2px black;
 }
-
+.title-header{
+  font-weight: bold;
+}
 .link_header{
   display: flex;
   justify-content: center;
@@ -50,6 +52,7 @@ body{
 }
 .link_header a:hover{
   color: black;
+  text-shadow: none;
 }
 .bouton-banner-top-f{
   border-radius: 10px;
@@ -146,7 +149,9 @@ li.dropdown {
   text-align: left;
 }
 
-.dropdown-content a:hover {background-color: #f1f1f1;}
+.dropdown-content a:hover {
+  background-color: #f1f1f1;
+}
 
 .dropdown:hover .dropdown-content {
   display: block;
@@ -210,10 +215,19 @@ li.dropdown {
 .instructions{
   padding-left: 1em;
 }
+.instructions p{
+  word-break: break-all;
+}
 .post{
   padding-top: 1em;
 }
-
+.composition{
+  background-color: antiquewhite;
+  border: solid 1px rgba(105, 99, 99, 0.486);
+  border-radius: 10px;
+  height: fit-content;
+  padding: 1em;
+}
 /* 
 ************************************************************
 */
@@ -322,6 +336,18 @@ blockquote{
   display: flex;
   justify-content: space-evenly;
 }
+.profil-created{
+  font-size: 20px;
+  margin-top: 2em;
+  display: flex;
+  justify-content: space-evenly;
+  padding-bottom: 4em;
+}
+.profil-created a{
+  border-bottom: solid 2px;
+  text-decoration: none;
+  color: rgba(105, 99, 99, 0.486);  
+}
 .profil-buttons-supp a{
   border-bottom: solid 2px;
   text-decoration: none;
@@ -341,7 +367,21 @@ blockquote{
   margin-top: 5em;
   display: flex;
 }
-
+.icon_add3:hover{
+  color: rgb(228, 157, 26);
+}
+.icon_add2:hover{
+  color: rgb(228, 157, 26);
+}
+.icon_add1:hover{
+  color: rgb(228, 157, 26);
+}
+.icon_add4:hover{
+  color: rgb(228, 157, 26);
+}
+.icon_add5:hover{
+  color: rgb(228, 157, 26);
+}
 
 /* 
 ********************
@@ -410,14 +450,8 @@ blockquote{
 }
 .body-subs{
   padding-top: 3em;
-  /* display: flex; */
-  /* display : grid;
-  grid-template-columns : repeat(6,1fr);
-  grid-gap: 5px
-  align-content: center; */
   display: flex;
   flex-wrap: wrap;
-  /* margin: 2em; */
 }
 .card-subs{
   margin: 2em;
@@ -448,6 +482,17 @@ blockquote{
   margin: 5px;
 }
 
+/* Biblio */
+
+.biblio-cards{
+  justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+}
+.title{
+  text-align: center;
+  padding: 1em;
+}
 
 /* FOOTER */
 
@@ -473,4 +518,25 @@ footer{
   border-top: solid 1px;
   background-color: #f1f1f1;
   text-align: center; 
+}
+
+
+/* Admin Utilisateurs index */
+.body-users-index{
+  display: flex;
+  justify-content: center;
+}
+/* DashBoard */
+.body-dash{
+  display: flex;
+  justify-content: center;
+}
+.col1{
+  padding-right: 1rem;
+}
+.col2{
+  padding-left: 1em;
+}
+.row{
+  padding-bottom: 3em;
 }

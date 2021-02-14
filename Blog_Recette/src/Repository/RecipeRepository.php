@@ -68,7 +68,31 @@ class RecipeRepository extends ServiceEntityRepository
 
         return false;
     }
+    public function getAllOrder() {
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager->createQuery(
+            'SELECT r
+                FROM App\Entity\Recipe r
+                ORDER BY r.id DESC'
+        )
+        ->setMaxResults(15);
 
+        return $query->execute();
+    }
+
+    // public function getAllOrderRecipe() {
+    //     $entityManager = $this->getEntityManager();
+    //     $query = $entityManager->createQuery(
+    //         'SELECT r.name, r.created_at
+    //         FROM App\Entity\Recipe r, App\Entity\User u
+    //         WHERE u.id = r.user_id
+    //         AND u.id = :id
+    //         ORDER BY r.created_at DESC'
+    //     )
+    //     ->setMaxResults(3);
+
+    //     return $query->execute();
+    // }
     // /**
     //  * @return Recipe[] Returns an array of Recipe objects
     //  */
@@ -113,4 +137,5 @@ class RecipeRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
 }

@@ -4,64 +4,57 @@
 
 {% block body %}
 
-    <div class="card-recipe mb-3" alt="">
-        <div class="card-body" alt="">
-            <div class="recipe-head" alt="">
-                <div class="recipe-details" alt=""> 
-                    <div class="img-recipe" alt="">
+    <div class="card-recipe mb-3" alt="card-recipe">
+        <div class="card-body" alt="card-body">
+            <div class="recipe-head" alt="recipe-head">
+                <div class="recipe-details" alt="recipe-details"> 
+                    <div class="img-recipe" alt="img-recipe">
                         <img src="{{ asset('uploads/images/' ~ recipe.picture) }}" class="img-fluid" alt="Responsive image">
-                        <div style="background-color: antiquewhite;" class="top-card card-text" alt="">
-                            <h4 class="text-center card-title" alt="">{{ recipe.name }}</h4>
-                            <p class="card-text" alt="">
-                                 <small class="text-muted" alt="">{{ recipe.createdAt | date('d/m/Y') }}</small>
+                        <div style="background-color: antiquewhite;" class="top-card card-text" alt="top-card">
+                            <h4 class="text-center card-title" alt="text-center">{{ recipe.name }}</h4>
+                            <p class="card-text" alt="card-text">
+                                 <small class="text-muted" alt="text-muted">{{ recipe.createdAt | date('d/m/Y') }}</small>
                                  {% if recipe.user %}
-                                    <div class="recipe-detail-pseudo" alt="">
+                                    <div class="recipe-detail-pseudo" alt="recipe-detail-pseudo">
                                         par <a href='{{ path('user_show', {'id': recipe.user.id}) }}'>{{ recipe.user.pseudo }}</a> 
                                     </div> 
                                  {% endif %}
-                                    {% if app.user %}
-                                        {% if recipe.user %} 
-                                            {# {% if not recipe.user.id == app.user.id %} #}
-                                               
-                                            {# {% endif %} #}
-                                            {# {% if recipe.user.subscribers.user.id == app.user.id %}
-                                                <p>hola</p>
-                                            {% else %} #}
-                                                <a href="{{ path('add_following', { id : recipe.user.id }) }}">suivre</a>
-                                            {# {% endif %} #}
-                                            
-                                            
-                                        {% endif %}
+                                {% if app.user %}
+                                    {% if recipe.user %} 
+                                        {% if recipe.user.id == app.user.id %}
+                                        {% else %}
+                                            <a href="{{ path('add_following', { id : recipe.user.id }) }}">suivre</a>
+                                        {% endif %} 
                                     {% endif %}
-                                   
-                                      
+                                {% endif %}     
                             </p>
                             {% if recipe.user %}
                                 {% if app.user %}
                                     {% if app.user.id == recipe.user.id or is_granted('ROLE_ADMIN') %}
-                                        <div class="text-center card-tools" alt="">
+                                        <div class="text-center card-tools" alt="text-center card-tools">
                                             <a href="{{ path('edit_recipe', { id: recipe.id }) }}"> <i class="fas fa-edit"></i></a>
-                                            <a alt="" class="confirmation" href="{{ path('recipe_delete', { id: recipe.id }) }}"><i class="fas fa-trash-alt"></i></a>
+                                            <a alt="confirmation" class="confirmation" href="{{ path('recipe_delete', { id: recipe.id }) }}"><i class="fas fa-trash-alt"></i></a>
                                         </div>
                                     {% endif %}
                                 {% endif %}
                             {% endif %}
-                            
-                            
-                            <p class="text-left">
+                            <p class="text-left" alt="text-left">
                                 {% for recipeCategory in recipeCategories %}
-                                    <span class="badge badge-secondary" alt="">
+                                    <span class="badge badge-secondary" alt="badge">
                                         {{ recipeCategory.name }}  
                                     </span>
                                 {% endfor %}
                             </p>
                              
                             <p>Temps de préparation : {{ recipe.preparationTime }} minutes</p>
-                            <p>Temps de cuisson : {{ recipe.cookingTime }} minutes</p>
+                            {% if recipe.cookingTime == null %}
+                            {% else %}
+                                <p>Temps de cuisson : {{ recipe.cookingTime }} minutes</p>
+                            {% endif %}
                             {% if app.user %}
                                 <li class="dropdown">
-                                <a href="javascript:void(0)" class="dropbtn" alt="">Ajouter dans ma collection</a>
-                                <div class="dropdown-content" alt="">
+                                <a href="javascript:void(0)" class="dropbtn" alt="dropbtn">Ajouter dans ma collection</a>
+                                <div class="dropdown-content" alt="dropdown-content">
                                     {% for bibliotheque in app.user.bibliotheques %}
                                         <a href="{{ path('addRecipeToCollection', {'recipeid' : recipe.id, 'biblioid' : bibliotheque.id}) }}">{{ bibliotheque.titre }}</a>
                                     {% endfor %}
@@ -84,37 +77,37 @@
                     </div>
                 </div>
             </div>
-            <div class="recipe-desc" alt="">
+            <div class="recipe-desc" alt="recipe-desc">
                 <h5>Description :</h5>
                 <p>{{ recipe.description }}</p>
             </div>   
         </div>
     </div>
-    <div class="body-recipe" alt=""> 
-        <div class="composition" alt=""> 
+    <div class="body-recipe" alt="body-recipe"> 
+        <div class="composition" alt="composition"> 
             <h5>Les ingrédients :</h5>
             {% for ingredient in ingredients %}
                 <p> - {{ ingredient['quantity'] }} {{ ingredient['unit'] }} de {{ ingredient['name'] }} - <small>{{ ingredient['category'] }}</small></p>
             {% endfor %}
         </div>
-        <div class="instructions" alt=""> 
+        <div class="instructions" alt="instructions"> 
             <h5>Instructions :</h5>
-            {{recipe.instructions|raw}}
+            <p style="word-break:break-all;">{{ recipe.instructions|raw }}</p>
         </div>
     </div>
     
     {% for comment in recipe.comments %}           
-        <ul class="list-unstyled" alt="">
-            <li class="media" alt="">
+        <ul class="list-unstyled" alt="list-unstyled">
+            <li class="media" alt="media">
                 <img class="pp mr-3" src="{{ asset('uploads/profilpicture/' ~ comment.user.picture) }}" alt="Generic placeholder image">
-                <div class="media-body" alt="">
+                <div class="media-bodymedia-body" alt="media-body">
                     <blockquote>
-                    <p class="post" alt="">{{ comment.post }}</p>
-                    <div class="text-small" alt=""><a href='{{ path('user_show', {'id': comment.user.id}) }}'>{{ comment.user.pseudo }}</a><p>{{ comment.createdAt | date('d/m/Y') }}</p></div>
+                    <p class="post" alt="post">{{ comment.post }}</p>
+                    <div class="text-small" alt="text-small"><a href='{{ path('user_show', {'id': comment.user.id}) }}'>{{ comment.user.pseudo }}</a><p>{{ comment.createdAt | date('d/m/Y') }}</p></div>
                     
                     {% if app.user == comment.user or is_granted('ROLE_ADMIN') %}
-                        <a alt="" class="uk-button uk-button-default" href="{{ path('comment_delete', {'id':comment.id})}}">DELETE</a>
-                        <a alt="" class="uk-button uk-button-default" href="{{ path('comment_edit', {'id':comment.id})}}">EDIT</a>
+                        <a alt="buttonF" class="uk-button uk-button-default" href="{{ path('comment_delete', {'id':comment.id})}}">DELETE</a>
+                        <a alt="buttonS" class="uk-button uk-button-default" href="{{ path('comment_edit', {'id':comment.id})}}">EDIT</a>
                     {% endif %}
                 </blockquote>
                 </div>

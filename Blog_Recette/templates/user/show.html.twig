@@ -6,15 +6,24 @@
 
     <div class="container ">
         <div class="profile-nav">
+
             <div class="user-heading">
                 <div class="top-profil">
                     <div class="card-pp">
+                        {# {% if user.picture is defined %} #}
                             <img class="profil-picture" src= "{{ asset('uploads/profilpicture/' ~ user.picture) }}" alt="ProfiPicture">
+                        {# {% else %} #}
+                            {# <img class="profil-picture" src="{{ asset('public/uploads/header/alimentation-saine.jpg') }}" alt="ProfiPicture"> #}
+                        {# {% endif %} #}
+                        
+                        
                     </div>
                     <div class="card-pi">
                         <div class="profil-info">
                             <h1>{{ user.pseudo }}</h1>
-                            <p>{{ user.email }}</p>
+                            {% if app.user.id == user.id or is_granted('ROLE_ADMIN') %}
+                                <p>{{ user.email }}</p>
+                            {% endif %}
                         </div>
                         <div class="profil-pi">
                             <p>Date d'inscription : {{ user.dateInscription | date('d/m/Y') }}</p>
@@ -39,85 +48,34 @@
                         </div>
                     </div>
                 </div> 
-                {% if app.user.id == user.id or is_granted('ROLE_ADMIN')%}
+                {% if app.user.id == user.id or is_granted('ROLE_ADMIN') %}
                     <div class="profil-buttons">
                         <div class="profil-buttons-supp">
-                        <a class= "confirmation icon_add1"href="{{ path('user_delete', { id : user.id }) }}">Supprimer compte</a>
+                            <a class= "confirmation icon_add1"href="{{ path('user_delete', { id : user.id }) }}">Supprimer compte</a>
                         </div>
                 {% endif %}
                 {% if app.user.id == user.id %}
                         <div class="profil-buttons-edit">
-                            <a class= "confirmation icon_add2" href="#">Modifier profil</a>
+                            <a class= "icon_add2" href="{{ path("user_edit", { id : user.id }) }}">Modifier profil</a>
                         </div>
                         <div class="profil-buttons-edit-mp">
-                            <a class= "confirmation icon_add3" href="{{ path('user_edit_password', {'id':app.user.id}) }}">Changer mon mot de passe</a>
+                            <a class= "icon_add3" href="{{ path('user_edit_password', {'id':app.user.id}) }}">Changer mon mot de passe</a>
                         </div>
                         <div></div>
                     </div>    
                 {% endif %}
+                    <div class="profil-created">
+                        <div class="profil-buttons-recipes">
+                            <a class= "icon_add4" href="{{ path('recipesUser_index', {'id': user.id}) }}"><i class="far fa-edit"></i> Voir recettes</a>
+                        </div>
+                        <div class="profil-buttons-biblio">
+                            <a class= "icon_add5" href="{{ path('bibliotheque_index', {'id':user.id}) }}"><i class="fas fa-book-open"></i> Voir bibliothèques</a>
+                        </div>
+                    </div>    
             </div>
         </div>
-        <div class="biblioUser">
-        <div class="col-sm-6">
-            <div class="card">
-            <div class="card-body">
-                <h5 class="card-title textCentre">Recette(s) : {{ user.recipes | length }}</h5>
-                <table  class="table table-striped table-responsive">
-                    <thead>
-                        <tr>
-                            <th>Titre</th>
-                            <th>Date de création</th>
-                            <th>Catégories</th>
-                            <th>Likes</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {# {% for subscription in subscriptions %} #}
-                            <tr>
-                                <td>
-                                    <a href="#"></a> 
-                                </td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        
-                    {# {% endfor %} #}
-                    </tbody>
-                </table>
-                <a href="{{ path('recipesUser_index', {'id': user.id}) }}"><button type="button" class="btn btn-primary">Voir recettes</button></a>
-            </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title textCentre"> Bibliothèque(s) : {{ user.Bibliotheques | length }}</h5>
-                    <table  class="table table-striped table-responsive">
-                        <thead>
-                            <tr>
-                                <th>Titre</th>
-                                <th>Date de création</th>
-                                <th>Nb de recettes</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        {# {% for subscriber in subscribers %} #}
-                        <tr>
-                            <td><a href="#"></a></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                            
-                        {# {% endfor %} #}
-                        </tbody>
-                    </table>
-                    <a class="confirmation" href="{{ path('bibliotheque_index', {'id':user.id}) }}"><button type="button" class="btn btn-primary">Voir bibliothèques</button></a>
-                </div>
-                </div>
-            </div>
-            </div>
-        </div>
+    </div>
+            
     
 
 {% endblock %}
