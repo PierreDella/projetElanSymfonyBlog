@@ -10,13 +10,11 @@
             <div class="user-heading">
                 <div class="top-profil">
                     <div class="card-pp">
-                        {# {% if user.picture is defined %} #}
+                        {# {% if user.picture == null %} #}
                             <img class="profil-picture" src= "{{ asset('uploads/profilpicture/' ~ user.picture) }}" alt="ProfiPicture">
-                        {# {% else %} #}
-                            {# <img class="profil-picture" src="{{ asset('public/uploads/header/alimentation-saine.jpg') }}" alt="ProfiPicture"> #}
-                        {# {% endif %} #}
-                        
-                        
+                        {# {% else %}  
+                            <img class="profil-picture" src="{{ asset('uploads/header/alimentation-saine.jpg') }}" alt="ProfiPicture">
+                        {% endif %} #}
                     </div>
                     <div class="card-pi">
                         <div class="profil-info">

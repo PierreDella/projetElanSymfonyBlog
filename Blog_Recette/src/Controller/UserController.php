@@ -25,6 +25,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class UserController extends AbstractController
 {
@@ -147,8 +148,6 @@ class UserController extends AbstractController
         $manager->flush();
 
         return $this->redirectToRoute('bibliotheque_index', ["id"=>$this->getUser()->getId()]);
-        
-
     }
 
     /** 
@@ -163,10 +162,9 @@ class UserController extends AbstractController
             $manager->persist($subscription);
             $manager->flush(); 
 
-        return $this->redirectToRoute("abonnements_index", ["id"=>$this->getUser()->getId()]);
+            return $this->redirectToRoute("abonnements_index", ["id"=>$this->getUser()->getId()]);
         }else{
             $this->addFlash("error", "vous n'avez pas les autorisations nécessaires.");
-
         }
         
     }
@@ -254,9 +252,6 @@ class UserController extends AbstractController
                         $this->addFlash("success", "Le profil a bien été édité.");
                         return $this->redirectToRoute("user_show", ['id'=>$user->getId()]);
                     }
-
-
-                   
                 }
         
                 return $this->render("user/edit.html.twig", [
@@ -282,10 +277,12 @@ class UserController extends AbstractController
     /**
      * @Route("/user/{id}/delete", name="user_delete")
      */
-    public function deleteUser(User $user = null, EntityManagerInterface $manager){
+    public function deleteUser(User $user = null, EntityManagerInterface $manager, Request $request, TokenStorageInterface $tokenStorage): Response {
        
-        if($this->getUser()->isAdmin() or $this->getUser() == $user){
-            
+        if($this->getUser() == $user){
+            // $session = new Session();
+            // $session->invalidate();
+
             $comments = $user->getComments();
             foreach($comments as $comment){
                 $manager->remove($comment);
@@ -309,10 +306,21 @@ class UserController extends AbstractController
             // if (condition) {
             //     # code...
             // }
-            $manager->remove($user);
-            $manager->flush();
-        
-            return $this->redirectToRoute('home');
+            
+           
+               
+                
+                // $manager = $this->getDoctrine()->getManager();
+                // $user = $this->getUser();
+                // $this->container->get('security.token_storage')->setToken(null);
+                // $tokenStorage->setToken(null);
+                // $session->invalidate();
+                $manager->remove($user);
+                $manager->flush();
+            
+            
+            
+            return $this->redirectToRoute('app_login');
         }else{
             $this->addFlash("error", "Suppression non autorisé.");
             return $this->redirectToRoute("home");
@@ -363,19 +371,21 @@ class UserController extends AbstractController
      * @ParamConverter("recipe", options={"id" = "recipe_id"})
      */
     public function removeRecipe(Recipe $recipe = null, Bibliotheque $bibliotheque = null, EntityManagerInterface $manager){
-
-        if ($bibliotheque && $recipe){
-            // dump($bibliotheque);
-            // dump($recipe);
-            $bibliotheque->removeRecipe($recipe);
-            $manager->persist($bibliotheque);
-            $manager->flush();
-
-            return $this->redirectToRoute('show_bibliotheque', ['id' => $bibliotheque->getId()]);
-        }else{
-            $this->addFlash("error", "Veuillez vérifier la bibliotheque et/ou la recette.");
-            return $this->redirectToRoute('home');
+        if ($this->getUser()) {
+            if ($bibliotheque && $recipe){
+                // dump($bibliotheque);
+                // dump($recipe);
+                $bibliotheque->removeRecipe($recipe);
+                $manager->persist($bibliotheque);
+                $manager->flush();
+    
+                return $this->redirectToRoute('show_bibliotheque', ['id' => $bibliotheque->getId()]);
+            }else{
+                $this->addFlash("error", "Veuillez vérifier la bibliotheque et/ou la recette.");
+                return $this->redirectToRoute('home');
+            }
         }
+        
     } 
     
 }

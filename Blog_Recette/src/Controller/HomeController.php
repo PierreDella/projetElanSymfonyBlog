@@ -172,7 +172,6 @@ class HomeController extends AbstractController
      */
     public function categoriesIngredientIndex()
     {
-
         $ingredients = $this->getDoctrine()
                            ->getRepository(Ingredient::class)
                            ->getAll();

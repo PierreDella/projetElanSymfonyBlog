@@ -87,12 +87,19 @@
         <div class="composition" alt="composition"> 
             <h5>Les ingrédients :</h5>
             {% for ingredient in ingredients %}
-                <p> - {{ ingredient['quantity'] }} {{ ingredient['unit'] }} de {{ ingredient['name'] }} - <small>{{ ingredient['category'] }}</small></p>
+                <p> - {{ ingredient['quantity'] }} {{ ingredient['unit'] }} 
+                {% if ingredient['quantity'] %}
+                    de 
+                {% endif %}
+                {{ ingredient['name'] }} - 
+                <small>
+                    {{ ingredient['category'] }}
+                </small></p>
             {% endfor %}
         </div>
         <div class="instructions" alt="instructions"> 
             <h5>Instructions :</h5>
-            <p style="word-break:break-all;">{{ recipe.instructions|raw }}</p>
+            <p>{{ recipe.instructions|raw }}</p>
         </div>
     </div>
     

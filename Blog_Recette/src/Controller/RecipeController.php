@@ -96,59 +96,56 @@ class RecipeController extends AbstractController
     * @Route("/recipe/add", name="add_recipe")
     * @Route("/recipe/edit/{id}", name="edit_recipe")
     */
-    public function addRecipe(ManagerRegistry $manager, Request $request, Recipe $recipe = null, SluggerInterface $slugger): Response{
+    public function addRecipe(User $user = null, ManagerRegistry $manager, Request $request, Recipe $recipe = null, SluggerInterface $slugger): Response{
 
-
-        if ( ! $recipe){
-            //On crée une nouvelle recette
-            $recipe = new Recipe();
-        }
-        //La recette aura comme user la personne connecté
-        $recipe->setUser($this->getUser());
-        //On crée un formulaire
-        $form = $this->createForm(RecipeType::class, $recipe);
-        $form->handleRequest($request);
-
-        if($form->isSubmitted() && $form->isValid()) {
-            /** @var UploadedFile $picture */
-            $picture = $form->get('picture')->getData();
-          
-            if ($picture) {
-                $originalPicture = pathinfo($picture->getClientOriginalName(), PATHINFO_FILENAME);
-                $safePicture = $slugger->slug($originalPicture);
-                $newPicture = $safePicture.'-'.uniqid().'.'.$picture->guessExtension();
-                
-                try {
-                    $picture->move(
-                        $this->getParameter('picturesRecipe_directory'),
-                        $newPicture
-                    );
-                } catch (FileException $e) {
-                   
-                }
-                
-                $recipe->setPicture($newPicture);
-                $time = ($request->request->get('recipe'));
-
-                if (($time['preparationTime']) >= $time['cookingTime']){     
-                
+        if($this->getUser()) {
+            if ( ! $recipe){
+                //On crée une nouvelle recette
+                $recipe = new Recipe();
+            }
+            //La recette aura comme user la personne connecté
+            $recipe->setUser($this->getUser());
+            //On crée un formulaire
+            $form = $this->createForm(RecipeType::class, $recipe);
+            $form->handleRequest($request);
+    
+            if($form->isSubmitted() && $form->isValid()) {
+                /** @var UploadedFile $picture */
+                $picture = $form->get('picture')->getData();
+                if ($picture) {
+                    $originalPicture = pathinfo($picture->getClientOriginalName(), PATHINFO_FILENAME);
+                    $safePicture = $slugger->slug($originalPicture);
+                    $newPicture = $safePicture.'-'.uniqid().'.'.$picture->guessExtension();
+                    try {
+                        $picture->move(
+                            $this->getParameter('picturesRecipe_directory'),
+                            $newPicture
+                        );
+                    } catch (FileException $e) {
+                     
+                    }
+                    $recipe->setPicture($newPicture);
                     $em = $manager->getManager();
                     $em->persist($recipe);
                     $em->flush();
 
-                    return $this->redirectToRoute('home');
-
-                }else{
-                    $this->addFlash("error", "Merci de mettre un temps de préparation inférieur au temps de cuisson");
+                    return $this->redirectToRoute('recipesUser_index', ["id"=>$this->getUser()->getId()]);
+    
+        
                 }
             }
-        }
             return $this->render('recipe/addRecipe.html.twig', 
             [
                 'form' => $form->createView(),
                 'recipe' => $recipe,
                 'editMode' => $recipe->getId() !== null,
             ]);
+        } else{
+            
+            $this->addFlash("error", "vous n'avez pas les autorisations nécessaires.");
+            return $this->redirectToRoute('home');
+        }
+        
     }
 
     /**
@@ -227,26 +224,29 @@ class RecipeController extends AbstractController
      * 
      */
     public function addIngredient(Ingredient $ingredient = null, Request $request, EntityManagerInterface $manager): Response {
-        
-        $ingredient = new Ingredient();
-        
-        $form = $this->createForm(IngredientType::class, $ingredient);
+        if ($this->getUser()) {
+            $ingredient = new Ingredient();
+            $form = $this->createForm(IngredientType::class, $ingredient);
+            $form->handleRequest($request);
 
-        $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()) {   
-            
-            $manager->persist($ingredient);
-            $manager->flush();
+            if($form->isSubmitted() && $form->isValid()) {   
+                
+                $manager->persist($ingredient);
+                $manager->flush();
+    
+                return $this->redirectToRoute('home');
+            }
 
-            return $this->redirectToRoute('home');
-        }
-        return $this->render('ingredient/add.html.twig', [
-            'formIngredient' => $form->createView(),
-            'ingredient' => $ingredient,
-            
-        ]);
+            return $this->render('ingredient/add.html.twig', [
+                'formIngredient' => $form->createView(),
+                'ingredient' => $ingredient,
+                
+            ]);
+        } else {
+            $this->addFlash("error", "vous n'avez pas les autorisations nécessaires.");
+            return $this->redirectToRoute('catIngredientList');
+        }   
     }
-
 
 //                                              ******************SUPPRESSIONS*****************
     
