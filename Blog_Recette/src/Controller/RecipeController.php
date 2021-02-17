@@ -233,8 +233,9 @@ class RecipeController extends AbstractController
                 
                 $manager->persist($ingredient);
                 $manager->flush();
-    
-                return $this->redirectToRoute('home');
+
+                $this->addFlash("success", "l'ingrédient a bien été ajouté");
+                return $this->redirectToRoute('catIngredientList');
             }
 
             return $this->render('ingredient/add.html.twig', [

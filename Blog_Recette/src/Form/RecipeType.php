@@ -31,6 +31,7 @@ class RecipeType extends AbstractType
         $builder
         // ->add('valider', SubmitType::class)
             ->add('name', TextType::class, [
+                'label' => 'Titre ',
                 'required' => true,
                 'constraints' => [
                     new NotBlank([
@@ -75,6 +76,7 @@ class RecipeType extends AbstractType
                 ],
             ])
             ->add('nbPerson', IntegerType::class, [
+                'label' => 'Nombre de personne',
                 'attr' => array('min' => 1, 'max' => 20), 
                 'constraints' => [
                     new NotBlank([

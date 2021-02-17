@@ -9,7 +9,7 @@
         </h2>
         <p>
             Notre site est avant tout un lieu libre que chacun peut améliorer en ajoutant
-            les ingrédients ou les recettes que vous préférez !      
+            les ingrédients ou les recettes qu'ils préfèrent !      
         </p>
         {% if app.user %}
         <div class="link_header" alt="link_header">
@@ -17,7 +17,7 @@
                 <a href="{{ path('add_recipe') }}" class="bouton-banner-top-f"> Ajouter vos recettes </a>
             </div>
             <div class="s-link" alt="s-link">
-                <a href="{{ path('catIngredientList') }}" class="bouton-banner-top-s"> Regarder notre liste d'ingrédients </a>
+                <a href="{{ path('catIngredientList') }}" class="bouton-banner-top-s"> Consulter notre liste d'ingrédients </a>
             </div>
         </div>
         {% endif %}
