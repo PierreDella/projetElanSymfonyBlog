@@ -12,7 +12,7 @@
                     <th class="table-danger">Pseudo</th>
                     <th class="table-danger">Abonnés</th>
                     <th class="table-danger">Recettes</th>
-                    <th class="table-danger"></th>
+                    {# <th class="table-danger"></th> #}
                 </tr>
             </thead>
             <tbody>
@@ -23,7 +23,7 @@
                     </td>
                     <td class="table"> {{ user.subscribers | length }} </td>
                     <td class="table">{{ user.recipes | length }}</td>
-                    <td class="table"></td>
+                    {# <td class="table"></td> #}
                 </tr>
             {% endfor %}
             </tbody>
@@ -40,7 +40,7 @@
                     <th class="table-primary">Date de création</th>
                     <th class="table-primary">Nb commentaires</th>
                     <th class="table-primary">Likes</th>
-                    <th class="table-primary"></th>
+                    {# <th class="table-primary"></th> #}
                 </tr>
             </thead>
             <tbody>
