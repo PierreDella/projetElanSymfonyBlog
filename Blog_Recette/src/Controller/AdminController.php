@@ -138,7 +138,8 @@ class AdminController extends AbstractController
             // $user = $recipe->getUser()
             $manager->remove($recipe);
             $manager->flush();
-        
+
+            $this->addFlash("success", "la recette a bien été supprimé");
             return $this->redirectToRoute('recipe_index');
         }else{
             $this->addFlash("error", "Action interdite");
@@ -162,7 +163,8 @@ class AdminController extends AbstractController
             // }
             $manager->remove($ingredient);
             $manager->flush();
-        
+
+            $this->addFlash("success", "L'ingrédient a bien été supprimé");
             return $this->redirectToRoute('catIngredient_index');
         }else{
             $this->addFlash("error", "Action interdite");
@@ -201,7 +203,7 @@ class AdminController extends AbstractController
             // }
             $manager->remove($user); 
             $manager->flush();
-        
+            $this->addFlash("success", "L'utilisateur a bien été supprimé");
             return $this->redirectToRoute('user_index');
         }else{
             $this->addFlash("error", "Suppression non autorisé.");

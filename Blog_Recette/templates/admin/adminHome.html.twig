@@ -3,77 +3,65 @@
 {% block title %}Nos utilisateurs{% endblock %}
 
 {% block body %}
-    <div class="body-dash">
-        <div class="row">
-            <div class="col1 col-sm-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title textCentre">Les derniers utilisateurs inscrits</h5>
-                        <table class="table table-striped table-responsive">
-                            <thead>
-                                <tr>
-                                    <th>Pseudo</th>
-                                    <th>Abonnés</th>
-                                    <th>Recettes</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            {% for user in users %}
-                                <tr>
-                                    <td>
-                                        <a href="{{ path('user_show', {'id':user.id}) }}">{{ user.pseudo }}</a>
-                                    </td>
-                                    <td> {{ user.subscribers | length }} </td>
-                                    <td>{{ user.recipes | length }}</td>
-                                    <td></td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                        <p>Nombre total d'utilisateurs : {{ users | length }}</p>
-                        <a class= "icon_add" href="{{ path('user_index') }}"><button type="button" class="btn btn-dark">Tous les utilisateurs</button></a>
-                    </div>
-                </div>
-            </div>
-            <div class="col2 col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title textCentre">Les dernieres recettes ajoutés</h5>
-                        <table  class="table table-striped table-responsive">
-                            <thead>
-                                <tr>
-                                    <th>Nom</th>
-                                    <th>Date de création</th>
-                                    <th>Nb commentaires</th>
-                                    <th>Likes</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            {% for recipe in recipes %}
-                                <tr>
-                                    <td>
-                                        <a href="{{ path('detailRecipe', {'id':recipe.id}) }}">{{ recipe.name }}</a> 
-                                    </td>
-                                    <td> {{ recipe.createdAt | date('d/m/Y') }} </td>
-                                    <td> {{ recipe.comments | length }}</td>
-                                    <td>
-                                        {{ recipe.likes | length }}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                        <p>Nombre total de recettes : {{ recipes | length }}</p>
-                        <a href="{{ path('recipe_index') }}"><button type="button" class="btn btn-dark">Liste des recettes</button></a>
-                    </div>
-                </div>
-            </div>
-        </div>    
+
+    <div class="card-body">
+        <h5 class="card-title textCentre">Les derniers utilisateurs inscrits</h5>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="table-danger">Pseudo</th>
+                    <th class="table-danger">Abonnés</th>
+                    <th class="table-danger">Recettes</th>
+                    <th class="table-danger"></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr>
+                    <td class="table">
+                        <a href="{{ path('user_show', {'id':user.id}) }}">{{ user.pseudo }}</a>
+                    </td>
+                    <td class="table"> {{ user.subscribers | length }} </td>
+                    <td class="table">{{ user.recipes | length }}</td>
+                    <td class="table"></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <p>Nombre total d'utilisateurs : {{ users | length }}</p>
+        <a class= "icon_add" href="{{ path('user_index') }}"><button type="button" class="btn btn-dark">Tous les utilisateurs</button></a>
+        </div>
+    <div class="card-body"> 
+        <h5 class="card-title textCentre">Les dernieres recettes ajoutés</h5>
+        <table  class="table table-striped table-responsive">
+            <thead>
+                <tr>
+                    <th class="table-primary">Nom</th>
+                    <th class="table-primary">Date de création</th>
+                    <th class="table-primary">Nb commentaires</th>
+                    <th class="table-primary">Likes</th>
+                    <th class="table-primary"></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for recipe in recipes %}
+                <tr>
+                    <td class="table">
+                        <a href="{{ path('detailRecipe', {'id':recipe.id}) }}">{{ recipe.name }}</a> 
+                    </td>
+                    <td class="table"> {{ recipe.createdAt | date('d/m/Y') }} </td>
+                    <td class="table"> {{ recipe.comments | length }}</td>
+                    <td class="table">
+                        {{ recipe.likes | length }}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <p>Nombre total de recettes : {{ recipes | length }}</p>
+        <a href="{{ path('recipe_index') }}"><button type="button" class="btn btn-dark">Liste des recettes</button></a>
     </div>
-    
-  
+
     
 {% endblock %}
 {% block javascripts %}
