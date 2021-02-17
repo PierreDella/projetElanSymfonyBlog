@@ -6,7 +6,6 @@
 
     <div class="container ">
         <div class="profile-nav">
-
             <div class="user-heading">
                 <div class="top-profil">
                     <div class="card-pp">
@@ -51,8 +50,6 @@
                         <div class="profil-buttons-supp">
                             <a class= "confirmation icon_add1"href="{{ path('user_delete', { id : user.id }) }}">Supprimer compte</a>
                         </div>
-                {% endif %}
-                {% if app.user.id == user.id %}
                         <div class="profil-buttons-edit">
                             <a class= "icon_add2" href="{{ path("user_edit", { id : user.id }) }}">Modifier profil</a>
                         </div>

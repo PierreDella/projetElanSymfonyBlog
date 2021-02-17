@@ -21,7 +21,7 @@
                         </div>
                         {% if recipe.user %}
                             <div class="author" alt="author">
-                                <small>crée par <a href="{{ path('user_show', {'id': recipe.user.id}) }}" class="link-author" alt="">{{ recipe.user.pseudo }}</a></small>
+                                <small>crée par <a href="{{ path('user_show', {'id': recipe.user.id}) }}" class="link-author" alt="">{{ recipe.recipe.user.pseudo }}</a></small>
                             </div>
                         {% endif %}
                         <div class="card-text-desc" alt="">
@@ -46,7 +46,7 @@
                             <a href="javascript:void(0)" class="dropbtn">Ajouter dans ma collection</a>
                             <div class="dropdown-content" alt="">
                                 {% for bibliotheque in app.user.bibliotheques %}
-                                    <a href="{{ path('addRecipeToCollection', {'recipeid' : recipe.id, 'biblioid' : bibliotheque.id}) }}">{{ bibliotheque.titre }}</a>
+                                    <a href="{{ path('addRecipeToCollection', {'recipeid' : recipe.recipe.id, 'biblioid' : bibliotheque.id}) }}">{{ bibliotheque.titre }}</a>
                                 {% endfor %}
                                 <a href="{{ path('add_bibliotheque', { 'recipeid' : recipe.recipe.id }) }}">Créer une collection</a>
                             </div>

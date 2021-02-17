@@ -3,32 +3,34 @@
 {% block title %}Toutes nos recettes{% endblock %}
 
 {% block home %}
-    <header class="header" alt="">
-        <h2 class="title-header" alt="">
+    <header class="header" alt="header">
+        <h2 class="title-header" alt="title-header">
             Bienvenue sur Idées Cuisine lieu de partage d'expériences culinaires
         </h2>
         <p>
             Notre site est avant tout un lieu libre que chacun peut améliorer en ajoutant
             les ingrédients ou les recettes que vous préférez !      
         </p>
-        <div class="link_header">
-            <div class="f-link">
+        {% if app.user %}
+        <div class="link_header" alt="link_header">
+            <div class="f-link" alt="f-link">
                 <a href="{{ path('add_recipe') }}" class="bouton-banner-top-f"> Ajouter vos recettes </a>
             </div>
-            <div class="s-link">
+            <div class="s-link" alt="s-link">
                 <a href="{{ path('catIngredientList') }}" class="bouton-banner-top-s"> Regarder notre liste d'ingrédients </a>
             </div>
         </div>
+        {% endif %}
     </header>
-    <div class="row" alt="">
-        <div class="filter" alt="">
+    <div class="row" alt="row">
+        <div class="filter" alt="filter">
                 {% include 'home/_filter.html.twig' %}
         </div>      
     </div>
-    <div class="body-recipes" alt="">
-        <div class="card-deck" alt="">
+    <div class="body-recipes" alt="body-recipes">
+        <div class="card-deck" alt="card-deck">
             {% for recipe in recipes %}
-                <div class="card" alt="">
+                <div class="card" alt="card">
                     <img class="card-img-top" alt="card-top"  src="{{ asset('uploads/images/' ~ recipe.picture) }}" alt="Card image cap">
                     <div class="card-body" alt="card-body">
                         <h5 class="card-title" alt="card-title">
@@ -46,7 +48,7 @@
                         <div>
                         
                         </div>
-                        <div class="card-text-desc" alt="">
+                        <div class="card-text-desc" alt="card-text-desc">
                             <p>{{ recipe.description }}</p>
                         </div>
                         <small class="text-muted" alt="">{{ recipe.comments | length }} commentaire(s)</small>

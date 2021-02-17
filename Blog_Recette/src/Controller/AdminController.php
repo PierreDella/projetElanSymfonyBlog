@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Recipe;
+use App\Entity\Ingredient;
 use App\Entity\CategoryRecipe;
 use App\Entity\CategoryIngredient;
 use App\Repository\RecipeRepository;
@@ -12,7 +13,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-
+/**
+ * @Route("/admin")
+ */
 class AdminController extends AbstractController
 {   
 //                                                    ******************AFFICHAGES*****************
@@ -46,10 +49,11 @@ class AdminController extends AbstractController
      */
     public function categoriesIngredientIndex()
     {
-        $repo = $this->getDoctrine()->getRepository(CategoryIngredient::class);
-        $categories = $repo->findAll();
+        $ingredients = $this->getDoctrine()
+                           ->getRepository(Ingredient::class)
+                           ->getAll();
         return $this->render('admin/indexCatIngredient.html.twig', [
-            'categories' => $categories,
+            'ingredients' => $ingredients,
         ]);
     }
 
@@ -57,7 +61,7 @@ class AdminController extends AbstractController
      * @Route("/users", name="user_index")
      */
     public function indexUsersAdmin()
-    {   
+    {   //si es Admin
         if($this->getUser()->isAdmin()){
             $repo = $this->getDoctrine()->getRepository(User::class);
             $users = $repo->findAll();
@@ -74,6 +78,7 @@ class AdminController extends AbstractController
      * @Route("/adminHome", name="adminHome")
      */
     public function dashboardAdmin(){
+        //Si est admin
         if($this->getUser()->isAdmin()){
             $users = $this->getDoctrine()->getRepository(User::class)->getAllOrder();
             $recipes = $this->getDoctrine()->getRepository(Recipe::class)->getAllOrder();
@@ -170,7 +175,7 @@ class AdminController extends AbstractController
             // if (condition) {
             //     # code...
             // }
-            $manager->remove($user);
+            $manager->remove($user); 
             $manager->flush();
         
             return $this->redirectToRoute('user_index');

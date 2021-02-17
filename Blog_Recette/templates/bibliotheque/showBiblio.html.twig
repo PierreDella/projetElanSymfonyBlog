@@ -48,7 +48,11 @@
                                         <a href="{{ path('addRecipeToCollection', {'recipeid' : recipe.id, 'biblioid' : bibliotheque.id}) }}">{{ bibliotheque.titre }}</a>
                                     {% endfor %}
                                     <a href="{{ path('add_bibliotheque', { 'recipeid' : recipe.id }) }}">Créer une collection</a>
-                                    <a href="{{ path('remove_recipe', { 'recipe_id':recipe.id, 'bibliotheque_id':bibliotheque.id }) }}" class="button">Supprimer de ma collection</a>
+                                    {% if app.user.id == bibliotheque.user.id %} 
+                                        <a href="{{ path('remove_recipe', { 'recipe_id':recipe.id, 'bibliotheque_id':bibliotheque.id }) }}" class="button">Supprimer de ma collection</a>
+                                    {% endif %}
+                                    
+                                    
                                 </div>
                             </li>
                         {% endif %}

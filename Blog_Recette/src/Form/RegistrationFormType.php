@@ -25,6 +25,7 @@ class RegistrationFormType extends AbstractType
     {
         $builder    
             ->add('email', EmailType::class, [
+                'label' => 'email *',
                     'constraints' => [
                         new NotBlank([
                             'message' => 'Veuillez entrer un email',
@@ -35,6 +36,7 @@ class RegistrationFormType extends AbstractType
                     ],
             ])
             ->add('pseudo', TextType::class, [
+                'label' => 'Pseudonyme *',
                     'constraints' => [
                         new NotBlank([
                             'message' => 'Veuillez entrer un pseudonyme',
@@ -51,21 +53,22 @@ class RegistrationFormType extends AbstractType
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
                 'mapped' => false,
-                'first_options' => ['label' => 'Mot de passe'],
-                'second_options' => ['label' => 'répéter mot de passe'],
+                'first_options' => ['label' => 'Mot de passe *'],
+                'second_options' => ['label' => 'répéter mot de passe *'],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter a password',
+                        'message' => 'Entrez un mot de passe',
                     ]),
                     new Length([
                         'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
+                        'minMessage' => 'Votre mot de passe doit comporter {{ limit }} caractères',
                         // max length allowed by Symfony for security reasons
-                        'max' => 4096,
+                        'max' => 20,
                     ]),
                 ],
             ])
             ->add('agreeTerms', CheckboxType::class, [
+                'label' => "j'ai lu et j'accepte les conditions d'utilisation *",
                 'mapped' => false,
                 'constraints' => [
                     new IsTrue([

@@ -17,6 +17,7 @@ img{
   object-fit: cover;
 }
 body{
+  width: fit-content;
   padding: auto;
 }
 
