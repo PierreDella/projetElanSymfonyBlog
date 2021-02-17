@@ -146,6 +146,30 @@ class AdminController extends AbstractController
         }
     }
     /**
+     * @Route("/ingredient/{id}/delete", name="ingredient_delete_admin")
+     */
+    public function deleteIngredient(Ingredient $ingredient = null, EntityManagerInterface $manager){
+        if($this->IsGranted('ROLE_ADMIN')){
+            // dd($ingredient);
+            $compositions = $ingredient->getCompositions();
+            // dd($compositions);
+            foreach ($compositions as $composition) {
+                $manager->remove($composition);
+            }
+            // $categories = $ingredient->getCategory();
+            // foreach($categories as $category){
+            //     $manager->remove($category);
+            // }
+            $manager->remove($ingredient);
+            $manager->flush();
+        
+            return $this->redirectToRoute('catIngredient_index');
+        }else{
+            $this->addFlash("error", "Action interdite");
+            return $this->redirectToRoute("home");
+        }
+    }
+    /**
      * @Route("/user/{id}/delete", name="admin_user_delete")
      */
     public function adminDeleteUser(User $user = null, EntityManagerInterface $manager){

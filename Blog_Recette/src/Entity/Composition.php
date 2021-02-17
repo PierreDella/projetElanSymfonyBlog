@@ -2,8 +2,9 @@
 
 namespace App\Entity;
 
-use App\Repository\CompositionRepository;
+use App\Entity\Ingredient;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\CompositionRepository;
 
 /**
  * @ORM\Entity(repositoryClass=CompositionRepository::class)
